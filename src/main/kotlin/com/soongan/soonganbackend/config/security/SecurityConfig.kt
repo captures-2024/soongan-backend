@@ -17,6 +17,9 @@ class SecurityConfig {
             .cors {
                 it.configurationSource(corsConfigurationSource())  // 아래에서 정의한 cors 설정을 사용
             }
+            .csrf {
+                it.disable()  // CSRF 보안 기능 비활성화 -> api 서버는 CSRF 공격에 취약하지 않음
+            }
             .httpBasic {  // OAuth2 인증을 사용, 필요없는 기본 인증을 비활성화
                 it.disable()
             }
