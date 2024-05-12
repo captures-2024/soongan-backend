@@ -4,6 +4,9 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.web.cors.CorsConfiguration
+import org.springframework.web.cors.CorsConfigurationSource
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 
 @Configuration
 class SecurityConfig {
@@ -11,6 +14,9 @@ class SecurityConfig {
     @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         return http
+            .cors {
+                it.configurationSource(corsConfigurationSource())  // 아래에서 정의한 cors 설정을 사용
+            }
             .httpBasic {  // OAuth2 인증을 사용, 필요없는 기본 인증을 비활성화
                 it.disable()
             }
@@ -23,5 +29,21 @@ class SecurityConfig {
             .oauth2Login {  // OAuth2 인증 설정
             }
             .build()
+    }
+
+    @Bean
+    fun corsConfigurationSource(): CorsConfigurationSource {  // cors 설정
+        val configuration = CorsConfiguration()
+        // 우선 모든 요청에 대해 허용
+        configuration.allowedOrigins = listOf("*")
+        configuration.allowedMethods = listOf("*")
+        configuration.allowedHeaders = listOf("*")
+        configuration.allowCredentials = true  // 인증 정보를 서버로 전송할 수 있도록 허용
+        configuration.maxAge = 3600L  // preflight 요청의 결과가 캐시되는 시간 (1시간)
+
+        val source = UrlBasedCorsConfigurationSource()
+        source.registerCorsConfiguration("/**", configuration)
+
+        return source
     }
 }
