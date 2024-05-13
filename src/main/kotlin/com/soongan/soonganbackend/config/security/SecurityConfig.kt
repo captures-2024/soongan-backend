@@ -1,5 +1,7 @@
 package com.soongan.soonganbackend.config.security
 
+import com.soongan.soonganbackend.service.CustomOAuth2MemberService
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -9,7 +11,9 @@ import org.springframework.web.cors.CorsConfigurationSource
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 
 @Configuration
-class SecurityConfig {
+class SecurityConfig @Autowired constructor(
+    private val customOAuth2MemberService: CustomOAuth2MemberService
+) {
 
     @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
@@ -30,6 +34,10 @@ class SecurityConfig {
                 it.anyRequest().authenticated()  // 일단 모든 요청에 대해 인증 요구
             }
             .oauth2Login {  // OAuth2 인증 설정
+                // 기본 DefaultOAuth2UserService 대신 직접 구현한 CustomOAuth2MemberService 사용
+                it.userInfoEndpoint { endpoint ->
+                    endpoint.userService(customOAuth2MemberService)
+                }
             }
             .build()
     }

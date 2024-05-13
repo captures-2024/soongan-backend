@@ -10,7 +10,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User
 import org.springframework.stereotype.Service
 
 @Service
-class CustomOAuth2Service @Autowired constructor(
+class CustomOAuth2MemberService @Autowired constructor(
     private val memberRepository: MemberRepository
 ): OAuth2UserService<OAuth2UserRequest, OAuth2User> {
 
