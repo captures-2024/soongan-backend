@@ -13,13 +13,13 @@ data class Member(
     val email: String,
 
     @Column
-    val nickname: String,
+    val nickname: String?,
 
     @Column
-    val birthDate: LocalDate,
+    val birthDate: LocalDate?,
 
     @Column
-    val profileImageUrl: String,
+    val profileImageUrl: String?,
 
     @Column
     val provider: String,

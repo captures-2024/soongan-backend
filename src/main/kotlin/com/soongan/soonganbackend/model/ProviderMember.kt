@@ -22,4 +22,15 @@ class ProviderMember(
         get() = oAuth2User.authorities.stream().map {
             SimpleGrantedAuthority(it.authority)
         }.toList()
+
+    fun toMember(): Member {
+        return Member(
+            email = email,
+            nickname = null,
+            birthDate = null,
+            profileImageUrl = null,
+            provider = provider,
+            authorities = authorities.map { it.authority }
+        )
+    }
 }
