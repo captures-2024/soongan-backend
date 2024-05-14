@@ -1,10 +1,8 @@
 package com.soongan.soonganbackend.repository
 
-import com.soongan.soonganbackend.model.Member
+import com.soongan.soonganbackend.model.MemberEntity
 import org.springframework.data.jpa.repository.JpaRepository
-import org.springframework.stereotype.Repository
 
-@Repository
-interface MemberRepository: JpaRepository<Member, Long> {
-    fun findByEmail(email: String): Member?
+interface MemberRepository: JpaRepository<MemberEntity, Long> {
+    fun findByEmail(email: String): MemberEntity?
 }

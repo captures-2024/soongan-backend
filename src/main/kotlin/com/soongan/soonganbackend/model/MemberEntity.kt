@@ -5,10 +5,12 @@ import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing
 import java.time.LocalDate
 
 @Entity
-data class Member(
+@EnableJpaAuditing
+data class MemberEntity(
     @Column
     val email: String,
 

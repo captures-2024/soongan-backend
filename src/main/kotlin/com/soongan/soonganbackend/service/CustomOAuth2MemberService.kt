@@ -25,7 +25,7 @@ class CustomOAuth2MemberService @Autowired constructor(
 
         // 만약 해당 이메일로 가입된 회원이 없다면(처음 로그인하는 유저라면) 회원 정보를 저장
         memberRepository.findByEmail(providerMember.email)
-            ?: memberRepository.save(providerMember.toMember())
+            ?: memberRepository.save(providerMember.toMemberEntity())
 
         return oAuth2User
     }

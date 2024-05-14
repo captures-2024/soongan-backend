@@ -23,8 +23,8 @@ class ProviderMember(
             SimpleGrantedAuthority(it.authority)
         }.toList()
 
-    fun toMember(): Member {
-        return Member(
+    fun toMemberEntity(): MemberEntity {
+        return MemberEntity(
             email = email,
             nickname = null,
             birthDate = null,
