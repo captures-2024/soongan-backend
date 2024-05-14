@@ -11,7 +11,7 @@ import org.springframework.web.cors.CorsConfigurationSource
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 
 @Configuration
-class SecurityConfig @Autowired constructor(
+class SecurityConfig(
     private val customOAuth2MemberService: CustomOAuth2MemberService
 ) {
 
