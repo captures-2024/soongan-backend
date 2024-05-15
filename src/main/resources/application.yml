@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: soongan-backend
+  security:  # ?? ?? ????? ??, ??? ? ???? ?? ? ??? ???? ??? ?? ??? ?
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 510490302408-hht7hmqir1hg0fc4o3c9p3q8bp31bt6q.apps.googleusercontent.com
+            client-secret: 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
+            scope:
+              - profile
+              - email
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
