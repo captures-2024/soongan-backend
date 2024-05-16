@@ -3,6 +3,7 @@ package com.soongan.soonganbackend.service
 import com.soongan.soonganbackend.enums.TokenType
 import com.soongan.soonganbackend.model.JwtData
 import com.soongan.soonganbackend.repository.JwtRepository
+import io.jsonwebtoken.JwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
 import org.springframework.stereotype.Service
@@ -51,5 +52,23 @@ class JwtService(
     fun getSecretKey(): SecretKey {  // Jwt 암호화 키를 가져오는 메서드, 현재는 임시 키 사용
         val secret = Base64.getEncoder().encodeToString("secret123456789123456789".toByteArray())
         return Keys.hmacShaKeyFor(secret.toByteArray())
+    }
+
+    fun getPayload(token: String): Map<String, Any>? {  // 토큰을 읽어 페이로드 정보를 가져오는 함수, 만약 유효하지 않다면 null
+        try {
+            val payload = Jwts.parser()
+                .verifyWith(getSecretKey())
+                .build()
+                .parseSignedClaims(token)
+                .payload
+
+            return if (payload.expiration.after(Date())) {
+                payload
+            } else {
+                null
+            }
+        } catch (e: JwtException) {
+            return null
+        }
     }
 }
