@@ -1,6 +1,7 @@
 package com.soongan.soonganbackend.service
 
 import com.soongan.soonganbackend.enums.TokenType
+import com.soongan.soonganbackend.model.JwtData
 import com.soongan.soonganbackend.repository.JwtRepository
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
@@ -13,6 +14,21 @@ class JwtService(
     private val jwtRepository: JwtRepository
 ) {
 
+    fun issueTokens(userEmail: String, authorities: List<String>, refreshToken: String): Pair<String, String> {
+        val accessToken = createToken(userEmail, authorities, TokenType.ACCESS)
+        val refreshToken = createToken(userEmail, authorities, TokenType.REFRESH)
+
+        jwtRepository.save(
+            JwtData(
+                userEmail = userEmail,
+                accessToken = accessToken,
+                refreshToken = refreshToken
+            )
+        )
+
+        return Pair(accessToken, refreshToken)
+    }
+
     fun createToken(userEmail: String, authorities: List<String>, tokenType: TokenType): String {
         val claims =  Jwts.claims().subject(userEmail)  // Jwt payload에 저장되는 정보
             .add("authorities", authorities)  // 유저의 권한 정보도 저장
@@ -24,7 +40,7 @@ class JwtService(
             TokenType.REFRESH -> Date(issuedAt.time + 1000 * 60 * 60 * 24 * 14)  // 14일
         }
 
-        return Jwts.builder()
+        return Jwts.builder()  // 토큰 생성
             .claims(claims)
             .issuedAt(issuedAt)
             .expiration(expiration)
