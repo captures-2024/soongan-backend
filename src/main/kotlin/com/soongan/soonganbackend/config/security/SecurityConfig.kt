@@ -12,7 +12,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 
 @Configuration
 class SecurityConfig(
-    private val customOAuth2MemberService: CustomOAuth2MemberService
+    private val customOAuth2MemberService: CustomOAuth2MemberService,
+    private val oAuth2LoginSuccessHandler: OAuth2LoginSuccessHandler
 ) {
 
     @Bean
@@ -38,6 +39,7 @@ class SecurityConfig(
                 it.userInfoEndpoint { endpoint ->
                     endpoint.userService(customOAuth2MemberService)
                 }
+                    .successHandler(oAuth2LoginSuccessHandler)  // OAuth2 인증 성공 시 처리할 핸들러 설정
             }
             .build()
     }

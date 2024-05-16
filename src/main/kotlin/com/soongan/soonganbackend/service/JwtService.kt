@@ -14,7 +14,7 @@ class JwtService(
     private val jwtRepository: JwtRepository
 ) {
 
-    fun issueTokens(userEmail: String, authorities: List<String>, refreshToken: String): Pair<String, String> {
+    fun issueTokens(userEmail: String, authorities: List<String>): Pair<String, String> {
         val accessToken = createToken(userEmail, authorities, TokenType.ACCESS)
         val refreshToken = createToken(userEmail, authorities, TokenType.REFRESH)
 
@@ -48,8 +48,8 @@ class JwtService(
             .compact()
     }
 
-    fun getSecretKey(): SecretKey {  // Jwt 암호화 키를 가져오는 메서드, 현재는 임시 키 "secret"을 사용
-        val secret = Base64.getEncoder().encodeToString("secret".toByteArray())
+    fun getSecretKey(): SecretKey {  // Jwt 암호화 키를 가져오는 메서드, 현재는 임시 키 사용
+        val secret = Base64.getEncoder().encodeToString("secret123456789123456789".toByteArray())
         return Keys.hmacShaKeyFor(secret.toByteArray())
     }
 }
