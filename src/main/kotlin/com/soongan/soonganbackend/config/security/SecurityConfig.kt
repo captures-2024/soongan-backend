@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.CorsConfigurationSource
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
@@ -13,7 +14,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 @Configuration
 class SecurityConfig(
     private val customOAuth2MemberService: CustomOAuth2MemberService,
-    private val oAuth2LoginSuccessHandler: OAuth2LoginSuccessHandler
+    private val oAuth2LoginSuccessHandler: OAuth2LoginSuccessHandler,
+    private val jwtFilter: JwtFilter
 ) {
 
     @Bean
@@ -41,6 +43,9 @@ class SecurityConfig(
                 }
                     .successHandler(oAuth2LoginSuccessHandler)  // OAuth2 인증 성공 시 처리할 핸들러 설정
             }
+            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter::class.java) // JwtFilter를 UsernamePasswordAuthenticationFilter 앞에 추가
+            // UsernamePasswordAuthenticationFilter는 UsernamePasswordAuthenticationToken을 생성하는 역할 -> JwtFilter에서 대신 Token 생성
+            // UsernamePasswordAuthenticationToken은 SecurityContext에 저장되어 인증 정보를 유지하는 역할
             .build()
     }
 
