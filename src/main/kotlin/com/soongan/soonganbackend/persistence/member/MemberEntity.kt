@@ -1,5 +1,6 @@
 package com.soongan.soonganbackend.persistence.member
 
+import com.soongan.soonganbackend.enums.Provider
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.EntityListeners
@@ -29,8 +30,8 @@ data class MemberEntity(
     @Column(name = "profileImageUrl")
     val profileImageUrl: String?,
 
-    @Column(name = "provider")
-    val provider: String,
+    @Column
+    val provider: Provider,
 
     @Column(name = "authorities")
     val authorities: String,
