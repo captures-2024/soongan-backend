@@ -1,7 +1,6 @@
 package com.soongan.soonganbackend.config.security
 
 import com.soongan.soonganbackend.service.CustomOAuth2MemberService
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -15,6 +14,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 class SecurityConfig(
     private val customOAuth2MemberService: CustomOAuth2MemberService,
     private val oAuth2LoginSuccessHandler: OAuth2LoginSuccessHandler,
+    private val oAuth2LoginFailureHandler: OAuth2LoginFailureHandler,
     private val jwtFilter: JwtFilter
 ) {
 
@@ -42,6 +42,7 @@ class SecurityConfig(
                     endpoint.userService(customOAuth2MemberService)
                 }
                     .successHandler(oAuth2LoginSuccessHandler)  // OAuth2 인증 성공 시 처리할 핸들러 설정
+                    .failureHandler(oAuth2LoginFailureHandler)  // OAuth2 인증 실패 시 처리할 핸들러 설정
             }
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter::class.java) // JwtFilter를 UsernamePasswordAuthenticationFilter 앞에 추가
             // UsernamePasswordAuthenticationFilter는 UsernamePasswordAuthenticationToken을 생성하는 역할 -> JwtFilter에서 대신 Token 생성
