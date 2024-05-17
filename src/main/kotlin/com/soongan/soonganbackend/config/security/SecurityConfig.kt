@@ -4,6 +4,7 @@ import com.soongan.soonganbackend.service.CustomOAuth2MemberService
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
+import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.web.cors.CorsConfiguration
@@ -26,6 +27,11 @@ class SecurityConfig(
             }
             .csrf {
                 it.disable()  // CSRF 보안 기능 비활성화 -> api 서버는 CSRF 공격에 취약하지 않음
+            }
+            .sessionManagement {
+                // 인증에는 JWT 토큰을 사용하므로 세션을 생성하지 않도록 설정
+                // STATELESS: 세션을 생성하지도 않고, 있어도 사용하지 않음
+                it.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             }
             .httpBasic {  // OAuth2 인증을 사용, 필요없는 기본 인증을 비활성화
                 it.disable()

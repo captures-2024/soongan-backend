@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class OAuth2LoginFailureHandler: AuthenticationFailureHandler {
+
     override fun onAuthenticationFailure(
         request: HttpServletRequest,
         response: HttpServletResponse,
