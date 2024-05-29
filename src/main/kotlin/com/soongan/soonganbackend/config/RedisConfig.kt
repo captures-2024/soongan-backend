@@ -1,5 +1,6 @@
 package com.soongan.soonganbackend.config
 
+import org.springframework.cache.annotation.EnableCaching
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.redis.connection.RedisConnectionFactory
@@ -8,6 +9,7 @@ import org.springframework.data.redis.core.RedisTemplate
 
 
 @Configuration
+@EnableCaching
 class RedisConfig {
     @Bean
     fun redisConnectionFactory(): RedisConnectionFactory {
