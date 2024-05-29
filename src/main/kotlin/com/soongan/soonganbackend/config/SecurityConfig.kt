@@ -1,5 +1,6 @@
 package com.soongan.soonganbackend.config
 
+import com.soongan.soonganbackend.filter.JwtExceptionFilter
 import com.soongan.soonganbackend.filter.JwtFilter
 import com.soongan.soonganbackend.handler.OAuth2LoginFailureHandler
 import com.soongan.soonganbackend.handler.OAuth2LoginSuccessHandler
@@ -19,7 +20,8 @@ class SecurityConfig(
     private val customOAuth2MemberService: CustomOAuth2MemberService,
     private val oAuth2LoginSuccessHandler: OAuth2LoginSuccessHandler,
     private val oAuth2LoginFailureHandler: OAuth2LoginFailureHandler,
-    private val jwtFilter: JwtFilter
+    private val jwtFilter: JwtFilter,
+    private val jwtExceptionFilter: JwtExceptionFilter
 ) {
 
     @Bean
@@ -56,6 +58,7 @@ class SecurityConfig(
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter::class.java) // JwtFilter를 UsernamePasswordAuthenticationFilter 앞에 추가
             // UsernamePasswordAuthenticationFilter는 UsernamePasswordAuthenticationToken을 생성하는 역할 -> JwtFilter에서 대신 Token 생성
             // UsernamePasswordAuthenticationToken은 SecurityContext에 저장되어 인증 정보를 유지하는 역할
+            .addFilterBefore(jwtExceptionFilter, JwtFilter::class.java)  // JwtExceptionFilter를 JwtFilter 앞에 추가(JwtFilter에서 발생한 에러를 처리)
             .build()
     }
 
