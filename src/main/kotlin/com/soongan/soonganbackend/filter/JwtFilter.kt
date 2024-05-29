@@ -1,4 +1,4 @@
-package com.soongan.soonganbackend.config.security
+package com.soongan.soonganbackend.filter
 
 import com.soongan.soonganbackend.repository.MemberRepository
 import com.soongan.soonganbackend.service.JwtService

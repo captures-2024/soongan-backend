@@ -1,4 +1,4 @@
-package com.soongan.soonganbackend.config.security
+package com.soongan.soonganbackend.handler
 
 import com.soongan.soonganbackend.service.JwtService
 import jakarta.servlet.http.HttpServletRequest

@@ -1,5 +1,8 @@
-package com.soongan.soonganbackend.config.security
+package com.soongan.soonganbackend.config
 
+import com.soongan.soonganbackend.filter.JwtFilter
+import com.soongan.soonganbackend.handler.OAuth2LoginFailureHandler
+import com.soongan.soonganbackend.handler.OAuth2LoginSuccessHandler
 import com.soongan.soonganbackend.service.CustomOAuth2MemberService
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
