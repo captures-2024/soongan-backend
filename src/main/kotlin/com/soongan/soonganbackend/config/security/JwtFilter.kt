@@ -28,8 +28,7 @@ class JwtFilter(
             return
         }
 
-        val payload = jwtService.getPayload(accessToken)
-            ?: throw Exception("유효하지 않은 토큰입니다.") // 토큰을 통해 페이로드 정보 가져오기, 만약 토큰이 유효하지 않다면 예외 발생
+        val payload = jwtService.getPayload(accessToken) // 토큰을 통해 페이로드 정보 가져오기, 만약 토큰이 유효하지 않다면 예외 발생
 
         val email = payload["sub"] as String  // 페이로드에서 이메일 정보 가져오기
         val member = memberRepository.findByEmail(email)

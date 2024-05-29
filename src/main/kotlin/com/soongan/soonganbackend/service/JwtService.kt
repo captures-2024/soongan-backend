@@ -1,6 +1,7 @@
 package com.soongan.soonganbackend.service
 
 import com.soongan.soonganbackend.enums.TokenType
+import com.soongan.soonganbackend.exception.jwt.InvalidTokenException
 import com.soongan.soonganbackend.model.JwtData
 import com.soongan.soonganbackend.repository.JwtRepository
 import io.jsonwebtoken.JwtException
@@ -54,7 +55,7 @@ class JwtService(
         return Keys.hmacShaKeyFor(secret.toByteArray())
     }
 
-    fun getPayload(token: String): Map<String, Any>? {  // 토큰을 읽어 페이로드 정보를 가져오는 함수, 만약 유효하지 않다면 null
+    fun getPayload(token: String): Map<String, Any> {  // 토큰을 읽어 페이로드 정보를 가져오는 함수, 만약 유효하지 않다면 null
         try {
             val payload = Jwts.parser()
                 .verifyWith(getSecretKey())
@@ -65,10 +66,10 @@ class JwtService(
             return if (payload.expiration.after(Date())) {
                 payload
             } else {
-                null
+                throw InvalidTokenException("만료된 토큰입니다.")
             }
         } catch (e: JwtException) {
-            return null
+            throw InvalidTokenException("유효하지 않은 토큰입니다.")
         }
     }
 }
