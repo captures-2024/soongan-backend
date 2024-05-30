@@ -26,7 +26,8 @@ class CustomOAuth2MemberService(
                 birthDate = null,
                 profileImageUrl = null,
                 provider = clientRegistration.registrationId,
-                authorities = oAuth2User.authorities.joinToString(",")
+                authorities = oAuth2User.authorities.joinToString(","),
+                withdrawalAt = null
             ))
 
         return oAuth2User
