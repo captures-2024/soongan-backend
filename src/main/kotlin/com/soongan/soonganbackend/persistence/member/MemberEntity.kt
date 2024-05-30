@@ -34,6 +34,10 @@ data class MemberEntity(
 
     @Column(name = "authorities")
     val authorities: String,
+
+    @Column(name = "withdrawal_at")
+    val withdrawalAt: LocalDateTime?
+
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
