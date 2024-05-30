@@ -4,7 +4,7 @@ import com.soongan.soonganbackend.filter.JwtExceptionFilter
 import com.soongan.soonganbackend.filter.JwtFilter
 import com.soongan.soonganbackend.handler.OAuth2LoginFailureHandler
 import com.soongan.soonganbackend.handler.OAuth2LoginSuccessHandler
-import com.soongan.soonganbackend.service.CustomOAuth2MemberService
+import com.soongan.soonganbackend.persistence.member.CustomOAuth2MemberService
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity

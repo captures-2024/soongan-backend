@@ -1,7 +1,7 @@
 package com.soongan.soonganbackend.filter
 
-import com.soongan.soonganbackend.repository.MemberRepository
-import com.soongan.soonganbackend.service.JwtService
+import com.soongan.soonganbackend.persistence.member.JwtService
+import com.soongan.soonganbackend.persistence.member.MemberRepository
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
@@ -33,7 +33,7 @@ class JwtFilter(
         val email = payload["sub"] as String  // 페이로드에서 이메일 정보 가져오기
         val member = memberRepository.findByEmail(email)
             ?: throw Exception("존재하지 않는 회원입니다.")  // 회원 정보 가져오기, 만약 회원이 존재하지 않는다면 예외 발생
-        val auth = UsernamePasswordAuthenticationToken(email, null, member.authorities.map {
+        val auth = UsernamePasswordAuthenticationToken(email, null, member.authorities.split(",").map {
             SimpleGrantedAuthority(it)
         })  // Security 인증 객체 생성
         SecurityContextHolder.getContext().authentication = auth  // Security Context에 인증 객체 저장

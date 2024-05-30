@@ -1,6 +1,6 @@
 package com.soongan.soonganbackend.handler
 
-import com.soongan.soonganbackend.service.JwtService
+import com.soongan.soonganbackend.persistence.member.JwtService
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.security.core.Authentication
@@ -22,7 +22,6 @@ class OAuth2LoginSuccessHandler(
 
         // 토큰을 쿼리 파라미터로 담아 리다이렉트
         val redirectUrl = "${request.scheme}://${request.serverName}:${request.serverPort}/login?accessToken=${issuedTokens.first}&refreshToken=${issuedTokens.second}"
-        println(redirectUrl)
         response.status = HttpServletResponse.SC_OK
         response.sendRedirect(redirectUrl)
     }
