@@ -1,6 +1,5 @@
-package com.soongan.soonganbackend.repository
+package com.soongan.soonganbackend.persistence.member
 
-import com.soongan.soonganbackend.model.MemberEntity
 import org.springframework.data.jpa.repository.JpaRepository
 
 interface MemberRepository: JpaRepository<MemberEntity, Long> {

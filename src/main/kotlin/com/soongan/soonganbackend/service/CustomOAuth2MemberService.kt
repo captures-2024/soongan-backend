@@ -1,7 +1,7 @@
 package com.soongan.soonganbackend.service
 
-import com.soongan.soonganbackend.model.MemberEntity
-import com.soongan.soonganbackend.repository.MemberRepository
+import com.soongan.soonganbackend.persistence.member.MemberEntity
+import com.soongan.soonganbackend.persistence.member.MemberRepository
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService
@@ -26,7 +26,8 @@ class CustomOAuth2MemberService(
                 birthDate = null,
                 profileImageUrl = null,
                 provider = clientRegistration.registrationId,
-                authorities = oAuth2User.authorities.map { it.authority }
+                authorities = oAuth2User.authorities.joinToString(","),
+                withdrawalAt = null
             ))
 
         return oAuth2User
