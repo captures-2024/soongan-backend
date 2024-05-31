@@ -1,6 +1,7 @@
 package com.soongan.soonganbackend.persistence.member
 
 import com.soongan.soonganbackend.dto.LoginDto
+import jakarta.validation.Valid
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -13,7 +14,7 @@ class MemberController(
 ) {
 
     @PostMapping("/login")
-    fun login(@RequestBody loginDto: LoginDto): String {
+    fun login(@RequestBody @Valid loginDto: LoginDto): String {
         return memberService.login(loginDto)
     }
 }
