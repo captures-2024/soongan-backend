@@ -8,10 +8,12 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/members")
-class MemberController {
+class MemberController(
+    private val memberService: MemberService
+) {
 
     @PostMapping("/login")
     fun login(@RequestBody loginDto: LoginDto): String {
-        return "login"
+        return memberService.login(loginDto)
     }
 }
