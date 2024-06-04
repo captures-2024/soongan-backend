@@ -18,6 +18,32 @@ class MemberService(
         val provider = loginDto.provider
         val accessToken = loginDto.accessToken
 
+        val userInfo = getOAuth2UserInfo(provider, accessToken)
+        println(userInfo)
+        if (userInfo["error"] != null) {
+            throw Exception("유효하지 않은 토큰으로 인해 회원 정보를 가져올 수 없습니다.")
+        }
+
+        val userEmail = when (provider) {
+            Provider.GOOGLE -> userInfo["email"]
+            Provider.KAKAO -> {
+                val kakaoAccount = userInfo["kakao_account"] as Map<*, *>
+                kakaoAccount["email"]
+            }
+            Provider.APPLE -> userInfo["email"]
+        }
+
+        val member = memberRepository.findByEmail(userEmail as String)
+            ?: memberRepository.save(MemberEntity(email = userEmail, authorities = "Member", provider = provider))
+
+        val tokens = jwtService.issueTokens(member.email, member.authorities.split(","))
+        return LoginResultDto(
+            accessToken = tokens.first,
+            refreshToken = tokens.second
+        )
+    }
+
+    fun getOAuth2UserInfo(provider: Provider, accessToken: String): Map<*, *> {
         val url = when (provider) {
             Provider.GOOGLE -> "https://www.googleapis.com/oauth2/v2/userinfo"
             Provider.KAKAO -> "https://kapi.kakao.com/v2/user/me"
@@ -32,32 +58,9 @@ class MemberService(
         val response = client.newCall(request).execute()
 
         val gson = Gson()
-        val userInfo = gson.fromJson(
+        return gson.fromJson(
             response.body?.string(),
             Map::class.java
-        )
-        if (userInfo["error"] != null) {
-            throw Exception("유효하지 않은 토큰으로 인해 회원 정보를 가져올 수 없습니다.")
-        }
-
-        val userEmail = when (provider) {
-            Provider.GOOGLE -> userInfo["email"]
-            Provider.KAKAO -> {
-                val kakaoAccount = userInfo["kakao_account"] as Map<*, *>
-                kakaoAccount["email"]
-            }
-            Provider.APPLE -> userInfo["email"]
-        }
-
-        var member = memberRepository.findByEmail(userEmail as String)
-        if (member == null) {
-            member = memberRepository.save(MemberEntity(email = userEmail, authorities = "Member", provider = provider))
-        }
-
-        val tokens = jwtService.issueTokens(member.email, member.authorities.split(","))
-        return LoginResultDto(
-            accessToken = tokens.first,
-            refreshToken = tokens.second
         )
     }
 }
