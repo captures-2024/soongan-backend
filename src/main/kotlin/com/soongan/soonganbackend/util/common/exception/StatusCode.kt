@@ -8,7 +8,7 @@ enum class StatusCode(val code: String, val message: String) {
     UNAUTHORIZED("401", "Unauthorized"),
 
     // 1000 Api Status Code
-    NOT_FOUND_USER("1000", "Not Found User"),
+    INVALIDE_REQUEST("1000", "Not Found User"),
 
 
     // 9000 Common Status Code
