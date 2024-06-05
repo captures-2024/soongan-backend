@@ -4,6 +4,7 @@ import com.google.gson.Gson
 import com.soongan.soonganbackend.dto.LoginDto
 import com.soongan.soonganbackend.dto.LoginResultDto
 import com.soongan.soonganbackend.enums.Provider
+import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.springframework.stereotype.Service
@@ -14,14 +15,17 @@ class MemberService(
     private val jwtService: JwtService
 ) {
 
+    private val client = OkHttpClient()
+    private val gson = Gson()
+
     fun login(loginDto: LoginDto): LoginResultDto {
         val provider = loginDto.provider
         val accessToken = loginDto.accessToken
 
-        val userInfo = getOAuth2UserInfo(provider, accessToken)
-        println(userInfo)
+        var userInfo = getOAuth2UserInfo(provider, accessToken)
         if (userInfo["error"] != null) {
-            throw Exception("유효하지 않은 토큰으로 인해 회원 정보를 가져올 수 없습니다.")
+            val newAccessToken = refreshOAuth2AccessToken(provider, accessToken)
+            userInfo = getOAuth2UserInfo(provider, newAccessToken)
         }
 
         val userEmail = when (provider) {
@@ -50,17 +54,40 @@ class MemberService(
             Provider.APPLE -> "https://appleid.apple.com/auth/user"
         }
 
-        val client = OkHttpClient()
         val request = Request.Builder()
             .url(url)
             .header("Authorization", "Bearer $accessToken")
             .build()
         val response = client.newCall(request).execute()
 
-        val gson = Gson()
         return gson.fromJson(
             response.body?.string(),
             Map::class.java
         )
+    }
+
+    fun refreshOAuth2AccessToken(provider: Provider, refreshToken: String): String {
+        val url = when (provider) {
+            Provider.GOOGLE -> "https://oauth2.googleapis.com/token"
+            Provider.KAKAO -> "https://kauth.kakao.com/oauth/token"
+            Provider.APPLE -> "https://appleid.apple.com/auth/token"
+        }
+
+        val reqBody = FormBody.Builder()
+            .add("client_id", "")
+            .add("client_secret", "")
+            .add("grant_type", "refresh_token")
+            .add("refresh_token", refreshToken)
+            .build()
+        val request = Request.Builder()
+            .url(url)
+            .post(reqBody)
+            .build()
+
+        val response = client.newCall(request).execute()
+        return gson.fromJson(
+            response.body?.string(),
+            Map::class.java
+        )["access_token"] as String
     }
 }
