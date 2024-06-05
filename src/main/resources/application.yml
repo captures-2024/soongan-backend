@@ -12,6 +12,10 @@ spring:
   profiles:
     include: jasypt
 
+redis:
+  host: ENC(7JDCGfEQHCzum4KkZl2gJc5MpHtRvoCj)
+  port: ENC(yvWbrMM7Nud8Qt5S4OmQMg==)
+
 oauth2:
   google:
     client-id: ENC(ZWeHYcVoYY4PbLoeWPVIrOvsfrGjbwtqAPQsQi7Yox9LwVTjQi89IJnuqFonyGi5/y1CwrPXzC1OKnGWRSR85nPrWyaIJ/zJx8YUMb5gPNp7S7oM/3/IsA==)

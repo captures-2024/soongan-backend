@@ -46,7 +46,7 @@ class SecurityConfig(
     @Bean
     fun corsConfigurationSource(): CorsConfigurationSource {  // cors 설정
         val configuration = CorsConfiguration()
-        // 우선 모든 요청에 대해 허용
+        // TODO: CORS 설정 클라이언트에 맞게 변경 필요
         configuration.allowedOrigins = listOf("*")
         configuration.allowedMethods = listOf("*")
         configuration.allowedHeaders = listOf("*")
