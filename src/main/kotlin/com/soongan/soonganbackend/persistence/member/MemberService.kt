@@ -7,12 +7,14 @@ import com.soongan.soonganbackend.enums.Provider
 import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
 
 @Service
 class MemberService(
     private val memberRepository: MemberRepository,
-    private val jwtService: JwtService
+    private val jwtService: JwtService,
+    private val env: Environment
 ) {
 
     private val client = OkHttpClient()
@@ -74,8 +76,8 @@ class MemberService(
         }
 
         val reqBody = FormBody.Builder()
-            .add("client_id", "")
-            .add("client_secret", "")
+            .add("client_id", env.getProperty("oauth2.google.client-id")!!)
+            .add("client_secret", env.getProperty("oauth2.google.client-secret")!!)
             .add("grant_type", "refresh_token")
             .add("refresh_token", refreshToken)
             .build()

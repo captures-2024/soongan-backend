@@ -11,3 +11,8 @@ spring:
         use_sql_comments: true
   profiles:
     include: jasypt
+
+oauth2:
+  google:
+    client-id: ENC(ZWeHYcVoYY4PbLoeWPVIrOvsfrGjbwtqAPQsQi7Yox9LwVTjQi89IJnuqFonyGi5/y1CwrPXzC1OKnGWRSR85nPrWyaIJ/zJx8YUMb5gPNp7S7oM/3/IsA==)
+    client-secret: ENC(5wq5lsTE8DpJ9JdOJcQgwVndFrNoYNMWc6AQ5eKSqLKG0OJQ1Mjj1+ZeqrgxOpnF)
