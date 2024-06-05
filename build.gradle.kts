@@ -32,6 +32,7 @@ dependencies {
     implementation("io.jsonwebtoken:jjwt-api:0.12.5")
     implementation("com.squareup.okhttp3:okhttp")
     implementation("com.google.code.gson:gson")
+    implementation("com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5")
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.5")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.5")
     developmentOnly("org.springframework.boot:spring-boot-docker-compose")
