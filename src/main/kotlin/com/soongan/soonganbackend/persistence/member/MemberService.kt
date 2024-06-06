@@ -20,19 +20,27 @@ class MemberService(
         val provider = loginDto.provider
         val idToken = loginDto.idToken
 
-        val memberInfo = when (provider) {
-            Provider.GOOGLE -> getGoogleMemberInfo(idToken)
-            Provider.KAKAO -> getKakaoMemberInfo(idToken)
-            Provider.APPLE -> getAppleMemberInfo(idToken)
+        val providerEmail = when (provider) {
+            Provider.GOOGLE -> getGoogleMemberEmail(idToken)
+            Provider.KAKAO -> getKakaoMemberEmail(idToken)
+            Provider.APPLE -> getAppleMemberEmail(idToken)
         }
 
+        val member = memberRepository.findByEmail(providerEmail)
+            ?: memberRepository.save(MemberEntity(
+                email = providerEmail,
+                provider = provider,
+                authorities = "ROLE_MEMBER"
+            ))
+
+        val issuedTokens = jwtService.issueTokens(member.email, member.authorities.split(","))
         return LoginResultDto(
-            accessToken = "zz",
-            refreshToken = "zz"
+            accessToken = issuedTokens.first,
+            refreshToken = issuedTokens.second
         )
     }
 
-    fun getGoogleMemberInfo(idToken: String): String {
+    fun getGoogleMemberEmail(idToken: String): String {
         val verifier = GoogleIdTokenVerifier.Builder(GoogleNetHttpTransport.newTrustedTransport(), GsonFactory())
             .setAudience(listOf(env.getProperty("oauth2.google.client-id")))
             .build()
@@ -42,12 +50,12 @@ class MemberService(
 
     }
 
-    fun getKakaoMemberInfo(providerIdToken: String): String {
+    fun getKakaoMemberEmail(providerIdToken: String): String {
         // TODO: Implement
         return ""
     }
 
-    fun getAppleMemberInfo(providerIdToken: String): String {
+    fun getAppleMemberEmail(providerIdToken: String): String {
         // TODO: Implement
         return ""
     }
