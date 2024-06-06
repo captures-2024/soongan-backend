@@ -3,10 +3,13 @@ package com.soongan.soonganbackend.persistence.member
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport
 import com.google.api.client.json.gson.GsonFactory
+import com.google.gson.Gson
 import com.soongan.soonganbackend.dto.LoginDto
 import com.soongan.soonganbackend.dto.LoginResultDto
 import com.soongan.soonganbackend.enums.Provider
 import com.soongan.soonganbackend.exception.token.InvalidOAuth2IdTokenException
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
 
@@ -16,6 +19,10 @@ class MemberService(
     private val jwtService: JwtService,
     private val env: Environment
 ) {
+
+    private val httpClient = OkHttpClient()
+    private val gson = Gson()
+
     fun login(loginDto: LoginDto): LoginResultDto {
         val provider = loginDto.provider
         val idToken = loginDto.idToken
@@ -51,8 +58,16 @@ class MemberService(
     }
 
     fun getKakaoMemberEmail(providerIdToken: String): String {
-        // TODO: Implement
-        return ""
+        val url = "https://kapi.kakao.com/v2/user/me"
+        val request = Request.Builder()
+            .url(url)
+            .header("Authorization", "Bearer $providerIdToken")
+            .build()
+
+        val response = httpClient.newCall(request).execute()
+        val userInfo = gson.fromJson(response.body?.string(), Map::class.java)["kakao_account"] as Map<*, *>
+        val email = userInfo["email"] ?: InvalidOAuth2IdTokenException("Kakao IdToken이 유효하지 않아 회원 정보를 가져올 수 ���습니다.")
+        return email as String
     }
 
     fun getAppleMemberEmail(providerIdToken: String): String {
