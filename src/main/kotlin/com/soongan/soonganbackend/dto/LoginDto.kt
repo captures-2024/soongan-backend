@@ -8,5 +8,5 @@ data class LoginDto(
     val provider: Provider,
 
     @NotNull
-    val accessToken: String
+    val providerIdToken: String
 )
