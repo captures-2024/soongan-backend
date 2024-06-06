@@ -4,6 +4,11 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport
 import com.google.api.client.json.gson.GsonFactory
 import com.google.gson.Gson
+import com.nimbusds.jose.JWSHeader
+import com.nimbusds.jose.crypto.RSASSAVerifier
+import com.nimbusds.jose.jwk.RSAKey
+import com.nimbusds.jose.util.Base64URL
+import com.nimbusds.jwt.SignedJWT
 import com.soongan.soonganbackend.dto.LoginDto
 import com.soongan.soonganbackend.dto.LoginResultDto
 import com.soongan.soonganbackend.enums.Provider
@@ -57,11 +62,11 @@ class MemberService(
 
     }
 
-    fun getKakaoMemberEmail(providerIdToken: String): String {
+    fun getKakaoMemberEmail(idToken: String): String {
         val url = "https://kapi.kakao.com/v2/user/me"
         val request = Request.Builder()
             .url(url)
-            .header("Authorization", "Bearer $providerIdToken")
+            .header("Authorization", "Bearer $idToken")
             .build()
 
         val response = httpClient.newCall(request).execute()
@@ -70,8 +75,33 @@ class MemberService(
         return email as String
     }
 
-    fun getAppleMemberEmail(providerIdToken: String): String {
-        // TODO: Implement
-        return ""
+    fun getAppleMemberEmail(idToken: String): String {
+        val applePublicKeysUrl = "https://appleid.apple.com/auth/keys"
+        val request = Request.Builder()
+            .url(applePublicKeysUrl)
+            .build()
+
+        val response = httpClient.newCall(request).execute()
+        val applePublicKeySets = gson.fromJson(response.body?.string(), Map::class.java)["keys"] as List<Map<*, *>>
+
+        val signedJWT = SignedJWT.parse(idToken)
+        val header = signedJWT.header as JWSHeader
+        val kid = header.keyID
+
+        val applePublicKeySet = applePublicKeySets.find { it["kid"] == kid }
+            ?: throw InvalidOAuth2IdTokenException("Applie IdToken이 유효하지 않아 회원 정보를 가져올 수 없습니다.")
+
+        val rsaKey = RSAKey.Builder(
+            Base64URL(applePublicKeySet["n"] as String),
+            Base64URL(applePublicKeySet["e"] as String)
+        ).build()
+
+        val verifier = RSASSAVerifier(rsaKey)
+        if (!signedJWT.verify(verifier)) {
+            throw InvalidOAuth2IdTokenException("Applie IdToken이 유효하지 않아 회원 정보를 가져올 수 없습니다.")
+        }
+
+        val claims = signedJWT.jwtClaimsSet
+        return claims.getStringClaim("email")
     }
 }
