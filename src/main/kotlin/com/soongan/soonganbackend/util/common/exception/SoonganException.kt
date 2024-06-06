@@ -1,8 +1,8 @@
 package com.soongan.soonganbackend.util.common.exception
 
-class SoonganException(
+open class SoonganException(
     val statusCode: StatusCode,
-    val detailMessage: String = ""
+    open val detailMessage: String = ""
 ): RuntimeException(statusCode.message + detailMessage) {
 
 }

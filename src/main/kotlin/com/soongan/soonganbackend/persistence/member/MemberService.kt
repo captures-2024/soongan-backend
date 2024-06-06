@@ -6,6 +6,7 @@ import com.google.api.client.json.gson.GsonFactory
 import com.soongan.soonganbackend.dto.LoginDto
 import com.soongan.soonganbackend.dto.LoginResultDto
 import com.soongan.soonganbackend.enums.Provider
+import com.soongan.soonganbackend.exception.token.InvalidOAuth2IdTokenException
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
 
@@ -31,12 +32,14 @@ class MemberService(
         )
     }
 
-    fun getGoogleMemberInfo(idToken: String): String? {
+    fun getGoogleMemberInfo(idToken: String): String {
         val verifier = GoogleIdTokenVerifier.Builder(GoogleNetHttpTransport.newTrustedTransport(), GsonFactory())
             .setAudience(listOf(env.getProperty("oauth2.google.client-id")))
             .build()
         val verifiedIdToken = verifier.verify(idToken)
-        return verifiedIdToken?.payload?.email
+        val email = verifiedIdToken.payload.email ?: InvalidOAuth2IdTokenException("Google IdToken이 유효하지 않아 회원 정보를 가져올 수 없습니다.")
+        return email as String
+
     }
 
     fun getKakaoMemberInfo(providerIdToken: String): String {

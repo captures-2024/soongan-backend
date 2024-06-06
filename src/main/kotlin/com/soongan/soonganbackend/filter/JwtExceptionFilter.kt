@@ -1,6 +1,8 @@
 package com.soongan.soonganbackend.filter
 
-import com.soongan.soonganbackend.exception.jwt.JwtException
+import com.soongan.soonganbackend.exception.token.JwtException
+import com.soongan.soonganbackend.util.common.exception.SoonganException
+import com.soongan.soonganbackend.util.common.exception.StatusCode
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
@@ -14,9 +16,7 @@ class JwtExceptionFilter: OncePerRequestFilter() {
         try {
             filterChain.doFilter(request, response)
         } catch (exception: JwtException) {
-            response.addHeader("Content-Type", "application/json")
-            response.characterEncoding = "UTF-8"
-            response.writer.write("{\"message\": \"${exception.message}\"}")
+            throw SoonganException(StatusCode.INVALID_JWT_TOKEN, exception.message)
         }
     }
 }

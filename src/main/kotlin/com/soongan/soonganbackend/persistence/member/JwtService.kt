@@ -1,7 +1,7 @@
 package com.soongan.soonganbackend.persistence.member
 
 import com.soongan.soonganbackend.enums.TokenType
-import com.soongan.soonganbackend.exception.jwt.InvalidTokenException
+import com.soongan.soonganbackend.exception.token.InvalidTokenException
 import io.jsonwebtoken.JwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
