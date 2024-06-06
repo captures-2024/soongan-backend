@@ -34,7 +34,7 @@ dependencies {
     implementation("com.google.code.gson:gson")
     implementation("com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5")
     implementation("com.google.api-client:google-api-client:2.2.0")
-    implementation("com.google.oauth-client:google-oauth-client-jetty:1.34.1")
+    implementation("com.nimbusds:nimbus-jose-jwt:9.37.3")
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.5")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.5")
     developmentOnly("org.springframework.boot:spring-boot-docker-compose")
