@@ -56,8 +56,8 @@ class MemberService(
         val verifier = GoogleIdTokenVerifier.Builder(GoogleNetHttpTransport.newTrustedTransport(), GsonFactory())
             .setAudience(listOf(env.getProperty("oauth2.google.client-id")))
             .build()
-        val verifiedIdToken = verifier.verify(idToken)
-        val email = verifiedIdToken.payload.email ?: InvalidOAuth2IdTokenException("Google IdToken이 유효하지 않아 회원 정보를 가져올 수 없습니다.")
+        val verifiedIdToken = verifier.verify(idToken) ?: throw InvalidOAuth2IdTokenException("Google IdToken이 유효하지 않아 회원 정보를 가져올 수 없습니다.")
+        val email = verifiedIdToken.payload.email
         return email as String
 
     }
