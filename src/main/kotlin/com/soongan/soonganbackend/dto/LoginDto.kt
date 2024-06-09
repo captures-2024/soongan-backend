@@ -4,9 +4,9 @@ import com.soongan.soonganbackend.enums.Provider
 import jakarta.validation.constraints.NotNull
 
 data class LoginDto(
-    @NotNull
+    @field:NotNull(message = "provider 정보는 필수입니다.")
     val provider: Provider,
 
-    @NotNull
+    @field:NotNull(message = "iDToken 정보는 필수입니다.")
     val idToken: String
 )
