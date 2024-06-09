@@ -1,7 +1,8 @@
 package com.soongan.soonganbackend.persistence.member
 
 import com.soongan.soonganbackend.enums.TokenType
-import com.soongan.soonganbackend.exception.token.InvalidTokenException
+import com.soongan.soonganbackend.util.common.exception.SoonganException
+import com.soongan.soonganbackend.util.common.exception.StatusCode
 import io.jsonwebtoken.JwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
@@ -64,10 +65,10 @@ class JwtService(
             return if (payload.expiration.after(Date())) {
                 payload
             } else {
-                throw InvalidTokenException("만료된 토큰입니다.")
+                throw SoonganException(StatusCode.INVALID_JWT_TOKEN, "만료된 토큰입니다.")
             }
         } catch (e: JwtException) {
-            throw InvalidTokenException("유효하지 않은 토큰입니다.")
+            throw SoonganException(StatusCode.INVALID_JWT_TOKEN, "유효하지 않은 토큰입니다.")
         }
     }
 }

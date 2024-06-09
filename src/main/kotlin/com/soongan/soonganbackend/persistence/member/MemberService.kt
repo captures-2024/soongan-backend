@@ -12,7 +12,8 @@ import com.nimbusds.jwt.SignedJWT
 import com.soongan.soonganbackend.dto.LoginDto
 import com.soongan.soonganbackend.dto.LoginResultDto
 import com.soongan.soonganbackend.enums.Provider
-import com.soongan.soonganbackend.exception.token.InvalidOAuth2IdTokenException
+import com.soongan.soonganbackend.util.common.exception.SoonganException
+import com.soongan.soonganbackend.util.common.exception.StatusCode
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.springframework.core.env.Environment
@@ -56,10 +57,10 @@ class MemberService(
         val verifier = GoogleIdTokenVerifier.Builder(GoogleNetHttpTransport.newTrustedTransport(), GsonFactory())
             .setAudience(listOf(env.getProperty("oauth2.google.client-id")))
             .build()
-        val verifiedIdToken = verifier.verify(idToken) ?: throw InvalidOAuth2IdTokenException("Google IdToken이 유효하지 않아 회원 정보를 가져올 수 없습니다.")
+        val verifiedIdToken = verifier.verify(idToken)
+            ?: throw SoonganException(StatusCode.INVALID_OAUTH2_ID_TOKEN, "Google IdToken이 유효하지 않아 회원 정보를 가져올 수 없습니다.")
         val email = verifiedIdToken.payload.email
         return email as String
-
     }
 
     fun getKakaoMemberEmail(idToken: String): String {
@@ -71,7 +72,8 @@ class MemberService(
 
         val response = httpClient.newCall(request).execute()
         val userInfo = gson.fromJson(response.body?.string(), Map::class.java)["kakao_account"] as Map<*, *>
-        val email = userInfo["email"] ?: InvalidOAuth2IdTokenException("Kakao IdToken이 유효하지 않아 회원 정보를 가져올 수 ���습니다.")
+        val email = userInfo["email"]
+            ?: throw SoonganException(StatusCode.INVALID_OAUTH2_ID_TOKEN, "Kakao IdToken이 유효하지 않아 회원 정보를 가져올 수 ���습니다.")
         return email as String
     }
 
@@ -89,7 +91,7 @@ class MemberService(
         val kid = header.keyID
 
         val applePublicKeySet = applePublicKeySets.find { it["kid"] == kid }
-            ?: throw InvalidOAuth2IdTokenException("Applie IdToken이 유효하지 않아 회원 정보를 가져올 수 없습니다.")
+            ?: throw SoonganException(StatusCode.INVALID_OAUTH2_ID_TOKEN, "Applie IdToken이 유효하지 않아 회원 정보를 가져올 수 없습니다.")
 
         val rsaKey = RSAKey.Builder(
             Base64URL(applePublicKeySet["n"] as String),
@@ -98,7 +100,7 @@ class MemberService(
 
         val verifier = RSASSAVerifier(rsaKey)
         if (!signedJWT.verify(verifier)) {
-            throw InvalidOAuth2IdTokenException("Applie IdToken이 유효하지 않아 회원 정보를 가져올 수 없습니다.")
+            throw SoonganException(StatusCode.INVALID_OAUTH2_ID_TOKEN, "Applie IdToken이 유효하지 않아 회원 정보를 가져올 수 없습니다.")
         }
 
         val claims = signedJWT.jwtClaimsSet
