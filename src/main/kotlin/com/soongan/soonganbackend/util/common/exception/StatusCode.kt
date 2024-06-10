@@ -6,6 +6,12 @@ enum class StatusCode(val code: String, val message: String) {
     OK("200", "OK"),
     BAD_REQUEST("400", "Bad Request"),
     UNAUTHORIZED("401", "Unauthorized"),
+    FORBIDDEN("403", "Forbidden"),
+    NOT_FOUND("404", "Not Found"),
+
+    // Token Status Code
+    INVALID_JWT_TOKEN("498", "Invalid JWT Token"),
+    INVALID_OAUTH2_ID_TOKEN("499", "Invalid OAuth2 ID Token"),
 
     // 1000 Api Status Code
     INVALIDE_REQUEST("1000", "Not Found User"),

@@ -1,5 +1,6 @@
 package com.soongan.soonganbackend.persistence.member
 
+import com.soongan.soonganbackend.enums.Provider
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.EntityListeners
@@ -21,23 +22,22 @@ data class MemberEntity(
     val email: String,
 
     @Column(name = "nickname")
-    val nickname: String?,
+    val nickname: String? = null,
 
     @Column(name = "birthDate")
-    val birthDate: LocalDate?,
+    val birthDate: LocalDate? = null,
 
     @Column(name = "profileImageUrl")
-    val profileImageUrl: String?,
+    val profileImageUrl: String? = null,
 
-    @Column(name = "provider")
-    val provider: String,
+    @Column
+    val provider: Provider,
 
     @Column(name = "authorities")
     val authorities: String,
 
     @Column(name = "withdrawal_at")
-    val withdrawalAt: LocalDateTime?
-
+    val withdrawalAt: LocalDateTime? = null
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
