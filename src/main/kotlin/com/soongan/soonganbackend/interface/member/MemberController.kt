@@ -1,7 +1,9 @@
-package com.soongan.soonganbackend.persistence.member
+package com.soongan.soonganbackend.`interface`.member
 
-import com.soongan.soonganbackend.dto.LoginDto
-import com.soongan.soonganbackend.dto.LoginResultDto
+import com.soongan.soonganbackend.`interface`.member.dto.LoginDto
+import com.soongan.soonganbackend.`interface`.member.dto.LoginResultDto
+import com.soongan.soonganbackend.service.member.MemberService
+import com.soongan.soonganbackend.util.common.constant.Uri
 import jakarta.validation.Valid
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -9,12 +11,12 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/members")
+@RequestMapping(Uri.MEMBERS)
 class MemberController(
     private val memberService: MemberService
 ) {
 
-    @PostMapping("/login")
+    @PostMapping(Uri.LOGIN)
     fun login(@RequestBody @Valid loginDto: LoginDto): LoginResultDto {
         return memberService.login(loginDto)
     }

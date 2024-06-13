@@ -14,7 +14,7 @@ enum class StatusCode(val code: String, val message: String) {
     INVALID_OAUTH2_ID_TOKEN("499", "Invalid OAuth2 ID Token"),
 
     // 1000 Api Status Code
-    INVALIDE_REQUEST("1000", "Not Found User"),
+    INVALID_REQUEST("1000", "Not Found User"),
 
 
     // 9000 Common Status Code

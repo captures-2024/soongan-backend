@@ -1,6 +1,8 @@
-package com.soongan.soonganbackend.persistence.member
+package com.soongan.soonganbackend.service.jwt
 
 import com.soongan.soonganbackend.enums.TokenType
+import com.soongan.soonganbackend.persistence.jwt.JwtData
+import com.soongan.soonganbackend.persistence.jwt.JwtRepository
 import com.soongan.soonganbackend.util.common.exception.SoonganException
 import com.soongan.soonganbackend.util.common.exception.StatusCode
 import io.jsonwebtoken.JwtException

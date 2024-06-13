@@ -1,4 +1,4 @@
-package com.soongan.soonganbackend.persistence.member
+package com.soongan.soonganbackend.service.member
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport
@@ -9,9 +9,12 @@ import com.nimbusds.jose.crypto.RSASSAVerifier
 import com.nimbusds.jose.jwk.RSAKey
 import com.nimbusds.jose.util.Base64URL
 import com.nimbusds.jwt.SignedJWT
-import com.soongan.soonganbackend.dto.LoginDto
-import com.soongan.soonganbackend.dto.LoginResultDto
+import com.soongan.soonganbackend.`interface`.member.dto.LoginDto
+import com.soongan.soonganbackend.`interface`.member.dto.LoginResultDto
 import com.soongan.soonganbackend.enums.Provider
+import com.soongan.soonganbackend.service.jwt.JwtService
+import com.soongan.soonganbackend.persistence.member.MemberEntity
+import com.soongan.soonganbackend.persistence.member.MemberRepository
 import com.soongan.soonganbackend.util.common.exception.SoonganException
 import com.soongan.soonganbackend.util.common.exception.StatusCode
 import okhttp3.OkHttpClient
@@ -40,11 +43,13 @@ class MemberService(
         }
 
         val member = memberRepository.findByEmail(providerEmail)
-            ?: memberRepository.save(MemberEntity(
+            ?: memberRepository.save(
+                MemberEntity(
                 email = providerEmail,
                 provider = provider,
                 authorities = "ROLE_MEMBER"
-            ))
+            )
+            )
 
         val issuedTokens = jwtService.issueTokens(member.email, member.authorities.split(","))
         return LoginResultDto(
