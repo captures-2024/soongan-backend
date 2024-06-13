@@ -4,6 +4,8 @@ import com.soongan.soonganbackend.util.common.dto.MemberInfoDto
 import com.soongan.soonganbackend.util.common.dto.PageDto
 
 data class WeeklyContestPostResponseDto (
+    val round: Int,
+    val subject: String,
     val posts: List<WeeklyContestPostDto>,
     val pageInfo: PageDto
 ) {

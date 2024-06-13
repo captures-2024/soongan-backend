@@ -57,7 +57,7 @@ class GlobalExceptionHandler {
     )
     @ResponseStatus(code = HttpStatus.BAD_REQUEST)
     fun handleInvalidParameterException(exception: Exception): ErrorResponseDto<StatusCode> {
-        val statusCode: StatusCode = StatusCode.INVALID_REQUEST
+        val statusCode: StatusCode = StatusCode.SOONGAN_API_INVALID_REQUEST
 
         val errorMessage: String =
             if (exception is HttpMessageNotReadableException
