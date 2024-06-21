@@ -1,4 +1,4 @@
-package com.soongan.soonganbackend.persistence.member
+package com.soongan.soonganbackend.persistence.jwt
 
 import org.springframework.data.annotation.Id
 import org.springframework.data.redis.core.RedisHash

@@ -1,6 +1,6 @@
 package com.soongan.soonganbackend.filter
 
-import com.soongan.soonganbackend.persistence.member.JwtService
+import com.soongan.soonganbackend.service.jwt.JwtService
 import com.soongan.soonganbackend.persistence.member.MemberRepository
 import com.soongan.soonganbackend.util.common.exception.SoonganException
 import com.soongan.soonganbackend.util.common.exception.StatusCode
