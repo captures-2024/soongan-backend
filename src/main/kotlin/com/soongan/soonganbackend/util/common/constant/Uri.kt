@@ -6,4 +6,5 @@ object Uri {
     const val WEEKLY = "/weekly"
     const val CONTESTS = "/contests"
     const val POSTS = "/posts"
+    const val LIKE = "/like"
 }

@@ -1,0 +1,57 @@
+package com.soongan.soonganbackend.service.postLike
+
+import com.soongan.soonganbackend.interfaces.postLike.dto.PostLikeRequestDto
+import com.soongan.soonganbackend.interfaces.postLike.dto.PostLikeResponseDto
+import com.soongan.soonganbackend.persistence.member.MemberAdapter
+import com.soongan.soonganbackend.persistence.member.MemberEntity
+import com.soongan.soonganbackend.persistence.postLike.PostLikeAdapter
+import com.soongan.soonganbackend.persistence.weeklyContestPost.WeeklyContestPostAdapter
+import com.soongan.soonganbackend.persistence.weeklyContestPost.WeeklyContestPostEntity
+import com.soongan.soonganbackend.util.common.dto.MemberDetail
+import com.soongan.soonganbackend.util.common.exception.SoonganException
+import com.soongan.soonganbackend.util.common.exception.StatusCode
+import com.soongan.soonganbackend.util.domain.ContestTypeEnum
+import org.springframework.stereotype.Service
+
+@Service
+class PostLikeService(
+    private val weeklyContestPostAdapter: WeeklyContestPostAdapter,
+    private val postLikeAdapter: PostLikeAdapter,
+    private val memberAdapter: MemberAdapter
+) {
+
+    fun addLikePost(postLikeRequest: PostLikeRequestDto, loginMember: MemberDetail): PostLikeResponseDto {
+        val member = memberAdapter.getByEmail(loginMember.email)
+            ?: throw SoonganException(StatusCode.SOONGAN_API_NOT_FOUND_MEMBER)
+
+        // todo: DAILY Contest 추가되면 구조 리팩토링 필요할 듯 (중복 발생할 듯)
+        if (postLikeRequest.contestType == ContestTypeEnum.WEEKLY) {
+            val weeklyContestPost: WeeklyContestPostEntity = weeklyContestPostAdapter.getByIdOrNull(postLikeRequest.postId)?.let { post ->
+
+                // 중복 좋아요 방지
+                if (isDuplicatedLike(post.id!!, postLikeRequest.contestType, member)) {
+                    throw SoonganException(StatusCode.SOONGAN_API_DUPLICATED_LIKE)
+                }
+
+                // 좋아요 추가
+                postLikeAdapter.addLike(
+                    postLikeRequest.postId,
+                    postLikeRequest.contestType,
+                    member = member
+                )
+                post
+            } ?: throw SoonganException(StatusCode.SOONGAN_API_NOT_FOUND_WEEKLY_CONTEST_POST)
+
+            return PostLikeResponseDto(
+                postId = weeklyContestPost.id!!,
+                likeCount = weeklyContestPost.likeCount
+            )
+        } else {
+            throw SoonganException(StatusCode.SOONGAN_API_INVALID_CONTEST_TYPE)
+        }
+    }
+
+    private fun isDuplicatedLike(postId: Long, contestType: ContestTypeEnum, member: MemberEntity): Boolean {
+        return postLikeAdapter.getByPostIdAndContestTypeAndMember(postId, contestType, member)?.let { true } ?: false
+    }
+}
