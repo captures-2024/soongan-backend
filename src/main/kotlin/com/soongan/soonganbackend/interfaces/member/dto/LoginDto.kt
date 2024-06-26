@@ -1,4 +1,4 @@
-package com.soongan.soonganbackend.`interface`.member.dto
+package com.soongan.soonganbackend.interfaces.member.dto
 
 import com.soongan.soonganbackend.enums.Provider
 import jakarta.validation.constraints.NotNull
