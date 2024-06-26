@@ -6,6 +6,7 @@ build/
 !**/src/test/**/build/
 
 application-*.yml
+*.p12
 
 ### macOS ###
 .DS_Store

@@ -12,6 +12,14 @@ spring:
   profiles:
     include: jasypt
 
+server:
+  port: 443
+  ssl:
+    key-store: ENC(CceBs5V+bc8OAFUqT941Rpl1zIKGGnQS)
+    key-store-password: ENC(7jjoVfr17tjpK2sFkSoE5DJL2bst58+A)
+    key-store-type: ENC(/a8N3/iKX6zawiBT/n1AjQ==)
+    key-alias: ENC(BPQBUsjoKG1RMNDe17HgxQ==)
+
 redis:
   host: ENC(7JDCGfEQHCzum4KkZl2gJc5MpHtRvoCj)
   port: ENC(yvWbrMM7Nud8Qt5S4OmQMg==)
