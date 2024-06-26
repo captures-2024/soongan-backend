@@ -34,10 +34,10 @@ data class WeeklyContestPostEntity(
     val imageUrl: String,
 
     @Column(name = "content")
-    val content: String?,   // 사진에 대한 설명?
+    val content: String,
 
     @Column(name = "ranking", nullable = false)
-    val ranking: Int,
+    val ranking: Int = 0,
 
     @Column(name = "like_count")
     val likeCount: Int = 0,
