@@ -8,13 +8,15 @@ import com.soongan.soonganbackend.util.common.exception.StatusCode
 import io.jsonwebtoken.JwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
+import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
 import java.util.*
 import javax.crypto.SecretKey
 
 @Service
 class JwtService(
-    private val jwtRepository: JwtRepository
+    private val jwtRepository: JwtRepository,
+    private val env: Environment
 ) {
 
     fun issueTokens(userEmail: String, authorities: List<String>): Pair<String, String> {
@@ -52,7 +54,9 @@ class JwtService(
     }
 
     fun getSecretKey(): SecretKey {  // Jwt 암호화 키를 가져오는 메서드, 현재는 임시 키 사용
-        val secret = Base64.getEncoder().encodeToString("secret123456789123456789".toByteArray())
+        val secret = Base64.getEncoder().encodeToString(
+            env.getProperty("jwt.secret").toString().toByteArray()
+        )
         return Keys.hmacShaKeyFor(secret.toByteArray())
     }
 
