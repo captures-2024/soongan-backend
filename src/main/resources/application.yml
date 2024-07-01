@@ -10,7 +10,7 @@ spring:
         format_sql: true
         use_sql_comments: true
   profiles:
-    include: jasypt
+    include: jasypt, db
 
 server:
   port: 443
