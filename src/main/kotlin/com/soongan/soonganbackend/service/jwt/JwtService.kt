@@ -53,11 +53,9 @@ class JwtService(
             .compact()
     }
 
-    fun getSecretKey(): SecretKey {  // Jwt 암호화 키를 가져오는 메서드, 현재는 임시 키 사용
-        val secret = Base64.getEncoder().encodeToString(
-            env.getProperty("jwt.secret").toString().toByteArray()
-        )
-        return Keys.hmacShaKeyFor(secret.toByteArray())
+    fun getSecretKey(): SecretKey {
+        val secretKey = env.getProperty("jwt.secret")!!
+        return Keys.hmacShaKeyFor(secretKey.toByteArray())
     }
 
     fun getPayload(token: String): Map<String, Any> {  // 토큰을 읽어 페이로드 정보를 가져오는 함수, 만약 유효하지 않다면 null

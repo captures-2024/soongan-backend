@@ -26,4 +26,4 @@ oauth2:
     client-secret: ENC(5wq5lsTE8DpJ9JdOJcQgwVndFrNoYNMWc6AQ5eKSqLKG0OJQ1Mjj1+ZeqrgxOpnF)
 
 jwt:
-  secret: ENC(1cKo/OXX1EhuGApbUz9sTHe0UZUIcYkn)
+  secret: ENC(Uet8sXoFY7S7ZDmqS2RuCOhRbluWH1jyGlNbOo3G3kPlxipkxqmvo2IKeaU2Hv+X)
