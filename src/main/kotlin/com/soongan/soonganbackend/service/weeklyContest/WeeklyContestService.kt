@@ -1,24 +1,32 @@
 package com.soongan.soonganbackend.service.weeklyContest
 
-import com.soongan.soonganbackend.`interface`.weeklyContest.dto.WeeklyContestPostResponseDto
+import com.soongan.soonganbackend.interfaces.weeklyContest.dto.WeeklyContestPostRegisterRequestDto
+import com.soongan.soonganbackend.interfaces.weeklyContest.dto.WeeklyContestPostRegisterResponseDto
+import com.soongan.soonganbackend.interfaces.weeklyContest.dto.WeeklyContestPostResponseDto
+import com.soongan.soonganbackend.persistence.member.MemberAdapter
+import com.soongan.soonganbackend.persistence.member.MemberEntity
 import com.soongan.soonganbackend.persistence.weeklyContest.WeeklyContestAdapter
 import com.soongan.soonganbackend.persistence.weeklyContest.WeeklyContestEntity
 import com.soongan.soonganbackend.persistence.weeklyContestPost.WeeklyContestPostAdapter
 import com.soongan.soonganbackend.persistence.weeklyContestPost.WeeklyContestPostEntity
 import com.soongan.soonganbackend.service.weeklyContest.WeeklyContestPostOrderCriteriaEnum.*
+import com.soongan.soonganbackend.util.common.dto.MemberDetail
 import com.soongan.soonganbackend.util.common.dto.MemberInfoDto
 import com.soongan.soonganbackend.util.common.dto.PageDto
 import com.soongan.soonganbackend.util.common.exception.SoonganException
 import com.soongan.soonganbackend.util.common.exception.StatusCode
 import org.springframework.data.domain.Slice
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class WeeklyContestService (
     private val weeklyContestPostAdapter: WeeklyContestPostAdapter,
-    private val weeklyContestAdapter: WeeklyContestAdapter
+    private val weeklyContestAdapter: WeeklyContestAdapter,
+    private val memberAdapter: MemberAdapter
 ){
 
+    @Transactional(readOnly = true)
     fun getWeeklyContestPost(
         round: Int,
         orderCriteria: WeeklyContestPostOrderCriteriaEnum,
@@ -55,6 +63,34 @@ class WeeklyContestService (
                 size = weeklyContestPostSlice.size,
                 hasNext = weeklyContestPostSlice.hasNext()
             )
+        )
+    }
+
+    fun registerWeeklyContestPost(
+        loginMember: MemberDetail,
+        weeklyContestPostRegisterRequest: WeeklyContestPostRegisterRequestDto
+    ): WeeklyContestPostRegisterResponseDto {
+        val weeklyContest: WeeklyContestEntity = weeklyContestAdapter.getWeeklyContest(weeklyContestPostRegisterRequest.weeklyContestRound) ?:
+            throw SoonganException(StatusCode.SOONGAN_API_NOT_FOUND_WEEKLY_CONTEST)
+
+        val member: MemberEntity = memberAdapter.getByEmail(loginMember.email)
+            ?: throw SoonganException(StatusCode.SOONGAN_API_NOT_FOUND_MEMBER)
+
+        val savedPost = weeklyContestPostAdapter.save(
+            WeeklyContestPostEntity(
+                member = member,
+                weeklyContest = weeklyContest,
+                imageUrl = weeklyContestPostRegisterRequest.imageUrl,
+                content = weeklyContestPostRegisterRequest.content
+            )
+        )
+
+        return WeeklyContestPostRegisterResponseDto(
+            postId = savedPost.id!!,
+            subject = weeklyContest.subject,
+            content = savedPost.content,
+            imageUrl = savedPost.imageUrl,
+            registerNickname = member.nickname!!
         )
     }
 }

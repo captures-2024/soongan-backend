@@ -2,6 +2,7 @@ package com.soongan.soonganbackend.filter
 
 import com.soongan.soonganbackend.service.jwt.JwtService
 import com.soongan.soonganbackend.persistence.member.MemberRepository
+import com.soongan.soonganbackend.util.common.dto.MemberDetail
 import com.soongan.soonganbackend.util.common.exception.SoonganException
 import com.soongan.soonganbackend.util.common.exception.StatusCode
 import jakarta.servlet.FilterChain
@@ -35,9 +36,13 @@ class JwtFilter(
         val email = payload["sub"] as String  // 페이로드에서 이메일 정보 가져오기
         val member = memberRepository.findByEmail(email)  // 이메일에 해당하는 회원 정보 가져오기
             ?: throw SoonganException(StatusCode.FORBIDDEN, "유효하지 않은 토큰입니다.")  // 만약 회원 정보가 없다면 잘못된 토큰이라고 판단
-        val auth = UsernamePasswordAuthenticationToken(email, null, member.authorities.split(",").map {
+
+        // UserDetails 구현한 커스텀 UserDetails 객체 생성
+        val memberDetail = MemberDetail(email, member.authorities.split(",").map {
             SimpleGrantedAuthority(it)
-        })  // Security 인증 객체 생성
+        })
+
+        val auth = UsernamePasswordAuthenticationToken(memberDetail, null, memberDetail.authorities)   // Security 인증 객체 생성
         SecurityContextHolder.getContext().authentication = auth  // Security Context에 인증 객체 저장
         filterChain.doFilter(request, response)  // 다음 필터로 이동
     }

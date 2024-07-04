@@ -9,12 +9,12 @@ import com.nimbusds.jose.crypto.RSASSAVerifier
 import com.nimbusds.jose.jwk.RSAKey
 import com.nimbusds.jose.util.Base64URL
 import com.nimbusds.jwt.SignedJWT
-import com.soongan.soonganbackend.`interface`.member.dto.LoginDto
-import com.soongan.soonganbackend.`interface`.member.dto.LoginResultDto
+import com.soongan.soonganbackend.interfaces.member.dto.LoginDto
+import com.soongan.soonganbackend.interfaces.member.dto.LoginResultDto
 import com.soongan.soonganbackend.enums.Provider
+import com.soongan.soonganbackend.persistence.member.MemberAdapter
 import com.soongan.soonganbackend.service.jwt.JwtService
 import com.soongan.soonganbackend.persistence.member.MemberEntity
-import com.soongan.soonganbackend.persistence.member.MemberRepository
 import com.soongan.soonganbackend.util.common.exception.SoonganException
 import com.soongan.soonganbackend.util.common.exception.StatusCode
 import okhttp3.OkHttpClient
@@ -24,7 +24,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class MemberService(
-    private val memberRepository: MemberRepository,
+    private val memberAdapter: MemberAdapter,
     private val jwtService: JwtService,
     private val env: Environment
 ) {
@@ -42,13 +42,13 @@ class MemberService(
             Provider.APPLE -> getAppleMemberEmail(idToken)
         }
 
-        val member = memberRepository.findByEmail(providerEmail)
-            ?: memberRepository.save(
+        val member = memberAdapter.getByEmail(providerEmail)
+            ?: memberAdapter.save(
                 MemberEntity(
-                email = providerEmail,
-                provider = provider,
-                authorities = "ROLE_MEMBER"
-            )
+                    email = providerEmail,
+                    provider = provider,
+                    authorities = "ROLE_MEMBER"
+                )
             )
 
         val issuedTokens = jwtService.issueTokens(member.email, member.authorities.split(","))
