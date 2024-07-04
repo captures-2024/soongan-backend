@@ -7,7 +7,6 @@ import com.soongan.soonganbackend.service.weeklyContest.WeeklyContestPostOrderCr
 import com.soongan.soonganbackend.service.weeklyContest.WeeklyContestService
 import com.soongan.soonganbackend.util.common.constant.Uri
 import com.soongan.soonganbackend.util.common.dto.MemberDetail
-import io.swagger.annotations.ApiOperation
 import jakarta.validation.Valid
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.GetMapping
@@ -24,7 +23,6 @@ class WeeklyContestController (
 ){
 
 
-    @ApiOperation("주간 콘테스트 사진 조회")
     @GetMapping(Uri.POSTS)
     fun getWeeklyContestPost(
         @RequestParam round: Int,
@@ -35,7 +33,6 @@ class WeeklyContestController (
         return weeklyContestService.getWeeklyContestPost(round, orderCriteria, page, pageSize)
     }
 
-    @ApiOperation("주간 콘테스트 사진 등록")
     @PostMapping(Uri.POSTS)
     fun registerWeeklyContestPost(
         @AuthenticationPrincipal loginMember: MemberDetail,
