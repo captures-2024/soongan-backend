@@ -42,7 +42,7 @@ class JwtFilter(
             SimpleGrantedAuthority(it)
         })
 
-        val auth = UsernamePasswordAuthenticationToken(memberDetail, null, memberDetail.authorities)   // Security 인증 객체 생성
+        val auth = UsernamePasswordAuthenticationToken(memberDetail, null, memberDetail.memberAuthorities)   // Security 인증 객체 생성
         SecurityContextHolder.getContext().authentication = auth  // Security Context에 인증 객체 저장
         filterChain.doFilter(request, response)  // 다음 필터로 이동
     }
