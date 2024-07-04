@@ -39,7 +39,13 @@ class PostLikeService(
                     postLikeRequest.contestType,
                     member = member
                 )
-                post
+
+                // 좋아요 개수 증가
+                val updatedPost = weeklyContestPostAdapter.save(
+                    post.copy(likeCount = post.likeCount + 1)
+                )
+
+                updatedPost
             } ?: throw SoonganException(StatusCode.SOONGAN_API_NOT_FOUND_WEEKLY_CONTEST_POST)
 
             return PostLikeResponseDto(
