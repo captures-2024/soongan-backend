@@ -1,11 +1,10 @@
 package com.soongan.soonganbackend.util.common.handler
 
 import com.fasterxml.jackson.databind.exc.InvalidFormatException
-import com.soongan.soonganbackend.util.common.constant.MdcConstant
 import com.soongan.soonganbackend.util.common.exception.SoonganException
 import com.soongan.soonganbackend.util.common.exception.StatusCode
+import io.github.oshai.kotlinlogging.KotlinLogging
 import jakarta.validation.ValidationException
-import org.slf4j.MDC
 import org.springframework.beans.TypeMismatchException
 import org.springframework.http.HttpStatus
 import org.springframework.http.converter.HttpMessageNotReadableException
@@ -27,17 +26,19 @@ import java.security.InvalidParameterException
 @ResponseBody
 class GlobalExceptionHandler {
 
+    private val logger = KotlinLogging.logger { }
+
     @ExceptionHandler(Exception::class)
     @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
     fun handleCommonException(ex: Exception): ErrorResponseDto<StatusCode> {
-        MDC.put(MdcConstant.ERROR_STATUS_CODE, ex.message)
+        logger.error { ex.stackTrace }
         return ErrorResponseDto(StatusCode.SERVICE_NOT_AVAILABLE)
     }
 
     @ExceptionHandler(SoonganException::class)
     @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
     fun handleSoonganException(ex: SoonganException): ErrorResponseDto<StatusCode> {
-        MDC.put(MdcConstant.ERROR_STATUS_CODE, ex.statusCode.code)
+        logger.error { ex.stackTrace }
         return ErrorResponseDto(ex.statusCode, ex.message ?: "")
     }
 
@@ -74,6 +75,7 @@ class GlobalExceptionHandler {
                 exception.message.toString()
             }
 
+        logger.error { exception.stackTrace }
         return ErrorResponseDto(statusCode, errorMessage)
     }
 }
