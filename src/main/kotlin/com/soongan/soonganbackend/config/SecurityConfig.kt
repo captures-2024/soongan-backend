@@ -60,6 +60,7 @@ class SecurityConfig(
         return listOf(
             "/members/login",
             "/members/refresh",
+            "/api-docs",
             "/swagger-ui/**",
             "/swagger-resources/**",
             "/v3/api-docs/**"
