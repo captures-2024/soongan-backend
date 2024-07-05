@@ -1,6 +1,7 @@
 package com.soongan.soonganbackend.config
 
 import com.soongan.soonganbackend.filter.JwtFilter
+import com.soongan.soonganbackend.util.common.constant.Uri
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -31,7 +32,7 @@ class SecurityConfig(
                 it.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             }
             .authorizeHttpRequests {  // 요청에 대한 인증 요구 여부 설정
-                it.requestMatchers("/members/login", "/members/refresh").permitAll()  // /members/login 요청은 인증 없이 허용
+                it.requestMatchers(*passUrls().toTypedArray()).permitAll()  // passUrls에 있는 url은 인증 요구하지 않음
                     .anyRequest().authenticated()  // 일단 모든 요청에 대해 인증 요구
             }
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter::class.java) // JwtFilter를 UsernamePasswordAuthenticationFilter 앞에 추가
@@ -54,5 +55,16 @@ class SecurityConfig(
         source.registerCorsConfiguration("/**", configuration)
 
         return source
+    }
+
+    fun passUrls(): List<String> {
+        return listOf(
+            Uri.MEMBERS + Uri.LOGIN,
+            Uri.MEMBERS + Uri.REFRESH,
+            Uri.API_DOCS,
+            Uri.SWAGGER_UI + "/**",
+            Uri.SWAGGER_RESOURCES + "/**",
+            Uri.V3 + Uri.API_DOCS + "/**"
+        )
     }
 }

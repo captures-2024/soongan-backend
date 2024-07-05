@@ -9,8 +9,8 @@ import com.nimbusds.jose.crypto.RSASSAVerifier
 import com.nimbusds.jose.jwk.RSAKey
 import com.nimbusds.jose.util.Base64URL
 import com.nimbusds.jwt.SignedJWT
-import com.soongan.soonganbackend.interfaces.member.dto.LoginDto
-import com.soongan.soonganbackend.interfaces.member.dto.LoginResultDto
+import com.soongan.soonganbackend.interfaces.member.dto.LoginRequestDto
+import com.soongan.soonganbackend.interfaces.member.dto.LoginResponseDto
 import com.soongan.soonganbackend.enums.Provider
 import com.soongan.soonganbackend.persistence.member.MemberAdapter
 import com.soongan.soonganbackend.service.jwt.JwtService
@@ -32,7 +32,7 @@ class MemberService(
     private val httpClient = OkHttpClient()
     private val gson = Gson()
 
-    fun login(loginDto: LoginDto): LoginResultDto {
+    fun login(loginDto: LoginRequestDto): LoginResponseDto {
         val provider = loginDto.provider
         val idToken = loginDto.idToken
 
@@ -52,7 +52,7 @@ class MemberService(
             )
 
         val issuedTokens = jwtService.issueTokens(member.email, member.authorities.split(","))
-        return LoginResultDto(
+        return LoginResponseDto(
             accessToken = issuedTokens.first,
             refreshToken = issuedTokens.second
         )

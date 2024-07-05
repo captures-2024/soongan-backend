@@ -12,6 +12,10 @@ spring:
   profiles:
     include: jasypt, db
 
+springdoc:
+  swagger-ui:
+    path: /api-docs
+
 server:
   port: 443
   ssl:

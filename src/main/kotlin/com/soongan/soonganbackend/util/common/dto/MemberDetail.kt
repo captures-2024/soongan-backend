@@ -5,9 +5,9 @@ import org.springframework.security.core.userdetails.UserDetails
 
 data class MemberDetail(
     val email: String,
-    val authorities: Collection<GrantedAuthority>
+    val memberAuthorities: Collection<GrantedAuthority>
 ): UserDetails {
-    override fun getAuthorities(): MutableCollection<out GrantedAuthority>  = authorities.toMutableList()
+    override fun getAuthorities(): MutableCollection<out GrantedAuthority>  = memberAuthorities.toMutableList()
 
     override fun getPassword(): String = ""
 
