@@ -31,7 +31,7 @@ class SecurityConfig(
                 it.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             }
             .authorizeHttpRequests {  // 요청에 대한 인증 요구 여부 설정
-                it.requestMatchers("/members/login", "/members/refresh").permitAll()  // /members/login 요청은 인증 없이 허용
+                it.requestMatchers("/members/login", "/members/refresh", "/swagger-ui/*").permitAll()  // /members/login 요청은 인증 없이 허용
                     .anyRequest().authenticated()  // 일단 모든 요청에 대해 인증 요구
             }
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter::class.java) // JwtFilter를 UsernamePasswordAuthenticationFilter 앞에 추가
