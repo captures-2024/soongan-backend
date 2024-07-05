@@ -7,6 +7,8 @@ import com.soongan.soonganbackend.service.weeklyContest.WeeklyContestPostOrderCr
 import com.soongan.soonganbackend.service.weeklyContest.WeeklyContestService
 import com.soongan.soonganbackend.util.common.constant.Uri
 import com.soongan.soonganbackend.util.common.dto.MemberDetail
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.GetMapping
@@ -18,12 +20,14 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping(Uri.WEEKLY + Uri.CONTESTS)
+@Tag(name = "Weekly Contest Apis", description = "주간 콘테스트 관련 API")
 class WeeklyContestController (
     private val weeklyContestService: WeeklyContestService
 ){
 
 
     @GetMapping(Uri.POSTS)
+    @Operation(summary = "주간 콘테스트 게시글 조회 Api", description = "주간 콘테스트 게시글을 조회합니다. 라운드와 정렬 기준을 이용하여 조회할 수 있습니다.")
     fun getWeeklyContestPost(
         @RequestParam round: Int,
         @RequestParam orderCriteria: WeeklyContestPostOrderCriteriaEnum,
@@ -34,6 +38,7 @@ class WeeklyContestController (
     }
 
     @PostMapping(Uri.POSTS)
+    @Operation(summary = "주간 콘테스트 게시글 등록 Api", description = "주간 콘테스트 게시글을 등록합니다.")
     fun registerWeeklyContestPost(
         @AuthenticationPrincipal loginMember: MemberDetail,
         @RequestBody @Valid weeklyContestPostRegisterRequest: WeeklyContestPostRegisterRequestDto
