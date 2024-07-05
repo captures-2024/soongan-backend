@@ -1,7 +1,7 @@
 package com.soongan.soonganbackend.interfaces.member
 
-import com.soongan.soonganbackend.interfaces.member.dto.LoginDto
-import com.soongan.soonganbackend.interfaces.member.dto.LoginResultDto
+import com.soongan.soonganbackend.interfaces.member.dto.LoginRequestDto
+import com.soongan.soonganbackend.interfaces.member.dto.LoginResponseDto
 import com.soongan.soonganbackend.service.member.MemberService
 import com.soongan.soonganbackend.util.common.constant.Uri
 import jakarta.validation.Valid
@@ -17,7 +17,7 @@ class MemberController(
 ) {
 
     @PostMapping(Uri.LOGIN)
-    fun login(@RequestBody @Valid loginDto: LoginDto): LoginResultDto {
+    fun login(@RequestBody @Valid loginDto: LoginRequestDto): LoginResponseDto {
         return memberService.login(loginDto)
     }
 }
