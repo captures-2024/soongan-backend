@@ -1,6 +1,7 @@
 package com.soongan.soonganbackend.config
 
 import com.soongan.soonganbackend.filter.JwtFilter
+import com.soongan.soonganbackend.util.common.constant.Uri
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -58,12 +59,12 @@ class SecurityConfig(
 
     fun passUrls(): List<String> {
         return listOf(
-            "/members/login",
-            "/members/refresh",
-            "/api-docs",
-            "/swagger-ui/**",
-            "/swagger-resources/**",
-            "/v3/api-docs/**"
+            Uri.MEMBERS + Uri.LOGIN,
+            Uri.MEMBERS + Uri.REFRESH,
+            Uri.API_DOCS,
+            Uri.SWAGGER_UI + "/**",
+            Uri.SWAGGER_RESOURCES + "/**",
+            Uri.V3 + Uri.API_DOCS + "/**"
         )
     }
 }
