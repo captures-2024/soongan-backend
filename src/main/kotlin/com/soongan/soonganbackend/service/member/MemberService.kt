@@ -37,16 +37,16 @@ class MemberService(
         val provider = loginDto.provider
         val idToken = loginDto.idToken
 
-        val providerEmail = when (provider) {
+        val memberEmail = when (provider) {
             Provider.GOOGLE -> getGoogleMemberEmail(userAgent, idToken)
             Provider.KAKAO -> getKakaoMemberEmail(idToken)
             Provider.APPLE -> getAppleMemberEmail(idToken)
         }
 
-        val member = memberAdapter.getByEmail(providerEmail)
+        val member = memberAdapter.getByEmail(memberEmail)
             ?: memberAdapter.save(
                 MemberEntity(
-                    email = providerEmail,
+                    email = memberEmail,
                     provider = provider,
                     authorities = "ROLE_MEMBER"
                 )
