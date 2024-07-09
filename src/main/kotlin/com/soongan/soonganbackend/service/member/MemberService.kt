@@ -60,7 +60,7 @@ class MemberService(
 
     fun getGoogleMemberEmail(idToken: String): String {
         val verifier = GoogleIdTokenVerifier.Builder(GoogleNetHttpTransport.newTrustedTransport(), GsonFactory())
-            .setAudience(listOf(env.getProperty("oauth2.google.client-id")))
+            .setAudience(listOf(env.getProperty("oauth2.android.google.client-id")))
             .build()
         val verifiedIdToken = verifier.verify(idToken)
             ?: throw SoonganException(StatusCode.INVALID_OAUTH2_ID_TOKEN, "Google IdToken이 유효하지 않아 회원 정보를 가져올 수 없습니다.")
