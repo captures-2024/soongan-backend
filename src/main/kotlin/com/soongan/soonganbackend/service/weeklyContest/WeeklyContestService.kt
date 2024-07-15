@@ -9,6 +9,7 @@ import com.soongan.soonganbackend.persistence.weeklyContest.WeeklyContestAdapter
 import com.soongan.soonganbackend.persistence.weeklyContest.WeeklyContestEntity
 import com.soongan.soonganbackend.persistence.weeklyContestPost.WeeklyContestPostAdapter
 import com.soongan.soonganbackend.persistence.weeklyContestPost.WeeklyContestPostEntity
+import com.soongan.soonganbackend.service.gcp.GcpStorageService
 import com.soongan.soonganbackend.service.weeklyContest.WeeklyContestPostOrderCriteriaEnum.*
 import com.soongan.soonganbackend.util.common.dto.MemberDetail
 import com.soongan.soonganbackend.util.common.dto.MemberInfoDto
@@ -23,7 +24,8 @@ import org.springframework.transaction.annotation.Transactional
 class WeeklyContestService (
     private val weeklyContestPostAdapter: WeeklyContestPostAdapter,
     private val weeklyContestAdapter: WeeklyContestAdapter,
-    private val memberAdapter: MemberAdapter
+    private val memberAdapter: MemberAdapter,
+    private val gcpStorageService: GcpStorageService
 ){
 
     @Transactional(readOnly = true)
@@ -76,11 +78,16 @@ class WeeklyContestService (
         val member: MemberEntity = memberAdapter.getByEmail(loginMember.email)
             ?: throw SoonganException(StatusCode.SOONGAN_API_NOT_FOUND_MEMBER)
 
+        val imageUrl = gcpStorageService.uploadFile(
+            weeklyContestPostRegisterRequest.imageFile,
+            member.id!!
+        )
+
         val savedPost = weeklyContestPostAdapter.save(
             WeeklyContestPostEntity(
                 member = member,
                 weeklyContest = weeklyContest,
-                imageUrl = weeklyContestPostRegisterRequest.imageUrl,
+                imageUrl = imageUrl,
                 content = weeklyContestPostRegisterRequest.content
             )
         )
