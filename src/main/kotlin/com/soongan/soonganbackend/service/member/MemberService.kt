@@ -12,6 +12,7 @@ import com.nimbusds.jwt.SignedJWT
 import com.soongan.soonganbackend.interfaces.member.dto.LoginRequestDto
 import com.soongan.soonganbackend.interfaces.member.dto.LoginResponseDto
 import com.soongan.soonganbackend.enums.Provider
+import com.soongan.soonganbackend.enums.UserAgent
 import com.soongan.soonganbackend.persistence.member.MemberAdapter
 import com.soongan.soonganbackend.service.jwt.JwtService
 import com.soongan.soonganbackend.persistence.member.MemberEntity
@@ -32,20 +33,20 @@ class MemberService(
     private val httpClient = OkHttpClient()
     private val gson = Gson()
 
-    fun login(loginDto: LoginRequestDto): LoginResponseDto {
+    fun login(userAgent: UserAgent, loginDto: LoginRequestDto): LoginResponseDto {
         val provider = loginDto.provider
         val idToken = loginDto.idToken
 
-        val providerEmail = when (provider) {
-            Provider.GOOGLE -> getGoogleMemberEmail(idToken)
+        val memberEmail = when (provider) {
+            Provider.GOOGLE -> getGoogleMemberEmail(userAgent, idToken)
             Provider.KAKAO -> getKakaoMemberEmail(idToken)
             Provider.APPLE -> getAppleMemberEmail(idToken)
         }
 
-        val member = memberAdapter.getByEmail(providerEmail)
+        val member = memberAdapter.getByEmail(memberEmail)
             ?: memberAdapter.save(
                 MemberEntity(
-                    email = providerEmail,
+                    email = memberEmail,
                     provider = provider,
                     authorities = "ROLE_MEMBER"
                 )
@@ -58,9 +59,13 @@ class MemberService(
         )
     }
 
-    fun getGoogleMemberEmail(idToken: String): String {
+    fun getGoogleMemberEmail(userAgent: UserAgent, idToken: String): String {
+        val clientId = when (userAgent) {
+            UserAgent.ANDROID -> env.getProperty("oauth2.android.google.client-id")
+            UserAgent.IOS -> env.getProperty("oauth2.ios.google.client-id")
+        }
         val verifier = GoogleIdTokenVerifier.Builder(GoogleNetHttpTransport.newTrustedTransport(), GsonFactory())
-            .setAudience(listOf(env.getProperty("oauth2.google.client-id")))
+            .setAudience(listOf(clientId))
             .build()
         val verifiedIdToken = verifier.verify(idToken)
             ?: throw SoonganException(StatusCode.INVALID_OAUTH2_ID_TOKEN, "Google IdToken이 유효하지 않아 회원 정보를 가져올 수 없습니다.")
