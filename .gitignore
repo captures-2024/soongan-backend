@@ -7,7 +7,7 @@ build/
 
 application-*.yml
 *.p12
-soongan-dev-bb7f419cf9a0.json
+soongan-dev-*.json
 
 ### macOS ###
 .DS_Store

@@ -19,6 +19,9 @@ repositories {
     mavenCentral()
 }
 
+extra["springCloudGcpVersion"] = "5.4.3"
+extra["springCloudVersion"] = "2023.0.2"
+
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-batch")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
@@ -34,6 +37,7 @@ dependencies {
     implementation("com.google.code.gson:gson")
     implementation("com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5")
     implementation("com.google.api-client:google-api-client:2.2.0")
+    implementation("com.google.cloud:spring-cloud-gcp-starter-storage")
     implementation("com.nimbusds:nimbus-jose-jwt:9.37.3")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0")
     implementation("io.github.oshai:kotlin-logging-jvm:5.1.0")
@@ -44,6 +48,13 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.batch:spring-batch-test")
     testImplementation("org.springframework.security:spring-security-test")
+}
+
+dependencyManagement {
+    imports {
+        mavenBom("com.google.cloud:spring-cloud-gcp-dependencies:${property("springCloudGcpVersion")}")
+        mavenBom("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudVersion")}")
+    }
 }
 
 tasks.withType<KotlinCompile> {

@@ -11,6 +11,13 @@ spring:
         use_sql_comments: true
   profiles:
     include: jasypt, db
+  cloud:
+    gcp:
+      project-id: ENC(w4SR5ImNLUFMoOfBD/hlRXg0I/gQMmyL)
+      credentials:
+        location: ENC(OLvIhWs1Vp5uXUbP0IIWqLt6dsGBLoxqfN6NCv7ikpCbLGY4s1Pjlg==)
+      storage:
+        bucket: ENC(w4SR5ImNLUFMoOfBD/hlRXg0I/gQMmyL)
 
 springdoc:
   swagger-ui:

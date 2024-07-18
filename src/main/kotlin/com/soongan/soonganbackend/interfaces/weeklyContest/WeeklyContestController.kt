@@ -12,8 +12,8 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
@@ -41,7 +41,7 @@ class WeeklyContestController (
     @Operation(summary = "주간 콘테스트 게시글 등록 Api", description = "주간 콘테스트 게시글을 등록합니다.")
     fun registerWeeklyContestPost(
         @AuthenticationPrincipal loginMember: MemberDetail,
-        @RequestBody @Valid weeklyContestPostRegisterRequest: WeeklyContestPostRegisterRequestDto
+        @ModelAttribute @Valid weeklyContestPostRegisterRequest: WeeklyContestPostRegisterRequestDto
     ): WeeklyContestPostRegisterResponseDto {
         return weeklyContestService.registerWeeklyContestPost(loginMember, weeklyContestPostRegisterRequest)
     }
