@@ -32,9 +32,13 @@ server:
     key-alias: ENC(BPQBUsjoKG1RMNDe17HgxQ==)
 
 oauth2:
-  google:
-    client-id: ENC(ZWeHYcVoYY4PbLoeWPVIrOvsfrGjbwtqAPQsQi7Yox9LwVTjQi89IJnuqFonyGi5/y1CwrPXzC1OKnGWRSR85nPrWyaIJ/zJx8YUMb5gPNp7S7oM/3/IsA==)
-    client-secret: ENC(5wq5lsTE8DpJ9JdOJcQgwVndFrNoYNMWc6AQ5eKSqLKG0OJQ1Mjj1+ZeqrgxOpnF)
+  android:
+    google:
+      client-id: ENC(ZWeHYcVoYY4PbLoeWPVIrOvsfrGjbwtqAPQsQi7Yox9LwVTjQi89IJnuqFonyGi5/y1CwrPXzC1OKnGWRSR85nPrWyaIJ/zJx8YUMb5gPNp7S7oM/3/IsA==)
+  ios:
+    google:
+      client-id: ENC(teK8fJZvVa2yHpTi/sBcuXMF7vrnsbrZtGMD5fkycc+a7s/Xjz0TTD8mCdgNLPBldzkTfewAINd0r/IlidxUew/3KwNvm3Gf0KhGrDkksT36Fra0RZqPPQ==)
+
 
 jwt:
   secret: ENC(Uet8sXoFY7S7ZDmqS2RuCOhRbluWH1jyGlNbOo3G3kPlxipkxqmvo2IKeaU2Hv+X)
