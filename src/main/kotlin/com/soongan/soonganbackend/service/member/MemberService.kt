@@ -14,9 +14,11 @@ import com.soongan.soonganbackend.interfaces.member.dto.LoginResponseDto
 import com.soongan.soonganbackend.enums.Provider
 import com.soongan.soonganbackend.enums.UserAgent
 import com.soongan.soonganbackend.interfaces.member.dto.LogoutResponseDto
+import com.soongan.soonganbackend.interfaces.member.dto.WithdrawResponseDto
 import com.soongan.soonganbackend.persistence.member.MemberAdapter
 import com.soongan.soonganbackend.service.jwt.JwtService
 import com.soongan.soonganbackend.persistence.member.MemberEntity
+import com.soongan.soonganbackend.service.gcp.GcpStorageService
 import com.soongan.soonganbackend.util.common.dto.MemberDetail
 import com.soongan.soonganbackend.util.common.exception.SoonganException
 import com.soongan.soonganbackend.util.common.exception.StatusCode
@@ -29,7 +31,8 @@ import org.springframework.stereotype.Service
 class MemberService(
     private val memberAdapter: MemberAdapter,
     private val jwtService: JwtService,
-    private val env: Environment
+    private val env: Environment,
+    private val gcpStorageService: GcpStorageService
 ) {
 
     private val httpClient = OkHttpClient()
@@ -129,6 +132,21 @@ class MemberService(
         return LogoutResponseDto(
             memberEmail = loginMember.email,
             message = "로그아웃 성공"
+        )
+    }
+
+    fun withdraw(loginMember: MemberDetail): WithdrawResponseDto {
+        try {
+            memberAdapter.deleteByEmail(loginMember.email)
+            jwtService.deleteToken(loginMember.email)
+            gcpStorageService.deleteMemberFiles(loginMember.id)
+        } catch (e: Exception) {
+            throw SoonganException(StatusCode.SERVICE_NOT_AVAILABLE, "회원 탈퇴에 실패했습니다.")
+        }
+
+        return WithdrawResponseDto(
+            memberEmail = loginMember.email,
+            message = "회원 탈퇴 성공"
         )
     }
 }

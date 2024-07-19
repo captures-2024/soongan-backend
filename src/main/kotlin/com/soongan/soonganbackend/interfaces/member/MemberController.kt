@@ -4,6 +4,7 @@ import com.soongan.soonganbackend.enums.UserAgent
 import com.soongan.soonganbackend.interfaces.member.dto.LoginRequestDto
 import com.soongan.soonganbackend.interfaces.member.dto.LoginResponseDto
 import com.soongan.soonganbackend.interfaces.member.dto.LogoutResponseDto
+import com.soongan.soonganbackend.interfaces.member.dto.WithdrawResponseDto
 import com.soongan.soonganbackend.service.member.MemberService
 import com.soongan.soonganbackend.util.common.constant.Uri
 import com.soongan.soonganbackend.util.common.dto.MemberDetail
@@ -34,5 +35,11 @@ class MemberController(
     @PostMapping(Uri.LOGOUT)
     fun logout(@AuthenticationPrincipal loginMember: MemberDetail): LogoutResponseDto {
         return memberService.logout(loginMember)
+    }
+
+    @Operation(summary = "회원 탈퇴 Api", description = "회원을 탈퇴합니다.")
+    @PostMapping(Uri.WITHDRAW)
+    fun withdraw(@AuthenticationPrincipal loginMember: MemberDetail): WithdrawResponseDto {
+        return memberService.withdraw(loginMember)
     }
 }
