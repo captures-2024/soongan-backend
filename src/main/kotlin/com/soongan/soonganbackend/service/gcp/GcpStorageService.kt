@@ -21,4 +21,15 @@ class GcpStorageService(
         val blob = gcpStorage.create(blobInfo, file.inputStream.readBytes())
         return "https://storage.cloud.google.com/${blob.bucket}/${blob.name}"
     }
+
+    fun deleteMemberFiles(memberId: Long) {
+        try {
+            val bucketName = env.getProperty("spring.cloud.gcp.storage.bucket")
+            val prefix = "$memberId/"
+            val blobs = gcpStorage.list(bucketName, Storage.BlobListOption.prefix(prefix))
+            blobs.iterateAll().forEach { gcpStorage.delete(it.blobId) }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
 }
