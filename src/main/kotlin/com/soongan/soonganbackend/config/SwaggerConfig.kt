@@ -31,7 +31,7 @@ class SwaggerConfig {
     fun apiInfo(): Info {
         return Info()
             .title("Soongan API")
-            .description("Soongan API Documentation")
+            .description("로그인, Jwt 리프레쉬 Api 외에는 로그인시 발급되는 Authorization Bearer Token이 필요합니다.")
             .version("1.0.0")
     }
 }
