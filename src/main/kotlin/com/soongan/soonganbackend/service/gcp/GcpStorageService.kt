@@ -19,6 +19,6 @@ class GcpStorageService(
             .setContentType(file.contentType)
             .build()
         val blob = gcpStorage.create(blobInfo, file.inputStream.readBytes())
-        return "www.googleapis.com/storage/${blob.bucket}/${blob.name}"
+        return "https://storage.cloud.google.com/${blob.bucket}/${blob.name}"
     }
 }
