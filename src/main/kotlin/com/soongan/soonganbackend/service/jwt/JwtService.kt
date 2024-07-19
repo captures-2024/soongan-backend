@@ -86,4 +86,8 @@ class JwtService(
             throw SoonganException(StatusCode.INVALID_JWT_TOKEN, "유효하지 않은 토큰입니다.")
         }
     }
+
+    fun deleteToken(email: String) {
+        jwtRepository.deleteByUserEmail(email)
+    }
 }
