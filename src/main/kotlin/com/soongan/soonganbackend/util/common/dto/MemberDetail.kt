@@ -4,6 +4,7 @@ import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 
 data class MemberDetail(
+    val id: Long,
     val email: String,
     val memberAuthorities: Collection<GrantedAuthority>
 ): UserDetails {

@@ -39,7 +39,7 @@ class JwtFilter(
             ?: throw SoonganException(StatusCode.FORBIDDEN, "유효하지 않은 토큰입니다.")  // 만약 회원 정보가 없다면 잘못된 토큰이라고 판단
 
         // UserDetails 구현한 커스텀 UserDetails 객체 생성
-        val memberDetail = MemberDetail(email, member.authorities.split(",").map {
+        val memberDetail = MemberDetail(member.id!!, email, member.authorities.split(",").map {
             SimpleGrantedAuthority(it)
         })
 
