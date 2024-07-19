@@ -8,6 +8,7 @@ object Uri {
 
     const val MEMBERS = "/members"
     const val LOGIN = "/login"
+    const val LOGOUT = "/logout"
     const val REFRESH = "/refresh"
 
     const val WEEKLY = "/weekly"

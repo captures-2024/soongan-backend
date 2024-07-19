@@ -13,9 +13,11 @@ import com.soongan.soonganbackend.interfaces.member.dto.LoginRequestDto
 import com.soongan.soonganbackend.interfaces.member.dto.LoginResponseDto
 import com.soongan.soonganbackend.enums.Provider
 import com.soongan.soonganbackend.enums.UserAgent
+import com.soongan.soonganbackend.interfaces.member.dto.LogoutResponseDto
 import com.soongan.soonganbackend.persistence.member.MemberAdapter
 import com.soongan.soonganbackend.service.jwt.JwtService
 import com.soongan.soonganbackend.persistence.member.MemberEntity
+import com.soongan.soonganbackend.util.common.dto.MemberDetail
 import com.soongan.soonganbackend.util.common.exception.SoonganException
 import com.soongan.soonganbackend.util.common.exception.StatusCode
 import okhttp3.OkHttpClient
@@ -115,5 +117,18 @@ class MemberService(
 
         val claims = signedJWT.jwtClaimsSet
         return claims.getStringClaim("email")
+    }
+
+    fun logout(loginMember: MemberDetail): LogoutResponseDto {
+        try {
+            jwtService.deleteToken(loginMember.email)
+        } catch (e: Exception) {
+            throw SoonganException(StatusCode.INVALID_JWT_TOKEN, "로그아웃에 실패했습니다.")
+        }
+
+        return LogoutResponseDto(
+            memberEmail = loginMember.email,
+            message = "로그아웃 성공"
+        )
     }
 }
