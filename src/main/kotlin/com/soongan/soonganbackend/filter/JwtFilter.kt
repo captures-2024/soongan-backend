@@ -1,5 +1,6 @@
 package com.soongan.soonganbackend.filter
 
+import com.soongan.soonganbackend.enums.TokenType
 import com.soongan.soonganbackend.service.jwt.JwtService
 import com.soongan.soonganbackend.persistence.member.MemberRepository
 import com.soongan.soonganbackend.util.common.dto.MemberDetail
@@ -31,7 +32,7 @@ class JwtFilter(
             return
         }
 
-        val payload = jwtService.getPayload(accessToken) // 토큰을 통해 페이로드 정보 가져오기, 만약 토큰이 유효하지 않다면 예외 발생
+        val payload = jwtService.getPayload(accessToken, TokenType.ACCESS) // 토큰을 통해 페이로드 정보 가져오기, 만약 토큰이 유효하지 않다면 예외 발생
 
         val email = payload["sub"] as String  // 페이로드에서 이메일 정보 가져오기
         val member = memberRepository.findByEmail(email)  // 이메일에 해당하는 회원 정보 가져오기
