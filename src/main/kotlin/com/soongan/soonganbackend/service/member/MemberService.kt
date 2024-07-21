@@ -9,12 +9,10 @@ import com.nimbusds.jose.crypto.RSASSAVerifier
 import com.nimbusds.jose.jwk.RSAKey
 import com.nimbusds.jose.util.Base64URL
 import com.nimbusds.jwt.SignedJWT
-import com.soongan.soonganbackend.interfaces.member.dto.LoginRequestDto
-import com.soongan.soonganbackend.interfaces.member.dto.LoginResponseDto
 import com.soongan.soonganbackend.enums.Provider
+import com.soongan.soonganbackend.enums.TokenType
 import com.soongan.soonganbackend.enums.UserAgent
-import com.soongan.soonganbackend.interfaces.member.dto.LogoutResponseDto
-import com.soongan.soonganbackend.interfaces.member.dto.WithdrawResponseDto
+import com.soongan.soonganbackend.interfaces.member.dto.*
 import com.soongan.soonganbackend.persistence.member.MemberAdapter
 import com.soongan.soonganbackend.service.jwt.JwtService
 import com.soongan.soonganbackend.persistence.member.MemberEntity
@@ -147,6 +145,19 @@ class MemberService(
         return WithdrawResponseDto(
             memberEmail = loginMember.email,
             message = "회원 탈퇴 성공"
+        )
+    }
+
+    fun refresh(refreshRequestDto: RefreshRequestDto): LoginResponseDto {
+        val refreshTokenPayload = jwtService.getPayload(refreshRequestDto.refreshToken, TokenType.REFRESH)
+        val memberEmail = refreshTokenPayload["sub"] as String
+        val member = memberAdapter.getByEmail(memberEmail)
+            ?: throw SoonganException(StatusCode.INVALID_JWT_TOKEN, "회원 정보를 찾을 수 없습니다.")
+
+        val issuedTokens = jwtService.issueTokens(member.email, member.authorities.split(","))
+        return LoginResponseDto(
+            accessToken = issuedTokens.first,
+            refreshToken = issuedTokens.second
         )
     }
 }

@@ -1,10 +1,7 @@
 package com.soongan.soonganbackend.interfaces.member
 
 import com.soongan.soonganbackend.enums.UserAgent
-import com.soongan.soonganbackend.interfaces.member.dto.LoginRequestDto
-import com.soongan.soonganbackend.interfaces.member.dto.LoginResponseDto
-import com.soongan.soonganbackend.interfaces.member.dto.LogoutResponseDto
-import com.soongan.soonganbackend.interfaces.member.dto.WithdrawResponseDto
+import com.soongan.soonganbackend.interfaces.member.dto.*
 import com.soongan.soonganbackend.service.member.MemberService
 import com.soongan.soonganbackend.util.common.constant.Uri
 import com.soongan.soonganbackend.util.common.dto.MemberDetail
@@ -12,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import org.springframework.security.core.annotation.AuthenticationPrincipal
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestHeader
@@ -41,5 +39,11 @@ class MemberController(
     @PostMapping(Uri.WITHDRAW)
     fun withdraw(@AuthenticationPrincipal loginMember: MemberDetail): WithdrawResponseDto {
         return memberService.withdraw(loginMember)
+    }
+
+    @Operation(summary = "JWT 갱신 Api", description = "Refresh Token을 이용하여 JWT를 갱신합니다.")
+    @GetMapping(Uri.REFRESH)
+    fun refresh(@RequestBody @Valid refreshRequestDto: RefreshRequestDto): LoginResponseDto {
+        return memberService.refresh(refreshRequestDto)
     }
 }
