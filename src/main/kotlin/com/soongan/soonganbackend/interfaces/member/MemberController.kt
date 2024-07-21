@@ -46,4 +46,14 @@ class MemberController(
     fun refresh(@RequestBody @Valid refreshRequestDto: RefreshRequestDto): LoginResponseDto {
         return memberService.refresh(refreshRequestDto)
     }
+
+    @Operation(summary = "회원 정보 조회 Api", description = "JWT를 읽어 로그인한 회원의 정보를 조회합니다.")
+    @GetMapping
+    fun getUserinfo(@AuthenticationPrincipal loginMember: MemberDetail): MemberDetail {
+        // 그냥 MemberDetail 객체를 반환하면 nickname 등의 추가 정보가 반환이 안됨
+        // 그렇다고 다시 Repository를 이용해 MemberEntity를 가져오면 불필요한 쿼리가 발생함 (이미 JWT 검사시 조회를 함)
+        // 근데 nickname 등의 추가 정보는 반환이 필요할 것 같음
+        // MemberDetail에 정보를 추가하는 것이 어떤지? -> 다시 repository 조회하는 것 보단 나을 것 같음
+        return loginMember
+    }
 }
