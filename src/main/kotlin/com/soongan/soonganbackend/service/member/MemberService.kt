@@ -164,4 +164,18 @@ class MemberService(
     fun checkNickname(nickname: String): Boolean {
         return memberAdapter.getByNickname(nickname) == null
     }
+
+    fun updateNickname(loginMember: MemberDetail, newNickname: String): UpdateNicknameResponseDto {
+        val member = memberAdapter.getByEmail(loginMember.email)
+            ?: throw SoonganException(StatusCode.INVALID_JWT_TOKEN, "회원 정보를 찾을 수 없습니다.")
+
+        member.nickname = newNickname
+        memberAdapter.save(member)
+
+        return UpdateNicknameResponseDto(
+            memberEmail = loginMember.email,
+            updatedNickname = newNickname,
+            message = "닉네임 변경 성공"
+        )
+    }
 }

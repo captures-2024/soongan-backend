@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestHeader
@@ -62,5 +63,11 @@ class MemberController(
     @GetMapping(Uri.CHECK_NICKNAME)
     fun checkNickname(@RequestParam nickname: String): Boolean {
         return memberService.checkNickname(nickname)
+    }
+
+    @Operation(summary = "닉네임 변경 Api", description = "닉네임을 변경합니다.")
+    @PatchMapping(Uri.NICKNAME)
+    fun updateNickname(@AuthenticationPrincipal loginMember: MemberDetail, @RequestParam newNickname: String): UpdateNicknameResponseDto {
+        return memberService.updateNickname(loginMember, newNickname)
     }
 }

@@ -22,13 +22,13 @@ data class MemberEntity(
     val email: String,
 
     @Column(name = "nickname")
-    val nickname: String? = null,
+    var nickname: String? = null,
 
     @Column(name = "birthDate")
     val birthDate: LocalDate? = null,
 
     @Column(name = "profileImageUrl")
-    val profileImageUrl: String? = null,
+    var profileImageUrl: String? = null,
 
     @Column
     val provider: Provider,
