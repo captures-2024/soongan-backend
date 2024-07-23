@@ -120,20 +120,17 @@ class MemberService(
         return claims.getStringClaim("email")
     }
 
-    fun logout(loginMember: MemberDetail): LogoutResponseDto {
+    fun logout(loginMember: MemberDetail): Boolean {
         try {
             jwtService.deleteToken(loginMember.email)
         } catch (e: Exception) {
             throw SoonganException(StatusCode.INVALID_JWT_TOKEN, "로그아웃에 실패했습니다.")
         }
 
-        return LogoutResponseDto(
-            memberEmail = loginMember.email,
-            message = "로그아웃 성공"
-        )
+        return true
     }
 
-    fun withdraw(loginMember: MemberDetail): WithdrawResponseDto {
+    fun withdraw(loginMember: MemberDetail): Boolean {
         try {
             memberAdapter.deleteByEmail(loginMember.email)
             jwtService.deleteToken(loginMember.email)
@@ -142,10 +139,7 @@ class MemberService(
             throw SoonganException(StatusCode.SERVICE_NOT_AVAILABLE, "회원 탈퇴에 실패했습니다.")
         }
 
-        return WithdrawResponseDto(
-            memberEmail = loginMember.email,
-            message = "회원 탈퇴 성공"
-        )
+        return true
     }
 
     fun refresh(refreshRequestDto: RefreshRequestDto): LoginResponseDto {
@@ -174,8 +168,7 @@ class MemberService(
 
         return UpdateNicknameResponseDto(
             memberEmail = loginMember.email,
-            updatedNickname = newNickname,
-            message = "닉네임 변경 성공"
+            updatedNickname = newNickname
         )
     }
 }

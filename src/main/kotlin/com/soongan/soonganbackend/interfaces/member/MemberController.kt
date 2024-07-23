@@ -33,13 +33,13 @@ class MemberController(
 
     @Operation(summary = "로그아웃 Api", description = "로그인시 발급한 JWT를 말소합니다.")
     @PostMapping(Uri.LOGOUT)
-    fun logout(@AuthenticationPrincipal loginMember: MemberDetail): LogoutResponseDto {
+    fun logout(@AuthenticationPrincipal loginMember: MemberDetail): Boolean {
         return memberService.logout(loginMember)
     }
 
     @Operation(summary = "회원 탈퇴 Api", description = "회원을 탈퇴합니다.")
     @PostMapping(Uri.WITHDRAW)
-    fun withdraw(@AuthenticationPrincipal loginMember: MemberDetail): WithdrawResponseDto {
+    fun withdraw(@AuthenticationPrincipal loginMember: MemberDetail): Boolean {
         return memberService.withdraw(loginMember)
     }
 
@@ -59,7 +59,7 @@ class MemberController(
         return loginMember
     }
 
-    @Operation(summary = "닉네임 중복 확인 Api", description = "닉네임이 중복되는지 확인합니다.")
+    @Operation(summary = "닉네임 중복 확인 Api", description = "닉네임이 중복되는지 확인합니다. true면 사용 가능, false면 중복.")
     @GetMapping(Uri.CHECK_NICKNAME)
     fun checkNickname(@RequestParam nickname: String): Boolean {
         return memberService.checkNickname(nickname)
