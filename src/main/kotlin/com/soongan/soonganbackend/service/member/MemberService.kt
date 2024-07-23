@@ -24,6 +24,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
+import org.springframework.web.multipart.MultipartFile
 
 @Service
 class MemberService(
@@ -170,5 +171,20 @@ class MemberService(
             memberEmail = loginMember.email,
             updatedNickname = newNickname
         )
+    }
+
+    fun updateProfileImage(loginMember: MemberDetail, profileImage: MultipartFile): Boolean {
+        val member = memberAdapter.getByEmail(loginMember.email)
+            ?: throw SoonganException(StatusCode.INVALID_JWT_TOKEN, "회원 정보를 찾을 수 없습니다.")
+
+        if (member.profileImageUrl != null) {
+            gcpStorageService.deleteFile(member.profileImageUrl!!)
+        }
+
+        val updatedProfileImageUrl = gcpStorageService.uploadFile(profileImage, member.id!!)
+        member.profileImageUrl = updatedProfileImageUrl
+        memberAdapter.save(member)
+
+        return true
     }
 }
