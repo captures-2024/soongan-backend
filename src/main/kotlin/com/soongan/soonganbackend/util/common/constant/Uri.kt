@@ -10,6 +10,7 @@ object Uri {
     const val LOGIN = "/login"
     const val LOGOUT = "/logout"
     const val WITHDRAW = "/withdraw"
+    const val CHECK_NICKNAME = "/check-nickname"
     const val REFRESH = "/refresh"
 
     const val WEEKLY = "/weekly"

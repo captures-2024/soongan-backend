@@ -160,4 +160,8 @@ class MemberService(
             refreshToken = issuedTokens.second
         )
     }
+
+    fun checkNickname(nickname: String): Boolean {
+        return memberAdapter.getByNickname(nickname) == null
+    }
 }

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
@@ -55,5 +56,11 @@ class MemberController(
         // 근데 nickname 등의 추가 정보는 반환이 필요할 것 같음
         // MemberDetail에 정보를 추가하는 것이 어떤지? -> 다시 repository 조회하는 것 보단 나을 것 같음
         return loginMember
+    }
+
+    @Operation(summary = "닉네임 중복 확인 Api", description = "닉네임이 중복되는지 확인합니다.")
+    @GetMapping(Uri.CHECK_NICKNAME)
+    fun checkNickname(@RequestParam nickname: String): Boolean {
+        return memberService.checkNickname(nickname)
     }
 }
