@@ -9,6 +9,7 @@ import jakarta.persistence.FetchType
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
+import jakarta.persistence.Index
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.OneToOne
@@ -20,7 +21,11 @@ import java.math.BigDecimal
 import java.time.LocalDateTime
 
 @Entity
-@Table(name = "weekly_contest_final")
+@Table(name = "weekly_contest_final",
+    indexes = [
+        Index(name = "weekly_contest_final_idx_weekly_contest_id_ranking", columnList = "weekly_contest_id,ranking"),
+    ]
+)
 @EntityListeners(AuditingEntityListener::class)
 data class WeeklyContestFinalEntity(
 

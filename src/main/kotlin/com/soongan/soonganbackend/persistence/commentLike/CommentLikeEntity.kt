@@ -11,6 +11,7 @@ import jakarta.persistence.FetchType
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
+import jakarta.persistence.Index
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
@@ -20,7 +21,13 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import java.time.LocalDateTime
 
 @Entity
-@Table(name = "weekly_contest")
+@Table(
+    name = "comment_like",
+    indexes = [
+        Index(name = "comment_like_idx_member_id", columnList = "member_id"),
+        Index(name = "comment_like_idx_contest_type_comment_id", columnList = "contest_type,comment_id"),
+    ]
+)
 @EntityListeners(AuditingEntityListener::class)
 data class CommentLikeEntity(
 
@@ -28,7 +35,7 @@ data class CommentLikeEntity(
     @JoinColumn(name = "member_id")
     val member: MemberEntity,
 
-    @JoinColumn(name = "comment_id")
+    @JoinColumn(name = "comment_id", nullable = false)
     val commentId: Long,
 
     @Column(name = "contest_type", nullable = false)

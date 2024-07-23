@@ -4,6 +4,8 @@ import com.soongan.soonganbackend.enums.Provider
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.EntityListeners
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
@@ -24,13 +26,14 @@ data class MemberEntity(
     @Column(name = "nickname")
     val nickname: String? = null,
 
-    @Column(name = "birthDate")
+    @Column(name = "birth_date")
     val birthDate: LocalDate? = null,
 
-    @Column(name = "profileImageUrl")
+    @Column(name = "profile_image_url")
     val profileImageUrl: String? = null,
 
     @Column
+    @Enumerated(EnumType.STRING)
     val provider: Provider,
 
     @Column(name = "authorities")
