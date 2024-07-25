@@ -36,14 +36,14 @@ class MemberController(
 
     @Operation(summary = "로그아웃 Api", description = "로그인시 발급한 JWT를 말소합니다.")
     @PostMapping(Uri.LOGOUT)
-    fun logout(@AuthenticationPrincipal loginMember: MemberDetail): Boolean {
-        return memberService.logout(loginMember)
+    fun logout(@AuthenticationPrincipal loginMember: MemberDetail) {
+        memberService.logout(loginMember)
     }
 
     @Operation(summary = "회원 탈퇴 Api", description = "회원을 탈퇴합니다.")
     @PostMapping(Uri.WITHDRAW)
-    fun withdraw(@AuthenticationPrincipal loginMember: MemberDetail): Boolean {
-        return memberService.withdraw(loginMember)
+    fun withdraw(@AuthenticationPrincipal loginMember: MemberDetail) {
+        memberService.withdraw(loginMember)
     }
 
     @Operation(summary = "JWT 갱신 Api", description = "Refresh Token을 이용하여 JWT를 갱신합니다.")
@@ -76,7 +76,7 @@ class MemberController(
 
     @Operation(summary = "프로필 사진 변경 Api", description = "프로필 사진을 변경합니다.")
     @PatchMapping(Uri.PROFILE_IMAGE, consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
-    fun updateProfileImage(@AuthenticationPrincipal loginMember: MemberDetail, @RequestPart("image") profileImage: MultipartFile): Boolean {
-        return memberService.updateProfileImage(loginMember, profileImage)
+    fun updateProfileImage(@AuthenticationPrincipal loginMember: MemberDetail, @RequestPart("image") profileImage: MultipartFile) {
+        memberService.updateProfileImage(loginMember, profileImage)
     }
 }

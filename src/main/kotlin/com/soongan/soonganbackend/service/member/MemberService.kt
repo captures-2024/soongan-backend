@@ -121,17 +121,15 @@ class MemberService(
         return claims.getStringClaim("email")
     }
 
-    fun logout(loginMember: MemberDetail): Boolean {
+    fun logout(loginMember: MemberDetail) {
         try {
             jwtService.deleteToken(loginMember.email)
         } catch (e: Exception) {
             throw SoonganException(StatusCode.INVALID_JWT_TOKEN, "로그아웃에 실패했습니다.")
         }
-
-        return true
     }
 
-    fun withdraw(loginMember: MemberDetail): Boolean {
+    fun withdraw(loginMember: MemberDetail) {
         try {
             memberAdapter.deleteByEmail(loginMember.email)
             jwtService.deleteToken(loginMember.email)
@@ -139,8 +137,6 @@ class MemberService(
         } catch (e: Exception) {
             throw SoonganException(StatusCode.SERVICE_NOT_AVAILABLE, "회원 탈퇴에 실패했습니다.")
         }
-
-        return true
     }
 
     fun refresh(refreshRequestDto: RefreshRequestDto): LoginResponseDto {
@@ -173,7 +169,7 @@ class MemberService(
         )
     }
 
-    fun updateProfileImage(loginMember: MemberDetail, profileImage: MultipartFile): Boolean {
+    fun updateProfileImage(loginMember: MemberDetail, profileImage: MultipartFile) {
         val member = memberAdapter.getByEmail(loginMember.email)
             ?: throw SoonganException(StatusCode.INVALID_JWT_TOKEN, "회원 정보를 찾을 수 없습니다.")
 
@@ -184,7 +180,5 @@ class MemberService(
         val updatedProfileImageUrl = gcpStorageService.uploadFile(profileImage, member.id!!)
         val updatedMember = member.copy(profileImageUrl = updatedProfileImageUrl)
         memberAdapter.save(updatedMember)
-
-        return true
     }
 }
