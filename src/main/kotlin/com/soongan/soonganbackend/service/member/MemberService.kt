@@ -25,6 +25,7 @@ import okhttp3.Request
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
+import java.time.LocalDateTime
 
 @Service
 class MemberService(
@@ -130,13 +131,12 @@ class MemberService(
     }
 
     fun withdraw(loginMember: MemberDetail) {
-        try {
-            memberAdapter.deleteByEmail(loginMember.email)
-            jwtService.deleteToken(loginMember.email)
-            gcpStorageService.deleteMemberFiles(loginMember.id)
-        } catch (e: Exception) {
-            throw SoonganException(StatusCode.SERVICE_NOT_AVAILABLE, "회원 탈퇴에 실패했습니다.")
-        }
+        val member = memberAdapter.getByEmail(loginMember.email)
+            ?: throw SoonganException(StatusCode.INVALID_JWT_TOKEN, "회원 정보를 찾을 수 없습니다.")
+
+        val softDeltedMember = member.copy(withdrawalAt = LocalDateTime.now())
+        memberAdapter.save(softDeltedMember)
+        jwtService.deleteToken(member.email)
     }
 
     fun refresh(refreshRequestDto: RefreshRequestDto): LoginResponseDto {
