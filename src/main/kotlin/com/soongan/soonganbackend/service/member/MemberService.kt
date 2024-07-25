@@ -164,8 +164,8 @@ class MemberService(
         val member = memberAdapter.getByEmail(loginMember.email)
             ?: throw SoonganException(StatusCode.INVALID_JWT_TOKEN, "회원 정보를 찾을 수 없습니다.")
 
-        member.nickname = newNickname
-        memberAdapter.save(member)
+        val updatedMember = member.copy(nickname = newNickname)
+        memberAdapter.save(updatedMember)
 
         return UpdateNicknameResponseDto(
             memberEmail = loginMember.email,
@@ -182,8 +182,8 @@ class MemberService(
         }
 
         val updatedProfileImageUrl = gcpStorageService.uploadFile(profileImage, member.id!!)
-        member.profileImageUrl = updatedProfileImageUrl
-        memberAdapter.save(member)
+        val updatedMember = member.copy(profileImageUrl = updatedProfileImageUrl)
+        memberAdapter.save(updatedMember)
 
         return true
     }
