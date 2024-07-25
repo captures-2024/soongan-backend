@@ -47,7 +47,7 @@ class MemberController(
     }
 
     @Operation(summary = "JWT 갱신 Api", description = "Refresh Token을 이용하여 JWT를 갱신합니다.")
-    @GetMapping(Uri.REFRESH)
+    @PatchMapping(Uri.REFRESH)
     fun refresh(@RequestBody @Valid refreshRequestDto: RefreshRequestDto): LoginResponseDto {
         return memberService.refresh(refreshRequestDto)
     }
