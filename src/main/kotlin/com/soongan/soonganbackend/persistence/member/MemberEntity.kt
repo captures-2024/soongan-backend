@@ -62,7 +62,7 @@ data class MemberEntity(
             nickname = nickname,
             birthDate = birthDate,
             profileImageUrl = profileImageUrl,
-            authorities = authorities.split(",").map { SimpleGrantedAuthority(it.trim()) },
+            memberAuthorities = authorities.split(",").map { SimpleGrantedAuthority(it.trim()) },
             createdAt = createdAt,
             updatedAt = updatedAt,
             withdrawalAt = withdrawalAt

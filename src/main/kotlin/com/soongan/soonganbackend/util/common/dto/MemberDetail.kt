@@ -11,12 +11,12 @@ data class MemberDetail(
     val nickname: String?,
     val birthDate: LocalDate?,
     val profileImageUrl: String?,
-    val authorities: Collection<GrantedAuthority>,
+    val memberAuthorities: Collection<GrantedAuthority>,
     val createdAt: LocalDateTime,
     val updatedAt: LocalDateTime,
     val withdrawalAt: LocalDateTime?
 ): UserDetails {
-    override fun getAuthorities(): MutableCollection<out GrantedAuthority>  = authorities.toMutableList()
+    override fun getAuthorities(): MutableCollection<out GrantedAuthority>  = memberAuthorities.toMutableList()
 
     override fun getPassword(): String = ""
 

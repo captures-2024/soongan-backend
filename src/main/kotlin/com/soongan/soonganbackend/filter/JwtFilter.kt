@@ -3,14 +3,12 @@ package com.soongan.soonganbackend.filter
 import com.soongan.soonganbackend.enums.TokenType
 import com.soongan.soonganbackend.service.jwt.JwtService
 import com.soongan.soonganbackend.persistence.member.MemberRepository
-import com.soongan.soonganbackend.util.common.dto.MemberDetail
 import com.soongan.soonganbackend.util.common.exception.SoonganException
 import com.soongan.soonganbackend.util.common.exception.StatusCode
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
-import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
@@ -41,7 +39,7 @@ class JwtFilter(
         // UserDetails 구현한 커스텀 UserDetails 객체 생성
         val memberDetail = member.toMemberDetails()
 
-        val auth = UsernamePasswordAuthenticationToken(memberDetail, null, memberDetail.authorities)   // Security 인증 객체 생성
+        val auth = UsernamePasswordAuthenticationToken(memberDetail, null, memberDetail.memberAuthorities)   // Security 인증 객체 생성
         SecurityContextHolder.getContext().authentication = auth  // Security Context에 인증 객체 저장
         filterChain.doFilter(request, response)  // 다음 필터로 이동
     }
