@@ -6,6 +6,7 @@ import jakarta.persistence.EntityListeners
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
+import jakarta.persistence.Index
 import jakarta.persistence.Table
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
@@ -13,7 +14,13 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import java.time.LocalDateTime
 
 @Entity
-@Table(name = "weekly_contest")
+@Table(
+    name = "weekly_contest",
+    indexes = [
+        Index(name = "weekly_contest_idx_round", columnList = "round"),
+        Index(name = "weekly_contest_idx_start_at_end_at", columnList = "start_at,end_at"),
+    ]
+)
 @EntityListeners(AuditingEntityListener::class)
 data class WeeklyContestEntity(
 
