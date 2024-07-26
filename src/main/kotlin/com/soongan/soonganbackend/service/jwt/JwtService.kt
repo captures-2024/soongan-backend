@@ -58,8 +58,19 @@ class JwtService(
         return Keys.hmacShaKeyFor(secretKey.toByteArray())
     }
 
-    fun getPayload(token: String): Map<String, Any> {  // 토큰을 읽어 페이로드 정보를 가져오는 함수, 만약 유효하지 않다면 null
+    fun getPayload(token: String, tokenType: TokenType): Map<String, Any> {  // 토큰을 읽어 페이로드 정보를 가져오는 함수, 만약 유효하지 않다면 null
         try {
+            when (tokenType) {
+                TokenType.ACCESS -> {
+                    jwtRepository.findByAccessToken(token)
+                        ?: throw SoonganException(StatusCode.INVALID_JWT_TOKEN, "유효하지 않은 토큰입니다.")
+                }
+                TokenType.REFRESH -> {
+                    jwtRepository.findByRefreshToken(token)
+                        ?: throw SoonganException(StatusCode.INVALID_JWT_TOKEN, "유효하지 않은 토큰입니다.")
+                }
+            }
+
             val payload = Jwts.parser()
                 .verifyWith(getSecretKey())
                 .build()
@@ -74,5 +85,9 @@ class JwtService(
         } catch (e: JwtException) {
             throw SoonganException(StatusCode.INVALID_JWT_TOKEN, "유효하지 않은 토큰입니다.")
         }
+    }
+
+    fun deleteToken(email: String) {
+        jwtRepository.deleteByUserEmail(email)
     }
 }

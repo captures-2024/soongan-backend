@@ -13,4 +13,12 @@ class MemberAdapter (
     fun getByEmail(email: String): MemberEntity? {
         return memberRepository.findByEmail(email)
     }
+
+    fun getByNickname(nickname: String): MemberEntity? {
+        return memberRepository.findByNickname(nickname)
+    }
+
+    fun deleteByEmail(email: String) {
+        memberRepository.deleteByEmail(email)
+    }
 }

@@ -9,25 +9,30 @@ import com.nimbusds.jose.crypto.RSASSAVerifier
 import com.nimbusds.jose.jwk.RSAKey
 import com.nimbusds.jose.util.Base64URL
 import com.nimbusds.jwt.SignedJWT
-import com.soongan.soonganbackend.interfaces.member.dto.LoginRequestDto
-import com.soongan.soonganbackend.interfaces.member.dto.LoginResponseDto
 import com.soongan.soonganbackend.enums.Provider
+import com.soongan.soonganbackend.enums.TokenType
 import com.soongan.soonganbackend.enums.UserAgent
+import com.soongan.soonganbackend.interfaces.member.dto.*
 import com.soongan.soonganbackend.persistence.member.MemberAdapter
 import com.soongan.soonganbackend.service.jwt.JwtService
 import com.soongan.soonganbackend.persistence.member.MemberEntity
+import com.soongan.soonganbackend.service.gcp.GcpStorageService
+import com.soongan.soonganbackend.util.common.dto.MemberDetail
 import com.soongan.soonganbackend.util.common.exception.SoonganException
 import com.soongan.soonganbackend.util.common.exception.StatusCode
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
+import org.springframework.web.multipart.MultipartFile
+import java.time.LocalDateTime
 
 @Service
 class MemberService(
     private val memberAdapter: MemberAdapter,
     private val jwtService: JwtService,
-    private val env: Environment
+    private val env: Environment,
+    private val gcpStorageService: GcpStorageService
 ) {
 
     private val httpClient = OkHttpClient()
@@ -115,5 +120,65 @@ class MemberService(
 
         val claims = signedJWT.jwtClaimsSet
         return claims.getStringClaim("email")
+    }
+
+    fun logout(loginMember: MemberDetail) {
+        try {
+            jwtService.deleteToken(loginMember.email)
+        } catch (e: Exception) {
+            throw SoonganException(StatusCode.INVALID_JWT_TOKEN, "로그아웃에 실패했습니다.")
+        }
+    }
+
+    fun withdraw(loginMember: MemberDetail) {
+        val member = memberAdapter.getByEmail(loginMember.email)
+            ?: throw SoonganException(StatusCode.INVALID_JWT_TOKEN, "회원 정보를 찾을 수 없습니다.")
+
+        val softDeltedMember = member.copy(withdrawalAt = LocalDateTime.now())
+        memberAdapter.save(softDeltedMember)
+        jwtService.deleteToken(member.email)
+    }
+
+    fun refresh(refreshRequestDto: RefreshRequestDto): LoginResponseDto {
+        val refreshTokenPayload = jwtService.getPayload(refreshRequestDto.refreshToken, TokenType.REFRESH)
+        val memberEmail = refreshTokenPayload["sub"] as String
+        val member = memberAdapter.getByEmail(memberEmail)
+            ?: throw SoonganException(StatusCode.INVALID_JWT_TOKEN, "회원 정보를 찾을 수 없습니다.")
+
+        val issuedTokens = jwtService.issueTokens(member.email, member.authorities.split(","))
+        return LoginResponseDto(
+            accessToken = issuedTokens.first,
+            refreshToken = issuedTokens.second
+        )
+    }
+
+    fun checkNickname(nickname: String): Boolean {
+        return memberAdapter.getByNickname(nickname) == null
+    }
+
+    fun updateNickname(loginMember: MemberDetail, newNickname: String): UpdateNicknameResponseDto {
+        val member = memberAdapter.getByEmail(loginMember.email)
+            ?: throw SoonganException(StatusCode.INVALID_JWT_TOKEN, "회원 정보를 찾을 수 없습니다.")
+
+        val updatedMember = member.copy(nickname = newNickname)
+        memberAdapter.save(updatedMember)
+
+        return UpdateNicknameResponseDto(
+            memberEmail = loginMember.email,
+            updatedNickname = newNickname
+        )
+    }
+
+    fun updateProfileImage(loginMember: MemberDetail, profileImage: MultipartFile) {
+        val member = memberAdapter.getByEmail(loginMember.email)
+            ?: throw SoonganException(StatusCode.INVALID_JWT_TOKEN, "회원 정보를 찾을 수 없습니다.")
+
+        if (member.profileImageUrl != null) {
+            gcpStorageService.deleteFile(member.profileImageUrl!!)
+        }
+
+        val updatedProfileImageUrl = gcpStorageService.uploadFile(profileImage, member.id!!)
+        val updatedMember = member.copy(profileImageUrl = updatedProfileImageUrl)
+        memberAdapter.save(updatedMember)
     }
 }

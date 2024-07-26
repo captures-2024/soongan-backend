@@ -6,6 +6,8 @@ import com.google.cloud.storage.Storage
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
+import java.net.URLDecoder
+import java.nio.charset.StandardCharsets
 
 @Service
 class GcpStorageService(
@@ -19,6 +21,20 @@ class GcpStorageService(
             .setContentType(file.contentType)
             .build()
         val blob = gcpStorage.create(blobInfo, file.inputStream.readBytes())
-        return "www.googleapis.com/storage/${blob.bucket}/${blob.name}"
+        return "https://storage.cloud.google.com/${blob.bucket}/${blob.name}"
+    }
+
+    fun deleteFile(fileUrl: String) {
+        val bucketName = env.getProperty("spring.cloud.gcp.storage.bucket")
+        val blobName = fileUrl.substringAfter("/${bucketName}/")
+        val decodedBlobName = URLDecoder.decode(blobName, StandardCharsets.UTF_8.name())
+        gcpStorage.delete(bucketName, decodedBlobName)
+    }
+
+    fun deleteMemberFiles(memberId: Long) {
+        val bucketName = env.getProperty("spring.cloud.gcp.storage.bucket")
+        val prefix = "$memberId/"
+        val blobs = gcpStorage.list(bucketName, Storage.BlobListOption.prefix(prefix))
+        blobs.iterateAll().forEach { gcpStorage.delete(it.blobId) }
     }
 }
