@@ -24,7 +24,7 @@ import java.time.LocalDateTime
 @Table(name = "post_like",
     indexes = [
         Index(name = "post_like_idx_member_id", columnList = "member_id"),
-        Index(name = "post_like_idx_contest_type_post_id", columnList = "contest_type,post_id")
+        Index(name = "post_like_uidx_contest_type_post_id", columnList = "contest_type,post_id", unique = true)
     ]
 )
 @EntityListeners(AuditingEntityListener::class)

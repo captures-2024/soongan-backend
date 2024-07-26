@@ -9,4 +9,4 @@ create table post_like
 );
 
 create index post_like_idx_member_id on post_like (member_id);
-create index post_like_idx_contest_type_post_id on post_like (contest_type, post_id);
+create unique index post_like_uidx_contest_type_post_id on post_like (contest_type, post_id);

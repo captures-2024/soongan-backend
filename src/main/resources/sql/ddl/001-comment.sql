@@ -13,4 +13,4 @@ create table comment
 );
 
 create index comment_idx_member_id on comment (member_id);
-create index comment_idx_contest_type_post_id on comment (contest_type, post_id);
+create unique index comment_uidx_contest_type_post_id on comment (contest_type, post_id);

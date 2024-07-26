@@ -9,4 +9,4 @@ create table comment_like
 );
 
 create index comment_like_idx_member_id on comment_like (member_id);
-create index comment_like_idx_contest_type_comment_id on comment_like (contest_type, comment_id);
+create unique index comment_like_uidx_contest_type_comment_id on comment_like (contest_type, comment_id);

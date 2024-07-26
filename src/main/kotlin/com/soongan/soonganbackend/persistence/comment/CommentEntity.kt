@@ -25,7 +25,7 @@ import java.time.LocalDateTime
     name = "comment",
     indexes = [
         Index(name = "comment_idx_member_id", columnList = "member_id"),
-        Index(name = "comment_idx_contest_type_post_id", columnList = "contest_type,post_id"),
+        Index(name = "comment_uidx_contest_type_post_id", columnList = "contest_type,post_id", unique = true),
     ])
 @EntityListeners(AuditingEntityListener::class)
 data class CommentEntity(
