@@ -8,13 +8,15 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+import org.springframework.stereotype.Component
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.CorsConfigurationSource
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 
 @Configuration
 class SecurityConfig(
-    private val jwtFilter: JwtFilter
+    private val jwtFilter: JwtFilter,
+    private val passUrls: PassUrls
 ) {
 
     @Bean
@@ -30,7 +32,7 @@ class SecurityConfig(
                 it.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             }
             .authorizeHttpRequests {
-                it.requestMatchers(*passUrls().toTypedArray()).permitAll()
+                it.requestMatchers(*passUrls.get().toTypedArray()).permitAll()
                     .anyRequest().authenticated()
             }
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter::class.java)
@@ -52,8 +54,11 @@ class SecurityConfig(
 
         return source
     }
+}
 
-    fun passUrls(): List<String> {
+@Component
+class PassUrls {
+    fun get(): List<String> {
         return listOf(
             Uri.MEMBERS + Uri.LOGIN,
             Uri.MEMBERS + Uri.REFRESH,

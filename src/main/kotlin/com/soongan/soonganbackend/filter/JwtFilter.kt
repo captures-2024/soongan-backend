@@ -1,5 +1,6 @@
 package com.soongan.soonganbackend.filter
 
+import com.soongan.soonganbackend.config.PassUrls
 import com.soongan.soonganbackend.enums.TokenType
 import com.soongan.soonganbackend.service.jwt.JwtService
 import com.soongan.soonganbackend.persistence.member.MemberRepository
@@ -16,8 +17,13 @@ import org.springframework.web.filter.OncePerRequestFilter
 @Component
 class JwtFilter(
     private val jwtService: JwtService,
-    private val memberRepository: MemberRepository
-): OncePerRequestFilter() {  // Security 인증 과정 중간에 동작하는 필터 역할을 하기 위해 OncePerRequestFilter 상속
+    private val memberRepository: MemberRepository,
+    private val passUrls: PassUrls
+): OncePerRequestFilter() {
+
+    override fun shouldNotFilter(request: HttpServletRequest): Boolean {
+        return passUrls.get().contains(request.requestURI)
+    }
 
     override fun doFilterInternal(
         request: HttpServletRequest,
@@ -25,22 +31,18 @@ class JwtFilter(
         filterChain: FilterChain
     ) {
         val accessToken = request.getHeader("Authorization")?.substringAfter("Bearer ")
-        if (accessToken == null) {  // 만약 헤더에 토큰이 없다면 다음 필터로 이동
-            doFilter(request, response, filterChain)
-            return
-        }
+            ?: throw SoonganException(StatusCode.FORBIDDEN, "요청에 JWT가 존재하지 않습니다.")
 
-        val payload = jwtService.getPayload(accessToken, TokenType.ACCESS) // 토큰을 통해 페이로드 정보 가져오기, 만약 토큰이 유효하지 않다면 예외 발생
+        val payload = jwtService.getPayload(accessToken, TokenType.ACCESS)
 
-        val email = payload["sub"] as String  // 페이로드에서 이메일 정보 가져오기
-        val member = memberRepository.findByEmail(email)  // 이메일에 해당하는 회원 정보 가져오기
-            ?: throw SoonganException(StatusCode.FORBIDDEN, "유효하지 않은 토큰입니다.")  // 만약 회원 정보가 없다면 잘못된 토큰이라고 판단
+        val email = payload["sub"] as String
+        val member = memberRepository.findByEmail(email)
+            ?: throw SoonganException(StatusCode.FORBIDDEN, "유효하지 않은 토큰입니다.")
 
-        // UserDetails 구현한 커스텀 UserDetails 객체 생성
         val memberDetail = member.toMemberDetails()
 
-        val auth = UsernamePasswordAuthenticationToken(memberDetail, null, memberDetail.memberAuthorities)   // Security 인증 객체 생성
-        SecurityContextHolder.getContext().authentication = auth  // Security Context에 인증 객체 저장
-        filterChain.doFilter(request, response)  // 다음 필터로 이동
+        val auth = UsernamePasswordAuthenticationToken(memberDetail, null, memberDetail.memberAuthorities)
+        SecurityContextHolder.getContext().authentication = auth
+        filterChain.doFilter(request, response)
     }
 }
