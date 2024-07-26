@@ -4,7 +4,6 @@ create table weekly_contest_post
     weekly_contest_id bigint       not null,
     member_id         bigint       not null,
     image_url         varchar(255) not null,
-    content           text         null,
     ranking           int          not null,
     like_count        int default 0
 );
