@@ -1,9 +1,9 @@
 package com.soongan.soonganbackend.filter
 
-import com.soongan.soonganbackend.config.PassUrls
 import com.soongan.soonganbackend.enums.TokenType
 import com.soongan.soonganbackend.service.jwt.JwtService
 import com.soongan.soonganbackend.persistence.member.MemberRepository
+import com.soongan.soonganbackend.util.common.constant.Uri
 import com.soongan.soonganbackend.util.common.exception.SoonganException
 import com.soongan.soonganbackend.util.common.exception.StatusCode
 import jakarta.servlet.FilterChain
@@ -17,12 +17,19 @@ import org.springframework.web.filter.OncePerRequestFilter
 @Component
 class JwtFilter(
     private val jwtService: JwtService,
-    private val memberRepository: MemberRepository,
-    private val passUrls: PassUrls
+    private val memberRepository: MemberRepository
 ): OncePerRequestFilter() {
 
     override fun shouldNotFilter(request: HttpServletRequest): Boolean {
-        return passUrls.get().contains(request.requestURI)
+        val requestUri = request.requestURI
+
+        return Uri.passUris.any { passUri ->
+            if (passUri.endsWith("/**")) {
+                requestUri.startsWith(passUri.removeSuffix("/**"))
+            } else {
+                requestUri == passUri
+            }
+        }
     }
 
     override fun doFilterInternal(

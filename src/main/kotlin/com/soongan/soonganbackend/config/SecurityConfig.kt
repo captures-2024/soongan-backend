@@ -8,15 +8,13 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
-import org.springframework.stereotype.Component
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.CorsConfigurationSource
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 
 @Configuration
 class SecurityConfig(
-    private val jwtFilter: JwtFilter,
-    private val passUrls: PassUrls
+    private val jwtFilter: JwtFilter
 ) {
 
     @Bean
@@ -32,7 +30,7 @@ class SecurityConfig(
                 it.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             }
             .authorizeHttpRequests {
-                it.requestMatchers(*passUrls.get().toTypedArray()).permitAll()
+                it.requestMatchers(*Uri.passUris.toTypedArray()).permitAll()
                     .anyRequest().authenticated()
             }
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter::class.java)
@@ -53,19 +51,5 @@ class SecurityConfig(
         source.registerCorsConfiguration("/**", configuration)
 
         return source
-    }
-}
-
-@Component
-class PassUrls {
-    fun get(): List<String> {
-        return listOf(
-            Uri.MEMBERS + Uri.LOGIN,
-            Uri.MEMBERS + Uri.REFRESH,
-            Uri.API_DOCS,
-            Uri.SWAGGER_UI + "/**",
-            Uri.SWAGGER_RESOURCES + "/**",
-            Uri.V3 + Uri.API_DOCS + "/**"
-        )
     }
 }
