@@ -10,7 +10,5 @@ data class WeeklyContestPostRegisterRequestDto(
     @field:NotBlank
     val subject: String,
     @field:NotBlank
-    val content: String,
-    @field:NotBlank
     val imageFile: MultipartFile
 )
