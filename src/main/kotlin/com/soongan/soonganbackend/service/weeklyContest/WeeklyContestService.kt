@@ -87,15 +87,13 @@ class WeeklyContestService (
             WeeklyContestPostEntity(
                 member = member,
                 weeklyContest = weeklyContest,
-                imageUrl = imageUrl,
-                content = weeklyContestPostRegisterRequest.content
+                imageUrl = imageUrl
             )
         )
 
         return WeeklyContestPostRegisterResponseDto(
             postId = savedPost.id!!,
             subject = weeklyContest.subject,
-            content = savedPost.content,
             imageUrl = savedPost.imageUrl,
             registerNickname = member.nickname!!
         )
