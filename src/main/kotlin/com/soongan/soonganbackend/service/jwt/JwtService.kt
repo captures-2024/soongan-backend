@@ -36,7 +36,7 @@ class JwtService(
     }
 
     fun createToken(userEmail: String, authorities: List<String>, tokenType: TokenType): String {
-        val claims =  Jwts.claims().subject(userEmail)  // Jwt payload에 저장되는 정보
+        val claims = Jwts.claims().subject(userEmail)  // Jwt payload에 저장되는 정보
             .add("authorities", authorities)  // 유저의 권한 정보도 저장
             .build()
 
@@ -61,32 +61,34 @@ class JwtService(
                     jwtRepository.findByAccessToken(token)
                         ?: throw SoonganException(StatusCode.INVALID_JWT_ACCESS_TOKEN)
                 }
+
                 TokenType.REFRESH -> {
                     jwtRepository.findByRefreshToken(token)
                         ?: throw SoonganException(StatusCode.INVALID_JWT_REFRESH_TOKEN)
                 }
             }
 
-            val payload: Claims = Jwts.parser()
-                .verifyWith(getSecretKey())
-                .build()
-                .parseSignedClaims(token)
-                .payload
-
-            validatePayload(payload)
-
-            return payload
+            return generateValidatedPayload(token)
 
         } catch (e: JwtException) {
             throw SoonganException(StatusCode.INVALID_JWT)
         }
     }
 
-    private fun validatePayload(payload: Claims) {
-        if (payload.expiration.before(Date())) {
+    private fun generateValidatedPayload(token: String): Claims {
+        val payload: Claims = Jwts.parser()
+            .verifyWith(getSecretKey())
+            .build()
+            .parseSignedClaims(token)
+            .payload
+
+        return if (payload.expiration.before(Date())) {
+            payload
+        } else {
             throw SoonganException(StatusCode.EXPIRED_JWT)
         }
     }
+
 
     private fun getSecretKey(): SecretKey {
         val secretKey = env.getProperty("jwt.secret")!!
