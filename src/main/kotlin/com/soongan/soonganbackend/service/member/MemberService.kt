@@ -64,6 +64,13 @@ class MemberService(
         )
     }
 
+    fun getMemberInfo(loginMember: MemberDetail): MemberInfoResponseDto {
+        val member = (memberAdapter.getByEmail(loginMember.email)
+            ?: throw SoonganException(StatusCode.NOT_FOUND_MEMBER_BY_EMAIL))
+
+        return MemberInfoResponseDto.from(member)
+    }
+
     fun getGoogleMemberEmail(userAgent: UserAgent, idToken: String): String {
         val clientId = when (userAgent) {
             UserAgent.ANDROID -> env.getProperty("oauth2.android.google.client-id")
