@@ -5,6 +5,7 @@ import com.soongan.soonganbackend.persistence.jwt.JwtData
 import com.soongan.soonganbackend.persistence.jwt.JwtRepository
 import com.soongan.soonganbackend.util.common.exception.SoonganException
 import com.soongan.soonganbackend.util.common.exception.StatusCode
+import io.jsonwebtoken.Claims
 import io.jsonwebtoken.JwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
@@ -53,38 +54,43 @@ class JwtService(
             .compact()
     }
 
-    fun getSecretKey(): SecretKey {
-        val secretKey = env.getProperty("jwt.secret")!!
-        return Keys.hmacShaKeyFor(secretKey.toByteArray())
-    }
-
     fun getPayload(token: String, tokenType: TokenType): Map<String, Any> {  // 토큰을 읽어 페이로드 정보를 가져오는 함수, 만약 유효하지 않다면 null
         try {
             when (tokenType) {
                 TokenType.ACCESS -> {
                     jwtRepository.findByAccessToken(token)
-                        ?: throw SoonganException(StatusCode.INVALID_JWT_TOKEN, "유효하지 않은 토큰입니다.")
+                        ?: throw SoonganException(StatusCode.INVALID_JWT_ACCESS_TOKEN)
                 }
                 TokenType.REFRESH -> {
                     jwtRepository.findByRefreshToken(token)
-                        ?: throw SoonganException(StatusCode.INVALID_JWT_TOKEN, "유효하지 않은 토큰입니다.")
+                        ?: throw SoonganException(StatusCode.INVALID_JWT_REFRESH_TOKEN)
                 }
             }
 
-            val payload = Jwts.parser()
+            val payload: Claims = Jwts.parser()
                 .verifyWith(getSecretKey())
                 .build()
                 .parseSignedClaims(token)
                 .payload
 
-            return if (payload.expiration.after(Date())) {
-                payload
-            } else {
-                throw SoonganException(StatusCode.INVALID_JWT_TOKEN, "만료된 토큰입니다.")
-            }
+            validatePayload(payload)
+
+            return payload
+
         } catch (e: JwtException) {
-            throw SoonganException(StatusCode.INVALID_JWT_TOKEN, "유효하지 않은 토큰입니다.")
+            throw SoonganException(StatusCode.INVALID_JWT)
         }
+    }
+
+    private fun validatePayload(payload: Claims) {
+        if (payload.expiration.before(Date())) {
+            throw SoonganException(StatusCode.EXPIRED_JWT)
+        }
+    }
+
+    private fun getSecretKey(): SecretKey {
+        val secretKey = env.getProperty("jwt.secret")!!
+        return Keys.hmacShaKeyFor(secretKey.toByteArray())
     }
 
     fun deleteToken(email: String) {
