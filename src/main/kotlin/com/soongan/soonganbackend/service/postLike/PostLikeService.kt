@@ -28,7 +28,7 @@ class PostLikeService(
 
         // todo: DAILY Contest 추가되면 구조 리팩토링 필요할 듯 (중복 발생할 듯)
         if (postLikeRequest.contestType == ContestTypeEnum.WEEKLY) {
-            val weeklyContestPost: WeeklyContestPostEntity = weeklyContestPostAdapter.getByIdOrNull(postLikeRequest.postId)?.let { post ->
+            val updatedPost: WeeklyContestPostEntity = weeklyContestPostAdapter.getByIdOrNull(postLikeRequest.postId)?.let { post ->
 
                 // 중복 좋아요 방지
                 if (isDuplicatedLike(post.id!!, postLikeRequest.contestType, member)) {
@@ -43,16 +43,14 @@ class PostLikeService(
                 )
 
                 // 좋아요 개수 증가
-                val updatedPost = weeklyContestPostAdapter.save(
+                weeklyContestPostAdapter.save(
                     post.copy(likeCount = post.likeCount + 1)
                 )
-
-                updatedPost
             } ?: throw SoonganException(StatusCode.SOONGAN_API_NOT_FOUND_WEEKLY_CONTEST_POST)
 
             return PostLikeResponseDto(
-                postId = weeklyContestPost.id!!,
-                likeCount = weeklyContestPost.likeCount
+                postId = updatedPost.id!!,
+                likeCount = updatedPost.likeCount
             )
         } else {
             throw SoonganException(StatusCode.SOONGAN_API_INVALID_CONTEST_TYPE)
@@ -65,22 +63,20 @@ class PostLikeService(
             ?: throw SoonganException(StatusCode.SOONGAN_API_NOT_FOUND_MEMBER)
 
         if (postLikeRequest.contestType == ContestTypeEnum.WEEKLY) {
-            val weeklyContestPost: WeeklyContestPostEntity = weeklyContestPostAdapter.getByIdOrNull(postLikeRequest.postId)?.let { post ->
+            val updatedPost: WeeklyContestPostEntity = weeklyContestPostAdapter.getByIdOrNull(postLikeRequest.postId)?.let { post ->
 
                 // 좋아요 취소
                 postLikeAdapter.cancelLike(post.id!!, postLikeRequest.contestType, member)
 
                 // 좋아요 개수 감소
-                val updatedPost = weeklyContestPostAdapter.save(
+                weeklyContestPostAdapter.save(
                     post.copy(likeCount = post.likeCount - 1)
                 )
-
-                updatedPost
             } ?: throw SoonganException(StatusCode.SOONGAN_API_NOT_FOUND_WEEKLY_CONTEST_POST)
 
             return PostLikeResponseDto(
-                postId = weeklyContestPost.id!!,
-                likeCount = weeklyContestPost.likeCount
+                postId = updatedPost.id!!,
+                likeCount = updatedPost.likeCount
             )
         } else {
             throw SoonganException(StatusCode.SOONGAN_API_INVALID_CONTEST_TYPE)
