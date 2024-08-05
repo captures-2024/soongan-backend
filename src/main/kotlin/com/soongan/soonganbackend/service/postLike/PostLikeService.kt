@@ -1,5 +1,7 @@
 package com.soongan.soonganbackend.service.postLike
 
+import com.soongan.soonganbackend.aspects.CheckMember
+import com.soongan.soonganbackend.aspects.getMemberFromRequest
 import com.soongan.soonganbackend.interfaces.postLike.dto.PostLikeRequestDto
 import com.soongan.soonganbackend.interfaces.postLike.dto.PostLikeResponseDto
 import com.soongan.soonganbackend.persistence.member.MemberAdapter
@@ -7,7 +9,6 @@ import com.soongan.soonganbackend.persistence.member.MemberEntity
 import com.soongan.soonganbackend.persistence.postLike.PostLikeAdapter
 import com.soongan.soonganbackend.persistence.weeklyContestPost.WeeklyContestPostAdapter
 import com.soongan.soonganbackend.persistence.weeklyContestPost.WeeklyContestPostEntity
-import com.soongan.soonganbackend.util.common.dto.MemberDetail
 import com.soongan.soonganbackend.util.common.exception.SoonganException
 import com.soongan.soonganbackend.util.common.exception.StatusCode
 import com.soongan.soonganbackend.util.domain.ContestTypeEnum
@@ -20,9 +21,9 @@ class PostLikeService(
     private val memberAdapter: MemberAdapter
 ) {
 
-    fun addLikePost(postLikeRequest: PostLikeRequestDto, loginMember: MemberDetail): PostLikeResponseDto {
-        val member = memberAdapter.getByEmail(loginMember.email)
-            ?: throw SoonganException(StatusCode.SOONGAN_API_NOT_FOUND_MEMBER)
+    @CheckMember
+    fun addLikePost(postLikeRequest: PostLikeRequestDto): PostLikeResponseDto {
+        val member = getMemberFromRequest()
 
         // todo: DAILY Contest 추가되면 구조 리팩토링 필요할 듯 (중복 발생할 듯)
         if (postLikeRequest.contestType == ContestTypeEnum.WEEKLY) {

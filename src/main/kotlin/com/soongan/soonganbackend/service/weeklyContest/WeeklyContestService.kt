@@ -1,5 +1,7 @@
 package com.soongan.soonganbackend.service.weeklyContest
 
+import com.soongan.soonganbackend.aspects.CheckMember
+import com.soongan.soonganbackend.aspects.getMemberFromRequest
 import com.soongan.soonganbackend.interfaces.weeklyContest.dto.WeeklyContestPostRegisterRequestDto
 import com.soongan.soonganbackend.interfaces.weeklyContest.dto.WeeklyContestPostRegisterResponseDto
 import com.soongan.soonganbackend.interfaces.weeklyContest.dto.WeeklyContestPostResponseDto
@@ -11,7 +13,6 @@ import com.soongan.soonganbackend.persistence.weeklyContestPost.WeeklyContestPos
 import com.soongan.soonganbackend.persistence.weeklyContestPost.WeeklyContestPostEntity
 import com.soongan.soonganbackend.service.gcp.GcpStorageService
 import com.soongan.soonganbackend.service.weeklyContest.WeeklyContestPostOrderCriteriaEnum.*
-import com.soongan.soonganbackend.util.common.dto.MemberDetail
 import com.soongan.soonganbackend.util.common.dto.MemberInfoDto
 import com.soongan.soonganbackend.util.common.dto.PageDto
 import com.soongan.soonganbackend.util.common.exception.SoonganException
@@ -68,15 +69,14 @@ class WeeklyContestService (
         )
     }
 
+    @CheckMember
     fun registerWeeklyContestPost(
-        loginMember: MemberDetail,
         weeklyContestPostRegisterRequest: WeeklyContestPostRegisterRequestDto
     ): WeeklyContestPostRegisterResponseDto {
         val weeklyContest: WeeklyContestEntity = weeklyContestAdapter.getWeeklyContest(weeklyContestPostRegisterRequest.weeklyContestRound) ?:
             throw SoonganException(StatusCode.SOONGAN_API_NOT_FOUND_WEEKLY_CONTEST)
 
-        val member: MemberEntity = memberAdapter.getByEmail(loginMember.email)
-            ?: throw SoonganException(StatusCode.SOONGAN_API_NOT_FOUND_MEMBER)
+        val member: MemberEntity = getMemberFromRequest()
 
         val imageUrl = gcpStorageService.uploadFile(
             weeklyContestPostRegisterRequest.imageFile,
