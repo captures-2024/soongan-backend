@@ -148,8 +148,8 @@ class MemberService(
     }
 
     fun refresh(refreshRequestDto: RefreshRequestDto): LoginResponseDto {
-        val refreshTokenPayload = jwtService.getPayload(refreshRequestDto.refreshToken, TokenType.REFRESH)
-        val memberEmail = refreshTokenPayload["sub"] as String
+        val payload = jwtService.validateRefreshRequest(refreshRequestDto)
+        val memberEmail = payload["sub"] as String
         val member = memberAdapter.getByEmail(memberEmail)
             ?: throw SoonganException(StatusCode.NOT_FOUND_MEMBER_BY_EMAIL)
 
