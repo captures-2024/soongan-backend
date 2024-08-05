@@ -1,7 +1,6 @@
 package com.soongan.soonganbackend.persistence.member
 
 import com.soongan.soonganbackend.enums.Provider
-import com.soongan.soonganbackend.util.common.dto.MemberDetail
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.EntityListeners
@@ -14,7 +13,6 @@ import jakarta.persistence.Table
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
-import org.springframework.security.core.authority.SimpleGrantedAuthority
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -58,17 +56,4 @@ data class MemberEntity(
     var updatedAt: LocalDateTime = LocalDateTime.now()
         private set
 
-    fun toMemberDetails(): MemberDetail {
-        return MemberDetail(
-            id = id!!,
-            email = email,
-            nickname = nickname,
-            birthDate = birthDate,
-            profileImageUrl = profileImageUrl,
-            memberAuthorities = authorities.split(",").map { SimpleGrantedAuthority(it.trim()) },
-            createdAt = createdAt,
-            updatedAt = updatedAt,
-            withdrawalAt = withdrawalAt
-        )
-    }
 }

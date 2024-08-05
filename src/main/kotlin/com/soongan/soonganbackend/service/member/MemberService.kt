@@ -64,6 +64,13 @@ class MemberService(
         )
     }
 
+    fun getMemberInfo(loginMember: MemberDetail): MemberInfoResponseDto {
+        val member = (memberAdapter.getByEmail(loginMember.email)
+            ?: throw SoonganException(StatusCode.NOT_FOUND_MEMBER_BY_EMAIL))
+
+        return MemberInfoResponseDto.from(member)
+    }
+
     fun getGoogleMemberEmail(userAgent: UserAgent, idToken: String): String {
         val clientId = when (userAgent) {
             UserAgent.ANDROID -> env.getProperty("oauth2.android.google.client-id")
@@ -126,16 +133,16 @@ class MemberService(
         try {
             jwtService.deleteToken(loginMember.email)
         } catch (e: Exception) {
-            throw SoonganException(StatusCode.INVALID_JWT_TOKEN, "로그아웃에 실패했습니다.")
+            throw SoonganException(StatusCode.SOONGAN_API_FAIL_TO_LOGOUT)
         }
     }
 
     fun withdraw(loginMember: MemberDetail) {
         val member = memberAdapter.getByEmail(loginMember.email)
-            ?: throw SoonganException(StatusCode.INVALID_JWT_TOKEN, "회원 정보를 찾을 수 없습니다.")
+            ?: throw SoonganException(StatusCode.NOT_FOUND_MEMBER_BY_EMAIL)
 
-        val softDeltedMember = member.copy(withdrawalAt = LocalDateTime.now())
-        memberAdapter.save(softDeltedMember)
+        val softDeletedMember = member.copy(withdrawalAt = LocalDateTime.now())
+        memberAdapter.save(softDeletedMember)
         jwtService.deleteToken(member.email)
     }
 
@@ -143,7 +150,7 @@ class MemberService(
         val refreshTokenPayload = jwtService.getPayload(refreshRequestDto.refreshToken, TokenType.REFRESH)
         val memberEmail = refreshTokenPayload["sub"] as String
         val member = memberAdapter.getByEmail(memberEmail)
-            ?: throw SoonganException(StatusCode.INVALID_JWT_TOKEN, "회원 정보를 찾을 수 없습니다.")
+            ?: throw SoonganException(StatusCode.NOT_FOUND_MEMBER_BY_EMAIL)
 
         val issuedTokens = jwtService.issueTokens(member.email, member.authorities.split(","))
         return LoginResponseDto(
@@ -158,7 +165,7 @@ class MemberService(
 
     fun updateNickname(loginMember: MemberDetail, newNickname: String): UpdateNicknameResponseDto {
         val member = memberAdapter.getByEmail(loginMember.email)
-            ?: throw SoonganException(StatusCode.INVALID_JWT_TOKEN, "회원 정보를 찾을 수 없습니다.")
+            ?: throw SoonganException(StatusCode.NOT_FOUND_MEMBER_BY_EMAIL)
 
         val updatedMember = member.copy(nickname = newNickname)
         memberAdapter.save(updatedMember)
@@ -171,10 +178,10 @@ class MemberService(
 
     fun updateProfileImage(loginMember: MemberDetail, profileImage: MultipartFile) {
         val member = memberAdapter.getByEmail(loginMember.email)
-            ?: throw SoonganException(StatusCode.INVALID_JWT_TOKEN, "회원 정보를 찾을 수 없습니다.")
+            ?: throw SoonganException(StatusCode.NOT_FOUND_MEMBER_BY_EMAIL)
 
         if (member.profileImageUrl != null) {
-            gcpStorageService.deleteFile(member.profileImageUrl!!)
+            gcpStorageService.deleteFile(member.profileImageUrl)
         }
 
         val updatedProfileImageUrl = gcpStorageService.uploadFile(profileImage, member.id!!)
