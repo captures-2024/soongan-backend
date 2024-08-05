@@ -69,7 +69,6 @@ class JwtService(
             }
 
             return generateValidatedPayload(token)
-
         } catch (e: JwtException) {
             throw SoonganException(StatusCode.INVALID_JWT)
         }
@@ -82,7 +81,7 @@ class JwtService(
             .parseSignedClaims(token)
             .payload
 
-        return if (payload.expiration.before(Date())) {
+        return if (payload.expiration.after(Date())) {
             payload
         } else {
             throw SoonganException(StatusCode.EXPIRED_JWT)
