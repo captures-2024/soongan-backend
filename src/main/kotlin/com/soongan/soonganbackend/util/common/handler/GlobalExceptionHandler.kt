@@ -31,14 +31,14 @@ class GlobalExceptionHandler {
     @ExceptionHandler(Exception::class)
     @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
     fun handleCommonException(ex: Exception): ErrorResponseDto<StatusCode> {
-        logger.error { ex.stackTrace }
+        logger.error { ex.stackTraceToString() }
         return ErrorResponseDto(StatusCode.SERVICE_NOT_AVAILABLE)
     }
 
     @ExceptionHandler(SoonganException::class)
     @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
     fun handleSoonganException(ex: SoonganException): ErrorResponseDto<StatusCode> {
-        logger.error { ex.stackTrace }
+        logger.error { ex.stackTraceToString() }
         return ErrorResponseDto(ex.statusCode, ex.message ?: "")
     }
 
@@ -75,7 +75,7 @@ class GlobalExceptionHandler {
                 exception.message.toString()
             }
 
-        logger.error { exception.stackTrace }
+        logger.error { exception.stackTraceToString() }
         return ErrorResponseDto(statusCode, errorMessage)
     }
 }
