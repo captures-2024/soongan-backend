@@ -12,7 +12,6 @@ import com.nimbusds.jwt.SignedJWT
 import com.soongan.soonganbackend.aspects.CheckMember
 import com.soongan.soonganbackend.aspects.getMemberFromRequest
 import com.soongan.soonganbackend.enums.Provider
-import com.soongan.soonganbackend.enums.TokenType
 import com.soongan.soonganbackend.enums.UserAgent
 import com.soongan.soonganbackend.interfaces.member.dto.*
 import com.soongan.soonganbackend.persistence.member.MemberAdapter
@@ -66,10 +65,9 @@ class MemberService(
         )
     }
 
-    fun getMemberInfo(loginMember: MemberDetail): MemberInfoResponseDto {
-        val member = (memberAdapter.getByEmail(loginMember.email)
-            ?: throw SoonganException(StatusCode.NOT_FOUND_MEMBER_BY_EMAIL))
-
+    @CheckMember
+    fun getMemberInfo(): MemberInfoResponseDto {
+        val member = getMemberFromRequest()
         return MemberInfoResponseDto.from(member)
     }
 

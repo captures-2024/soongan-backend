@@ -54,8 +54,8 @@ class MemberController(
 
     @Operation(summary = "회원 정보 조회 Api", description = "JWT를 읽어 로그인한 회원의 정보를 조회합니다.")
     @GetMapping
-    fun getUserinfo(@AuthenticationPrincipal loginMember: MemberDetail): MemberInfoResponseDto {
-        return memberService.getMemberInfo(loginMember)
+    fun getUserinfo(): MemberInfoResponseDto {
+        return memberService.getMemberInfo()
     }
 
     @Operation(summary = "닉네임 중복 확인 Api", description = "닉네임이 중복되는지 확인합니다. true면 사용 가능, false면 중복.")
