@@ -21,11 +21,14 @@ object Uri {
     const val LIKE = "/like"
 
     val passUris = listOf(
-        MEMBERS + LOGIN,
-        MEMBERS + REFRESH,
         API_DOCS,
         SWAGGER_UI + "/**",
         SWAGGER_RESOURCES + "/**",
-        V3 + API_DOCS + "/**"
+        V3 + API_DOCS + "/**",
+
+        MEMBERS + LOGIN,
+        MEMBERS + REFRESH,
+
+        WEEKLY + CONTESTS + POSTS,
     )
 }
