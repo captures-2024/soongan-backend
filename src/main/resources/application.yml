@@ -42,3 +42,7 @@ oauth2:
 
 jwt:
   secret: ENC(Uet8sXoFY7S7ZDmqS2RuCOhRbluWH1jyGlNbOo3G3kPlxipkxqmvo2IKeaU2Hv+X)
+
+firebase:
+  project-id: ENC(5YLSshIxITz1cQ1o2Dsf62PVAryHEo1W)
+  keypath: ENC(hN8sOLKoQ/s2TyXj+DKxmSexUv5jT2HfT+G3wqCrhOMcTD2kNXq+a02VkVu2uBIpoE3t/3HmjOgK/y9Bon0p6A==)

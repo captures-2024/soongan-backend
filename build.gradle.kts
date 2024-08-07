@@ -41,6 +41,7 @@ dependencies {
     implementation("com.nimbusds:nimbus-jose-jwt:9.37.3")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0")
     implementation("io.github.oshai:kotlin-logging-jvm:5.1.0")
+    implementation("com.google.firebase:firebase-admin:9.2.0")
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.5")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.5")
     runtimeOnly("com.h2database:h2")
