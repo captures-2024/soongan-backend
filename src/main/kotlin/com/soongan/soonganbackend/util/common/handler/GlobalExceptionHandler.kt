@@ -1,6 +1,7 @@
 package com.soongan.soonganbackend.util.common.handler
 
 import com.fasterxml.jackson.databind.exc.InvalidFormatException
+import com.soongan.soonganbackend.util.common.dto.CommonErrorResponseDto
 import com.soongan.soonganbackend.util.common.exception.SoonganException
 import com.soongan.soonganbackend.util.common.exception.StatusCode
 import io.github.oshai.kotlinlogging.KotlinLogging
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException
 import org.springframework.web.multipart.support.MissingServletRequestPartException
 import org.springframework.web.server.ServerWebInputException
+import org.springframework.web.servlet.resource.NoResourceFoundException
 import java.security.InvalidParameterException
 
 @RestControllerAdvice
@@ -30,16 +32,16 @@ class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception::class)
     @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
-    fun handleCommonException(ex: Exception): ErrorResponseDto<StatusCode> {
+    fun handleCommonException(ex: Exception): CommonErrorResponseDto {
         logger.error { ex.stackTraceToString() }
-        return ErrorResponseDto(StatusCode.SERVICE_NOT_AVAILABLE)
+        return CommonErrorResponseDto.from(StatusCode.SERVICE_NOT_AVAILABLE)
     }
 
     @ExceptionHandler(SoonganException::class)
     @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
-    fun handleSoonganException(ex: SoonganException): ErrorResponseDto<StatusCode> {
+    fun handleSoonganException(ex: SoonganException): CommonErrorResponseDto {
         logger.error { ex.stackTraceToString() }
-        return ErrorResponseDto(ex.statusCode, ex.message ?: "")
+        return CommonErrorResponseDto.from(ex.statusCode)
     }
 
     @ExceptionHandler(
@@ -54,28 +56,35 @@ class GlobalExceptionHandler {
         HttpMessageNotReadableException::class,
         HttpMessageNotWritableException::class,
         MissingServletRequestPartException::class,
-        BindException::class
+        BindException::class,
+        NoResourceFoundException::class
     )
     @ResponseStatus(code = HttpStatus.BAD_REQUEST)
-    fun handleInvalidParameterException(exception: Exception): ErrorResponseDto<StatusCode> {
+    fun handleInvalidParameterException(exception: Exception): CommonErrorResponseDto {
         val statusCode: StatusCode = StatusCode.SOONGAN_API_INVALID_REQUEST
 
         val errorMessage: String =
-            if (exception is HttpMessageNotReadableException
-                && exception.rootCause is InvalidFormatException
-            ) {
-                val fieldName = (exception.rootCause as InvalidFormatException).path[0].fieldName
-                "There is a missing parameter, detail : missing '${fieldName}'"
-            } else if (exception is BindException) {
-                val fieldNames = exception.bindingResult.allErrors.joinToString {
-                    "${(it as FieldError).field}:${it.defaultMessage}"
+            when {
+                exception is HttpMessageNotReadableException
+                        && exception.rootCause is InvalidFormatException -> {
+                    val fieldName = (exception.rootCause as InvalidFormatException).path[0].fieldName
+                    "There is a missing parameter, detail : missing '${fieldName}'"
                 }
-                "There are invalid parameters, detail : ['${fieldNames}']"
-            } else {
-                exception.message.toString()
+                exception is BindException -> {
+                    val fieldNames = exception.bindingResult.allErrors.joinToString {
+                        "${(it as FieldError).field}:${it.defaultMessage}"
+                    }
+                    "There are invalid parameters, detail : ['${fieldNames}']"
+                }
+                exception is NoResourceFoundException -> {
+                    "Resource not found for path: ${exception.resourcePath}"
+                }
+                else -> {
+                    exception.message.toString()
+                }
             }
 
         logger.error { exception.stackTraceToString() }
-        return ErrorResponseDto(statusCode, errorMessage)
+        return CommonErrorResponseDto.from(statusCode, errorMessage)
     }
 }
