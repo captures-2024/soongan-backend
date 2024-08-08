@@ -21,6 +21,11 @@ class PostLikeAdapter(
         )
     }
 
+    @Transactional
+    fun cancelLike(postId: Long, contestType: ContestTypeEnum, member: MemberEntity) {
+        postLikeRepository.deleteByPostIdAndContestTypeAndMember(postId, contestType, member)
+    }
+
     @Transactional(readOnly = true)
     fun getByPostIdAndContestTypeAndMember(postId: Long, contestType: ContestTypeEnum, member: MemberEntity): PostLikeEntity? {
         return postLikeRepository.findByPostIdAndContestTypeAndMember(postId, contestType, member)

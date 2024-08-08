@@ -8,6 +8,7 @@ import com.soongan.soonganbackend.util.common.dto.MemberDetail
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.security.core.annotation.AuthenticationPrincipal
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -27,5 +28,14 @@ class PostLikeController (
         @AuthenticationPrincipal loginMember: MemberDetail
     ): PostLikeResponseDto {
         return postLikeService.addLikePost(postLikeRequest, loginMember)
+    }
+
+    @DeleteMapping
+    @Operation(summary = "게시글 좋아요 취소 Api", description = "게시글에 좋아요를 취소합니다.")
+    fun cancelLikePost(
+        @RequestBody postLikeRequest: PostLikeRequestDto,
+        @AuthenticationPrincipal loginMember: MemberDetail
+    ): PostLikeResponseDto {
+        return postLikeService.cancelLikePost(postLikeRequest, loginMember)
     }
 }
