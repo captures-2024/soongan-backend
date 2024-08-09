@@ -20,6 +20,8 @@ object Uri {
     const val POSTS = "/posts"
     const val LIKE = "/like"
 
+    const val FCM = "/fcm"
+
     val passUris = listOf(
         API_DOCS,
         SWAGGER_UI + "/**",
