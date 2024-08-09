@@ -23,6 +23,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.multipart.MultipartFile
 import java.time.LocalDateTime
 
@@ -37,6 +38,7 @@ class MemberService(
     private val httpClient = OkHttpClient()
     private val gson = Gson()
 
+    @Transactional
     fun login(userAgent: UserAgent, loginDto: LoginRequestDto): LoginResponseDto {
         val provider = loginDto.provider
         val idToken = loginDto.idToken
@@ -133,12 +135,14 @@ class MemberService(
         }
     }
 
+    @Transactional
     fun withdraw(loginMember: MemberEntity) {
         val softDeletedMember = loginMember.copy(withdrawalAt = LocalDateTime.now())
         memberAdapter.save(softDeletedMember)
         jwtService.deleteToken(loginMember.email)
     }
 
+    @Transactional
     fun refresh(refreshRequestDto: RefreshRequestDto): LoginResponseDto {
         val payload = jwtService.validateRefreshRequest(refreshRequestDto)
         val memberEmail = payload["sub"] as String
@@ -152,10 +156,12 @@ class MemberService(
         )
     }
 
+    @Transactional(readOnly = true)
     fun checkNickname(nickname: String): Boolean {
         return memberAdapter.getByNickname(nickname) == null
     }
 
+    @Transactional
     fun updateNickname(loginMember: MemberEntity, newNickname: String): UpdateNicknameResponseDto {
         val updatedMember = loginMember.copy(nickname = newNickname)
         memberAdapter.save(updatedMember)
@@ -166,6 +172,7 @@ class MemberService(
         )
     }
 
+    @Transactional
     fun updateProfileImage(loginMember: MemberEntity, profileImage: MultipartFile) {
         if (loginMember.profileImageUrl != null) {
             gcpStorageService.deleteFile(loginMember.profileImageUrl)
