@@ -1,10 +1,10 @@
 package com.soongan.soonganbackend.interfaces.weeklyContest
 
-import com.soongan.soonganbackend.aspects.CheckMember
 import com.soongan.soonganbackend.interfaces.weeklyContest.dto.WeeklyContestPostRegisterRequestDto
 import com.soongan.soonganbackend.interfaces.weeklyContest.dto.WeeklyContestPostRegisterResponseDto
 import com.soongan.soonganbackend.interfaces.weeklyContest.dto.WeeklyContestPostResponseDto
 import com.soongan.soonganbackend.persistence.member.MemberEntity
+import com.soongan.soonganbackend.resolver.LoginMember
 import com.soongan.soonganbackend.service.weeklyContest.WeeklyContestPostOrderCriteriaEnum
 import com.soongan.soonganbackend.service.weeklyContest.WeeklyContestService
 import com.soongan.soonganbackend.util.common.constant.Uri
@@ -39,9 +39,8 @@ class WeeklyContestController (
 
     @PostMapping(Uri.POSTS)
     @Operation(summary = "주간 콘테스트 게시글 등록 Api", description = "주간 콘테스트 게시글을 등록합니다.")
-    @CheckMember
     fun registerWeeklyContestPost(
-        loginMember: MemberEntity,
+        @LoginMember loginMember: MemberEntity,
         @ModelAttribute @Valid weeklyContestPostRegisterRequest: WeeklyContestPostRegisterRequestDto
     ): WeeklyContestPostRegisterResponseDto {
         return weeklyContestService.registerWeeklyContestPost(loginMember, weeklyContestPostRegisterRequest)

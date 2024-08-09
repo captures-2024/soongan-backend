@@ -10,6 +10,7 @@ import com.soongan.soonganbackend.persistence.weeklyContestPost.WeeklyContestPos
 import com.soongan.soonganbackend.util.common.exception.SoonganException
 import com.soongan.soonganbackend.util.common.exception.StatusCode
 import com.soongan.soonganbackend.util.domain.ContestTypeEnum
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.stereotype.Service
 
 @Service
@@ -19,6 +20,7 @@ class PostLikeService(
     private val memberAdapter: MemberAdapter
 ) {
 
+    @Transactional
     fun addLikePost(loginMember: MemberEntity, postLikeRequest: PostLikeRequestDto): PostLikeResponseDto {
         // todo: DAILY Contest 추가되면 구조 리팩토링 필요할 듯 (중복 발생할 듯)
         if (postLikeRequest.contestType == ContestTypeEnum.WEEKLY) {

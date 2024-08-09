@@ -1,9 +1,9 @@
 package com.soongan.soonganbackend.interfaces.member
 
-import com.soongan.soonganbackend.aspects.CheckMember
 import com.soongan.soonganbackend.enums.UserAgent
 import com.soongan.soonganbackend.interfaces.member.dto.*
 import com.soongan.soonganbackend.persistence.member.MemberEntity
+import com.soongan.soonganbackend.resolver.LoginMember
 import com.soongan.soonganbackend.service.member.MemberService
 import com.soongan.soonganbackend.util.common.constant.Uri
 import com.soongan.soonganbackend.util.common.dto.MemberDetail
@@ -44,8 +44,7 @@ class MemberController(
 
     @Operation(summary = "회원 탈퇴 Api", description = "회원을 탈퇴합니다.")
     @PostMapping(Uri.WITHDRAW)
-    @CheckMember
-    fun withdraw(loginMember: MemberEntity) {
+    fun withdraw(@LoginMember loginMember: MemberEntity) {
         memberService.withdraw(loginMember)
     }
 
@@ -57,8 +56,7 @@ class MemberController(
 
     @Operation(summary = "회원 정보 조회 Api", description = "JWT를 읽어 로그인한 회원의 정보를 조회합니다.")
     @GetMapping
-    @CheckMember
-    fun getUserinfo(loginMember: MemberEntity): MemberInfoResponseDto {
+    fun getUserinfo(@LoginMember loginMember: MemberEntity): MemberInfoResponseDto {
         return memberService.getMemberInfo(loginMember)
     }
 
@@ -70,15 +68,13 @@ class MemberController(
 
     @Operation(summary = "닉네임 변경 Api", description = "닉네임을 변경합니다.")
     @PatchMapping(Uri.NICKNAME)
-    @CheckMember
-    fun updateNickname(loginMember: MemberEntity, @RequestParam newNickname: String): UpdateNicknameResponseDto {
+    fun updateNickname(@LoginMember loginMember: MemberEntity, @RequestParam newNickname: String): UpdateNicknameResponseDto {
         return memberService.updateNickname(loginMember, newNickname)
     }
 
     @Operation(summary = "프로필 사진 변경 Api", description = "프로필 사진을 변경합니다.")
     @PatchMapping(Uri.PROFILE_IMAGE, consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
-    @CheckMember
-    fun updateProfileImage(loginMember: MemberEntity, @RequestPart("image") profileImage: MultipartFile) {
+    fun updateProfileImage(@LoginMember loginMember: MemberEntity, @RequestPart("image") profileImage: MultipartFile) {
         memberService.updateProfileImage(loginMember, profileImage)
     }
 }
