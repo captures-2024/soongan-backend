@@ -9,8 +9,6 @@ import com.nimbusds.jose.crypto.RSASSAVerifier
 import com.nimbusds.jose.jwk.RSAKey
 import com.nimbusds.jose.util.Base64URL
 import com.nimbusds.jwt.SignedJWT
-import com.soongan.soonganbackend.aspects.CheckMember
-import com.soongan.soonganbackend.aspects.getMemberFromRequest
 import com.soongan.soonganbackend.enums.Provider
 import com.soongan.soonganbackend.enums.UserAgent
 import com.soongan.soonganbackend.interfaces.member.dto.*
@@ -65,10 +63,8 @@ class MemberService(
         )
     }
 
-    @CheckMember
-    fun getMemberInfo(): MemberInfoResponseDto {
-        val member = getMemberFromRequest()
-        return MemberInfoResponseDto.from(member)
+    fun getMemberInfo(loginMember: MemberEntity): MemberInfoResponseDto {
+        return MemberInfoResponseDto.from(loginMember)
     }
 
     fun getGoogleMemberEmail(userAgent: UserAgent, idToken: String): String {
@@ -137,12 +133,10 @@ class MemberService(
         }
     }
 
-    @CheckMember
-    fun withdraw() {
-        val member = getMemberFromRequest()
-        val softDeletedMember = member.copy(withdrawalAt = LocalDateTime.now())
+    fun withdraw(loginMember: MemberEntity) {
+        val softDeletedMember = loginMember.copy(withdrawalAt = LocalDateTime.now())
         memberAdapter.save(softDeletedMember)
-        jwtService.deleteToken(member.email)
+        jwtService.deleteToken(loginMember.email)
     }
 
     fun refresh(refreshRequestDto: RefreshRequestDto): LoginResponseDto {
@@ -162,10 +156,8 @@ class MemberService(
         return memberAdapter.getByNickname(nickname) == null
     }
 
-    @CheckMember
-    fun updateNickname(newNickname: String): UpdateNicknameResponseDto {
-        val member = getMemberFromRequest()
-        val updatedMember = member.copy(nickname = newNickname)
+    fun updateNickname(loginMember: MemberEntity, newNickname: String): UpdateNicknameResponseDto {
+        val updatedMember = loginMember.copy(nickname = newNickname)
         memberAdapter.save(updatedMember)
 
         return UpdateNicknameResponseDto(
@@ -174,15 +166,13 @@ class MemberService(
         )
     }
 
-    @CheckMember
-    fun updateProfileImage(profileImage: MultipartFile) {
-        val member = getMemberFromRequest()
-        if (member.profileImageUrl != null) {
-            gcpStorageService.deleteFile(member.profileImageUrl)
+    fun updateProfileImage(loginMember: MemberEntity, profileImage: MultipartFile) {
+        if (loginMember.profileImageUrl != null) {
+            gcpStorageService.deleteFile(loginMember.profileImageUrl)
         }
 
-        val updatedProfileImageUrl = gcpStorageService.uploadFile(profileImage, member.id!!)
-        val updatedMember = member.copy(profileImageUrl = updatedProfileImageUrl)
+        val updatedProfileImageUrl = gcpStorageService.uploadFile(profileImage, loginMember.id!!)
+        val updatedMember = loginMember.copy(profileImageUrl = updatedProfileImageUrl)
         memberAdapter.save(updatedMember)
     }
 }

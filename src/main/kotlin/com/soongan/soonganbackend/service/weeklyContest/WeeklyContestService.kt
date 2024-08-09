@@ -1,7 +1,5 @@
 package com.soongan.soonganbackend.service.weeklyContest
 
-import com.soongan.soonganbackend.aspects.CheckMember
-import com.soongan.soonganbackend.aspects.getMemberFromRequest
 import com.soongan.soonganbackend.interfaces.weeklyContest.dto.WeeklyContestPostRegisterRequestDto
 import com.soongan.soonganbackend.interfaces.weeklyContest.dto.WeeklyContestPostRegisterResponseDto
 import com.soongan.soonganbackend.interfaces.weeklyContest.dto.WeeklyContestPostResponseDto
@@ -69,23 +67,21 @@ class WeeklyContestService (
         )
     }
 
-    @CheckMember
     fun registerWeeklyContestPost(
+        loginMember: MemberEntity,
         weeklyContestPostRegisterRequest: WeeklyContestPostRegisterRequestDto
     ): WeeklyContestPostRegisterResponseDto {
         val weeklyContest: WeeklyContestEntity = weeklyContestAdapter.getWeeklyContest(weeklyContestPostRegisterRequest.weeklyContestRound) ?:
             throw SoonganException(StatusCode.SOONGAN_API_NOT_FOUND_WEEKLY_CONTEST)
 
-        val member: MemberEntity = getMemberFromRequest()
-
         val imageUrl = gcpStorageService.uploadFile(
             weeklyContestPostRegisterRequest.imageFile,
-            member.id!!
+            loginMember.id!!
         )
 
         val savedPost = weeklyContestPostAdapter.save(
             WeeklyContestPostEntity(
-                member = member,
+                member = loginMember,
                 weeklyContest = weeklyContest,
                 imageUrl = imageUrl
             )
@@ -95,7 +91,7 @@ class WeeklyContestService (
             postId = savedPost.id!!,
             subject = weeklyContest.subject,
             imageUrl = savedPost.imageUrl,
-            registerNickname = member.nickname!!
+            registerNickname = loginMember.nickname!!
         )
     }
 }

@@ -1,7 +1,5 @@
 package com.soongan.soonganbackend.service.postLike
 
-import com.soongan.soonganbackend.aspects.CheckMember
-import com.soongan.soonganbackend.aspects.getMemberFromRequest
 import com.soongan.soonganbackend.interfaces.postLike.dto.PostLikeRequestDto
 import com.soongan.soonganbackend.interfaces.postLike.dto.PostLikeResponseDto
 import com.soongan.soonganbackend.persistence.member.MemberAdapter
@@ -21,16 +19,13 @@ class PostLikeService(
     private val memberAdapter: MemberAdapter
 ) {
 
-    @CheckMember
-    fun addLikePost(postLikeRequest: PostLikeRequestDto): PostLikeResponseDto {
-        val member = getMemberFromRequest()
-
+    fun addLikePost(loginMember: MemberEntity, postLikeRequest: PostLikeRequestDto): PostLikeResponseDto {
         // todo: DAILY Contest 추가되면 구조 리팩토링 필요할 듯 (중복 발생할 듯)
         if (postLikeRequest.contestType == ContestTypeEnum.WEEKLY) {
             val weeklyContestPost: WeeklyContestPostEntity = weeklyContestPostAdapter.getByIdOrNull(postLikeRequest.postId)?.let { post ->
 
                 // 중복 좋아요 방지
-                if (isDuplicatedLike(post.id!!, postLikeRequest.contestType, member)) {
+                if (isDuplicatedLike(post.id!!, postLikeRequest.contestType, loginMember)) {
                     throw SoonganException(StatusCode.SOONGAN_API_DUPLICATED_LIKE)
                 }
 
@@ -38,7 +33,7 @@ class PostLikeService(
                 postLikeAdapter.addLike(
                     postLikeRequest.postId,
                     postLikeRequest.contestType,
-                    member = member
+                    member = loginMember
                 )
 
                 // 좋아요 개수 증가

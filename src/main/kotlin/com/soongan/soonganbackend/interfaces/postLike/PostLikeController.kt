@@ -1,7 +1,9 @@
 package com.soongan.soonganbackend.interfaces.postLike
 
+import com.soongan.soonganbackend.aspects.CheckMember
 import com.soongan.soonganbackend.interfaces.postLike.dto.PostLikeRequestDto
 import com.soongan.soonganbackend.interfaces.postLike.dto.PostLikeResponseDto
+import com.soongan.soonganbackend.persistence.member.MemberEntity
 import com.soongan.soonganbackend.service.postLike.PostLikeService
 import com.soongan.soonganbackend.util.common.constant.Uri
 import io.swagger.v3.oas.annotations.Operation
@@ -20,7 +22,8 @@ class PostLikeController (
 
     @PutMapping
     @Operation(summary = "게시글 좋아요 Api", description = "게시글에 좋아요를 추가합니다.")
-    fun addLikePost(@RequestBody postLikeRequest: PostLikeRequestDto): PostLikeResponseDto {
-        return postLikeService.addLikePost(postLikeRequest)
+    @CheckMember
+    fun addLikePost(loginMember: MemberEntity, @RequestBody postLikeRequest: PostLikeRequestDto): PostLikeResponseDto {
+        return postLikeService.addLikePost(loginMember, postLikeRequest)
     }
 }

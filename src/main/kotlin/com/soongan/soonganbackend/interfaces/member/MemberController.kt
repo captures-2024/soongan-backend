@@ -1,7 +1,9 @@
 package com.soongan.soonganbackend.interfaces.member
 
+import com.soongan.soonganbackend.aspects.CheckMember
 import com.soongan.soonganbackend.enums.UserAgent
 import com.soongan.soonganbackend.interfaces.member.dto.*
+import com.soongan.soonganbackend.persistence.member.MemberEntity
 import com.soongan.soonganbackend.service.member.MemberService
 import com.soongan.soonganbackend.util.common.constant.Uri
 import com.soongan.soonganbackend.util.common.dto.MemberDetail
@@ -42,8 +44,9 @@ class MemberController(
 
     @Operation(summary = "회원 탈퇴 Api", description = "회원을 탈퇴합니다.")
     @PostMapping(Uri.WITHDRAW)
-    fun withdraw() {
-        memberService.withdraw()
+    @CheckMember
+    fun withdraw(loginMember: MemberEntity) {
+        memberService.withdraw(loginMember)
     }
 
     @Operation(summary = "JWT 갱신 Api", description = "Refresh Token을 이용하여 JWT를 갱신합니다.")
@@ -54,8 +57,9 @@ class MemberController(
 
     @Operation(summary = "회원 정보 조회 Api", description = "JWT를 읽어 로그인한 회원의 정보를 조회합니다.")
     @GetMapping
-    fun getUserinfo(): MemberInfoResponseDto {
-        return memberService.getMemberInfo()
+    @CheckMember
+    fun getUserinfo(loginMember: MemberEntity): MemberInfoResponseDto {
+        return memberService.getMemberInfo(loginMember)
     }
 
     @Operation(summary = "닉네임 중복 확인 Api", description = "닉네임이 중복되는지 확인합니다. true면 사용 가능, false면 중복.")
@@ -66,13 +70,15 @@ class MemberController(
 
     @Operation(summary = "닉네임 변경 Api", description = "닉네임을 변경합니다.")
     @PatchMapping(Uri.NICKNAME)
-    fun updateNickname(@RequestParam newNickname: String): UpdateNicknameResponseDto {
-        return memberService.updateNickname(newNickname)
+    @CheckMember
+    fun updateNickname(loginMember: MemberEntity, @RequestParam newNickname: String): UpdateNicknameResponseDto {
+        return memberService.updateNickname(loginMember, newNickname)
     }
 
     @Operation(summary = "프로필 사진 변경 Api", description = "프로필 사진을 변경합니다.")
     @PatchMapping(Uri.PROFILE_IMAGE, consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
-    fun updateProfileImage(@RequestPart("image") profileImage: MultipartFile) {
-        memberService.updateProfileImage(profileImage)
+    @CheckMember
+    fun updateProfileImage(loginMember: MemberEntity, @RequestPart("image") profileImage: MultipartFile) {
+        memberService.updateProfileImage(loginMember, profileImage)
     }
 }
