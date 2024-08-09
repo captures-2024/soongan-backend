@@ -17,16 +17,19 @@ import java.time.LocalDateTime
 )
 @EntityListeners(AuditingEntityListener::class)
 data class FcmTokenEntity(
-    @ManyToOne(targetEntity = MemberEntity::class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    val member: MemberEntity,
-
     @Column(name = "token", nullable = false)
     val token: String,
 
+    @ManyToOne(targetEntity = MemberEntity::class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    val member: MemberEntity? = null,
+
     @Column(name = "device_type", nullable = false)
     @Enumerated(EnumType.STRING)
-    val deviceType: UserAgent
+    val deviceType: UserAgent,
+
+    @Column(name = "device_id", nullable = false)
+    val deviceId: String
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
