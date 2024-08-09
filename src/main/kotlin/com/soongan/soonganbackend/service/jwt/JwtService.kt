@@ -2,8 +2,9 @@ package com.soongan.soonganbackend.service.jwt
 
 import com.soongan.soonganbackend.enums.TokenType
 import com.soongan.soonganbackend.interfaces.member.dto.RefreshRequestDto
+import com.soongan.soonganbackend.persistence.jwt.JwtAdaptor
 import com.soongan.soonganbackend.persistence.jwt.JwtData
-import com.soongan.soonganbackend.persistence.jwt.JwtRepository
+import com.soongan.soonganbackend.util.common.exception.SoonganException
 import com.soongan.soonganbackend.util.common.exception.SoonganUnauthorizedException
 import com.soongan.soonganbackend.util.common.exception.StatusCode
 import io.jsonwebtoken.Claims
@@ -12,20 +13,22 @@ import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.util.*
 import javax.crypto.SecretKey
 
 @Service
 class JwtService(
-    private val jwtRepository: JwtRepository,
+    private val jwtAdaptor: JwtAdaptor,
     private val env: Environment
 ) {
 
+    @Transactional
     fun issueTokens(userEmail: String, authorities: List<String>): Pair<String, String> {
         val accessToken = createToken(userEmail, authorities, TokenType.ACCESS)
         val refreshToken = createToken(userEmail, authorities, TokenType.REFRESH)
 
-        jwtRepository.save(
+        jwtAdaptor.save(
             JwtData(
                 userEmail = userEmail,
                 accessToken = accessToken,
@@ -55,16 +58,17 @@ class JwtService(
             .compact()
     }
 
+    @Transactional(readOnly = true)
     fun getPayload(token: String, tokenType: TokenType): Map<String, *> {
         try {
             when (tokenType) {
                 TokenType.ACCESS -> {
-                    jwtRepository.findByAccessToken(token)
+                    jwtAdaptor.findByAccessToken(token)
                         ?: throw SoonganUnauthorizedException(StatusCode.INVALID_JWT_ACCESS_TOKEN)
                 }
 
                 TokenType.REFRESH -> {
-                    jwtRepository.findByRefreshToken(token)
+                    jwtAdaptor.findByRefreshToken(token)
                         ?: throw SoonganUnauthorizedException(StatusCode.INVALID_JWT_REFRESH_TOKEN)
                 }
             }
@@ -89,8 +93,9 @@ class JwtService(
         }
     }
 
+    @Transactional(readOnly = true)
     fun validateRefreshRequest(refreshRequestDto: RefreshRequestDto): Map<String, *> {
-        val jwtData = jwtRepository.findByRefreshToken(refreshRequestDto.refreshToken)
+        val jwtData = jwtAdaptor.findByRefreshToken(refreshRequestDto.refreshToken)
             ?: throw SoonganException(StatusCode.INVALID_JWT_REFRESH_TOKEN)
 
         val payload = getPayload(refreshRequestDto.refreshToken, TokenType.REFRESH)
@@ -107,7 +112,8 @@ class JwtService(
         return Keys.hmacShaKeyFor(secretKey.toByteArray())
     }
 
+    @Transactional
     fun deleteToken(email: String) {
-        jwtRepository.deleteByUserEmail(email)
+        jwtAdaptor.deleteByUserEmail(email)
     }
 }
