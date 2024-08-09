@@ -2,7 +2,7 @@ package com.soongan.soonganbackend.interfaces.fcm
 
 import com.soongan.soonganbackend.enums.UserAgent
 import com.soongan.soonganbackend.interfaces.fcm.dto.FcmRegistRequestDto
-import com.soongan.soonganbackend.persistence.fcm.FcmTokenEntity
+import com.soongan.soonganbackend.interfaces.fcm.dto.FcmTokenInfoResponseDto
 import com.soongan.soonganbackend.service.fcm.FcmService
 import com.soongan.soonganbackend.util.common.constant.Uri
 import io.swagger.v3.oas.annotations.Operation
@@ -19,7 +19,7 @@ class FcmController(
     fun registFcmToken(
         @RequestHeader(value = "User-Agent") userAgent: UserAgent,
         @RequestBody fcmRegistRequestDto: FcmRegistRequestDto
-    ): FcmTokenEntity {
+    ): FcmTokenInfoResponseDto {
         return fcmService.registFcmToken(userAgent, fcmRegistRequestDto)
     }
 }
