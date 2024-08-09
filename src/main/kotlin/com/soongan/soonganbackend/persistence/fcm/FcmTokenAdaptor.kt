@@ -10,13 +10,17 @@ class FcmTokenAdaptor(
 ) {
 
     @Transactional
-    fun save(deviceType: UserAgent, token: String, deviceId: String): FcmTokenEntity {
-        return fcmTokenRepository.save(
-            FcmTokenEntity(
-                deviceType = deviceType,
-                token = token,
-                deviceId = deviceId
-            )
-        )
+    fun save(fcmTokenEntity: FcmTokenEntity): FcmTokenEntity {
+        return fcmTokenRepository.save(fcmTokenEntity)
+    }
+
+    @Transactional(readOnly = true)
+    fun findByToken(token: String): FcmTokenEntity? {
+        return fcmTokenRepository.findByToken(token)
+    }
+
+    @Transactional(readOnly = true)
+    fun findByDeviceId(deviceId: String): FcmTokenEntity? {
+        return fcmTokenRepository.findByDeviceId(deviceId)
     }
 }

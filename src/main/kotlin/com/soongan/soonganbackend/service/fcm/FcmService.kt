@@ -4,6 +4,9 @@ import com.soongan.soonganbackend.enums.UserAgent
 import com.soongan.soonganbackend.interfaces.fcm.dto.FcmRegistRequestDto
 import com.soongan.soonganbackend.interfaces.fcm.dto.FcmTokenInfoResponseDto
 import com.soongan.soonganbackend.persistence.fcm.FcmTokenAdaptor
+import com.soongan.soonganbackend.persistence.fcm.FcmTokenEntity
+import com.soongan.soonganbackend.util.common.exception.SoonganException
+import com.soongan.soonganbackend.util.common.exception.StatusCode
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -14,10 +17,32 @@ class FcmService(
 
     @Transactional
     fun registFcmToken(userAgent: UserAgent, fcmRegistRequestDto: FcmRegistRequestDto): FcmTokenInfoResponseDto {
+        fcmTokenAdaptor.findByToken(token = fcmRegistRequestDto.token)?.let {
+            throw SoonganException(StatusCode.SOONGAN_API_ALREADY_EXIST_FCM_TOKEN)
+        }
+
+        val foundFcmTokenByDeviceId = fcmTokenAdaptor.findByDeviceId(deviceId = fcmRegistRequestDto.deviceId)
+        if (foundFcmTokenByDeviceId != null) {
+            val updatedFcmToken = fcmTokenAdaptor.save(
+                foundFcmTokenByDeviceId.copy(
+                    token = fcmRegistRequestDto.token
+                )
+            )
+
+            return FcmTokenInfoResponseDto(
+                id = updatedFcmToken.id!!,
+                token = updatedFcmToken.token,
+                deviceId = updatedFcmToken.deviceId,
+                deviceType = updatedFcmToken.deviceType
+            )
+        }
+
         val savedFcmToken = fcmTokenAdaptor.save(
-            deviceType = userAgent,
-            token = fcmRegistRequestDto.token,
-            deviceId = fcmRegistRequestDto.deviceId
+            FcmTokenEntity(
+                deviceType = userAgent,
+                token = fcmRegistRequestDto.token,
+                deviceId = fcmRegistRequestDto.deviceId
+            )
         )
 
         return FcmTokenInfoResponseDto(
