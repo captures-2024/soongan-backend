@@ -4,9 +4,9 @@ import com.soongan.soonganbackend.util.common.exception.StatusCode
 
 class ExportResponseDto(
     override val statusCode: String,
-    override val errorMessage: String,
+    override val message: String,
     var responseData: Any? = null
-): CommonErrorResponseDto(statusCode, errorMessage){
+): CommonErrorResponseDto(statusCode, message){
 
     companion object {
         fun from(
@@ -15,7 +15,7 @@ class ExportResponseDto(
         ): ExportResponseDto =
             ExportResponseDto(
                 statusCode = statusCode.code,
-                errorMessage = statusCode.message,
+                message = statusCode.message,
                 responseData = responseData
         )
     }

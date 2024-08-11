@@ -4,7 +4,7 @@ import com.soongan.soonganbackend.util.common.exception.StatusCode
 
 open class CommonErrorResponseDto(
     open val statusCode: String,
-    open val errorMessage: String,
+    open val message: String,
 ) {
     companion object {
         fun from(
@@ -13,7 +13,7 @@ open class CommonErrorResponseDto(
         ): CommonErrorResponseDto =
             CommonErrorResponseDto(
                 statusCode = statusCode.code,
-                errorMessage = errorMessage ?: statusCode.message
+                message = errorMessage ?: statusCode.message
             )
     }
 }
