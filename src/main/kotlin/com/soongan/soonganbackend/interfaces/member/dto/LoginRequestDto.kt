@@ -8,5 +8,8 @@ data class LoginRequestDto(
     val provider: Provider,
 
     @field:NotNull(message = "iDToken 정보는 필수입니다.")
-    val idToken: String
+    val idToken: String,
+
+    @field:NotNull(message = "fcmToken 정보는 필수입니다.")
+    val fcmToken: String
 )

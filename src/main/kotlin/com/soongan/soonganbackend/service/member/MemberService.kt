@@ -12,6 +12,8 @@ import com.nimbusds.jwt.SignedJWT
 import com.soongan.soonganbackend.enums.Provider
 import com.soongan.soonganbackend.enums.UserAgent
 import com.soongan.soonganbackend.interfaces.member.dto.*
+import com.soongan.soonganbackend.persistence.fcm.FcmTokenAdaptor
+import com.soongan.soonganbackend.persistence.fcm.FcmTokenEntity
 import com.soongan.soonganbackend.persistence.member.MemberAdapter
 import com.soongan.soonganbackend.service.jwt.JwtService
 import com.soongan.soonganbackend.persistence.member.MemberEntity
@@ -30,6 +32,7 @@ import java.time.LocalDateTime
 @Service
 class MemberService(
     private val memberAdapter: MemberAdapter,
+    private val fcmTokenAdaptor: FcmTokenAdaptor,
     private val jwtService: JwtService,
     private val env: Environment,
     private val gcpStorageService: GcpStorageService
@@ -57,6 +60,14 @@ class MemberService(
                     authorities = "ROLE_MEMBER"
                 )
             )
+
+        fcmTokenAdaptor.findByToken(loginDto.fcmToken)?.let { foundFcmToken ->
+            fcmTokenAdaptor.save(
+                foundFcmToken.copy(
+                    member = member
+                )
+            )
+        } ?: throw SoonganException(StatusCode.SOONGAN_API_NOT_FOUND_FCM_TOKEN)
 
         val issuedTokens = jwtService.issueTokens(member.email, member.authorities.split(","))
         return LoginResponseDto(
