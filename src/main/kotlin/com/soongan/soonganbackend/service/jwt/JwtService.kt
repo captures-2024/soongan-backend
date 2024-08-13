@@ -3,7 +3,7 @@ package com.soongan.soonganbackend.service.jwt
 import com.soongan.soonganbackend.enums.TokenType
 import com.soongan.soonganbackend.persistence.jwt.JwtData
 import com.soongan.soonganbackend.persistence.jwt.JwtRepository
-import com.soongan.soonganbackend.util.common.exception.SoonganException
+import com.soongan.soonganbackend.util.common.exception.SoonganUnauthorizedException
 import com.soongan.soonganbackend.util.common.exception.StatusCode
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.JwtException
@@ -59,18 +59,18 @@ class JwtService(
             when (tokenType) {
                 TokenType.ACCESS -> {
                     jwtRepository.findByAccessToken(token)
-                        ?: throw SoonganException(StatusCode.INVALID_JWT_ACCESS_TOKEN)
+                        ?: throw SoonganUnauthorizedException(StatusCode.INVALID_JWT_ACCESS_TOKEN)
                 }
 
                 TokenType.REFRESH -> {
                     jwtRepository.findByRefreshToken(token)
-                        ?: throw SoonganException(StatusCode.INVALID_JWT_REFRESH_TOKEN)
+                        ?: throw SoonganUnauthorizedException(StatusCode.INVALID_JWT_REFRESH_TOKEN)
                 }
             }
 
             return generateValidatedPayload(token)
         } catch (e: JwtException) {
-            throw SoonganException(StatusCode.INVALID_JWT)
+            throw SoonganUnauthorizedException(StatusCode.INVALID_JWT)
         }
     }
 
@@ -84,7 +84,7 @@ class JwtService(
         return if (payload.expiration.after(Date())) {
             payload
         } else {
-            throw SoonganException(StatusCode.EXPIRED_JWT)
+            throw SoonganUnauthorizedException(StatusCode.EXPIRED_JWT)
         }
     }
 
