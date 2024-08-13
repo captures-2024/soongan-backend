@@ -62,11 +62,9 @@ class MemberService(
             )
 
         fcmTokenAdaptor.findByToken(loginDto.fcmToken)?.let { foundFcmToken ->
-            fcmTokenAdaptor.save(
-                foundFcmToken.copy(
-                    member = member
-                )
-            )
+            if (foundFcmToken.member == null || foundFcmToken.member.id != member.id) {
+                fcmTokenAdaptor.save(foundFcmToken.copy(member = member))
+            }
         } ?: throw SoonganException(StatusCode.SOONGAN_API_NOT_FOUND_FCM_TOKEN)
 
         val issuedTokens = jwtService.issueTokens(member.email, member.authorities.split(","))
