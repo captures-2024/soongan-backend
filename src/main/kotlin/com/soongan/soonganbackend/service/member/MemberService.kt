@@ -10,7 +10,6 @@ import com.nimbusds.jose.jwk.RSAKey
 import com.nimbusds.jose.util.Base64URL
 import com.nimbusds.jwt.SignedJWT
 import com.soongan.soonganbackend.enums.Provider
-import com.soongan.soonganbackend.enums.TokenType
 import com.soongan.soonganbackend.enums.UserAgent
 import com.soongan.soonganbackend.interfaces.member.dto.*
 import com.soongan.soonganbackend.persistence.member.MemberAdapter
@@ -64,11 +63,8 @@ class MemberService(
         )
     }
 
-    fun getMemberInfo(loginMember: MemberDetail): MemberInfoResponseDto {
-        val member = (memberAdapter.getByEmail(loginMember.email)
-            ?: throw SoonganException(StatusCode.NOT_FOUND_MEMBER_BY_EMAIL))
-
-        return MemberInfoResponseDto.from(member)
+    fun getMemberInfo(loginMember: MemberEntity): MemberInfoResponseDto {
+        return MemberInfoResponseDto.from(loginMember)
     }
 
     fun getGoogleMemberEmail(userAgent: UserAgent, idToken: String): String {
@@ -137,18 +133,15 @@ class MemberService(
         }
     }
 
-    fun withdraw(loginMember: MemberDetail) {
-        val member = memberAdapter.getByEmail(loginMember.email)
-            ?: throw SoonganException(StatusCode.NOT_FOUND_MEMBER_BY_EMAIL)
-
-        val softDeletedMember = member.copy(withdrawalAt = LocalDateTime.now())
+    fun withdraw(loginMember: MemberEntity) {
+        val softDeletedMember = loginMember.copy(withdrawalAt = LocalDateTime.now())
         memberAdapter.save(softDeletedMember)
-        jwtService.deleteToken(member.email)
+        jwtService.deleteToken(loginMember.email)
     }
 
     fun refresh(refreshRequestDto: RefreshRequestDto): LoginResponseDto {
-        val refreshTokenPayload = jwtService.getPayload(refreshRequestDto.refreshToken, TokenType.REFRESH)
-        val memberEmail = refreshTokenPayload["sub"] as String
+        val payload = jwtService.validateRefreshRequest(refreshRequestDto)
+        val memberEmail = payload["sub"] as String
         val member = memberAdapter.getByEmail(memberEmail)
             ?: throw SoonganException(StatusCode.NOT_FOUND_MEMBER_BY_EMAIL)
 
@@ -163,29 +156,23 @@ class MemberService(
         return memberAdapter.getByNickname(nickname) == null
     }
 
-    fun updateNickname(loginMember: MemberDetail, newNickname: String): UpdateNicknameResponseDto {
-        val member = memberAdapter.getByEmail(loginMember.email)
-            ?: throw SoonganException(StatusCode.NOT_FOUND_MEMBER_BY_EMAIL)
-
-        val updatedMember = member.copy(nickname = newNickname)
+    fun updateNickname(loginMember: MemberEntity, newNickname: String): UpdateNicknameResponseDto {
+        val updatedMember = loginMember.copy(nickname = newNickname)
         memberAdapter.save(updatedMember)
 
         return UpdateNicknameResponseDto(
-            memberEmail = loginMember.email,
+            memberEmail = updatedMember.email,
             updatedNickname = newNickname
         )
     }
 
-    fun updateProfileImage(loginMember: MemberDetail, profileImage: MultipartFile) {
-        val member = memberAdapter.getByEmail(loginMember.email)
-            ?: throw SoonganException(StatusCode.NOT_FOUND_MEMBER_BY_EMAIL)
-
-        if (member.profileImageUrl != null) {
-            gcpStorageService.deleteFile(member.profileImageUrl)
+    fun updateProfileImage(loginMember: MemberEntity, profileImage: MultipartFile) {
+        if (loginMember.profileImageUrl != null) {
+            gcpStorageService.deleteFile(loginMember.profileImageUrl)
         }
 
-        val updatedProfileImageUrl = gcpStorageService.uploadFile(profileImage, member.id!!)
-        val updatedMember = member.copy(profileImageUrl = updatedProfileImageUrl)
+        val updatedProfileImageUrl = gcpStorageService.uploadFile(profileImage, loginMember.id!!)
+        val updatedMember = loginMember.copy(profileImageUrl = updatedProfileImageUrl)
         memberAdapter.save(updatedMember)
     }
 }

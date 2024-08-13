@@ -71,16 +71,14 @@ class GlobalExceptionHandler {
                     "There is a missing parameter, detail : missing '${fieldName}'"
                 }
                 exception is BindException -> {
-                    val fieldNames = exception.bindingResult.allErrors.joinToString {
-                        "${(it as FieldError).field}:${it.defaultMessage}"
+                    try {
+                        val fieldNames = exception.bindingResult.allErrors.joinToString {
+                            "${(it as FieldError).field}:${it.defaultMessage}"
+                        }
+                        "There are invalid parameters, detail : ['${fieldNames}']"
+                    } catch (e: Exception) {
+                        exception.message
                     }
-                    "There are invalid parameters, detail : ['${fieldNames}']"
-                }
-                exception is NoResourceFoundException -> {
-                    "Resource not found for path: ${exception.resourcePath}"
-                }
-                else -> {
-                    exception.message.toString()
                 }
             }
 

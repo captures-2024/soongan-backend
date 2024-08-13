@@ -1,6 +1,7 @@
 package com.soongan.soonganbackend.service.jwt
 
 import com.soongan.soonganbackend.enums.TokenType
+import com.soongan.soonganbackend.interfaces.member.dto.RefreshRequestDto
 import com.soongan.soonganbackend.persistence.jwt.JwtData
 import com.soongan.soonganbackend.persistence.jwt.JwtRepository
 import com.soongan.soonganbackend.util.common.exception.SoonganUnauthorizedException
@@ -54,7 +55,7 @@ class JwtService(
             .compact()
     }
 
-    fun getPayload(token: String, tokenType: TokenType): Map<String, Any> {  // 토큰을 읽어 페이로드 정보를 가져오는 함수, 만약 유효하지 않다면 null
+    fun getPayload(token: String, tokenType: TokenType): Map<String, *> {
         try {
             when (tokenType) {
                 TokenType.ACCESS -> {
@@ -88,6 +89,18 @@ class JwtService(
         }
     }
 
+    fun validateRefreshRequest(refreshRequestDto: RefreshRequestDto): Map<String, *> {
+        val jwtData = jwtRepository.findByRefreshToken(refreshRequestDto.refreshToken)
+            ?: throw SoonganException(StatusCode.INVALID_JWT_REFRESH_TOKEN)
+
+        val payload = getPayload(refreshRequestDto.refreshToken, TokenType.REFRESH)
+        if (jwtData.refreshToken != refreshRequestDto.refreshToken ||
+            jwtData.accessToken != refreshRequestDto.accessToken ||
+            jwtData.userEmail != payload["sub"]) {
+            throw SoonganException(StatusCode.INVALID_JWT_REFRESH_TOKEN)
+        }
+        return payload
+    }
 
     private fun getSecretKey(): SecretKey {
         val secretKey = env.getProperty("jwt.secret")!!

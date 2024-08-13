@@ -11,7 +11,6 @@ import com.soongan.soonganbackend.persistence.weeklyContestPost.WeeklyContestPos
 import com.soongan.soonganbackend.persistence.weeklyContestPost.WeeklyContestPostEntity
 import com.soongan.soonganbackend.service.gcp.GcpStorageService
 import com.soongan.soonganbackend.service.weeklyContest.WeeklyContestPostOrderCriteriaEnum.*
-import com.soongan.soonganbackend.util.common.dto.MemberDetail
 import com.soongan.soonganbackend.util.common.dto.MemberInfoDto
 import com.soongan.soonganbackend.util.common.dto.PageDto
 import com.soongan.soonganbackend.util.common.exception.SoonganException
@@ -69,23 +68,20 @@ class WeeklyContestService (
     }
 
     fun registerWeeklyContestPost(
-        loginMember: MemberDetail,
+        loginMember: MemberEntity,
         weeklyContestPostRegisterRequest: WeeklyContestPostRegisterRequestDto
     ): WeeklyContestPostRegisterResponseDto {
         val weeklyContest: WeeklyContestEntity = weeklyContestAdapter.getWeeklyContest(weeklyContestPostRegisterRequest.weeklyContestRound) ?:
             throw SoonganException(StatusCode.SOONGAN_API_NOT_FOUND_WEEKLY_CONTEST)
 
-        val member: MemberEntity = memberAdapter.getByEmail(loginMember.email)
-            ?: throw SoonganException(StatusCode.SOONGAN_API_NOT_FOUND_MEMBER)
-
         val imageUrl = gcpStorageService.uploadFile(
             weeklyContestPostRegisterRequest.imageFile,
-            member.id!!
+            loginMember.id!!
         )
 
         val savedPost = weeklyContestPostAdapter.save(
             WeeklyContestPostEntity(
-                member = member,
+                member = loginMember,
                 weeklyContest = weeklyContest,
                 imageUrl = imageUrl
             )
@@ -95,7 +91,7 @@ class WeeklyContestService (
             postId = savedPost.id!!,
             subject = weeklyContest.subject,
             imageUrl = savedPost.imageUrl,
-            registerNickname = member.nickname!!
+            registerNickname = loginMember.nickname!!
         )
     }
 }
