@@ -67,10 +67,14 @@ class GlobalExceptionHandler {
                 val fieldName = (exception.rootCause as InvalidFormatException).path[0].fieldName
                 "There is a missing parameter, detail : missing '${fieldName}'"
             } else if (exception is BindException) {
-                val fieldNames = exception.bindingResult.allErrors.joinToString {
-                    "${(it as FieldError).field}:${it.defaultMessage}"
+                try {
+                    val fieldNames = exception.bindingResult.allErrors.joinToString {
+                        "${(it as FieldError).field}:${it.defaultMessage}"
+                    }
+                    "There are invalid parameters, detail : ['${fieldNames}']"
+                } catch (e: Exception) {
+                    exception.message
                 }
-                "There are invalid parameters, detail : ['${fieldNames}']"
             } else {
                 exception.message.toString()
             }
