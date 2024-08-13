@@ -3,7 +3,6 @@ package com.soongan.soonganbackend.service.member
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport
 import com.google.api.client.json.gson.GsonFactory
-import com.google.gson.Gson
 import com.nimbusds.jose.JWSHeader
 import com.nimbusds.jose.crypto.RSASSAVerifier
 import com.nimbusds.jose.jwk.RSAKey
@@ -13,7 +12,6 @@ import com.soongan.soonganbackend.enums.Provider
 import com.soongan.soonganbackend.enums.UserAgent
 import com.soongan.soonganbackend.interfaces.member.dto.*
 import com.soongan.soonganbackend.persistence.fcm.FcmTokenAdaptor
-import com.soongan.soonganbackend.persistence.fcm.FcmTokenEntity
 import com.soongan.soonganbackend.persistence.member.MemberAdapter
 import com.soongan.soonganbackend.service.jwt.JwtService
 import com.soongan.soonganbackend.persistence.member.MemberEntity
@@ -21,11 +19,11 @@ import com.soongan.soonganbackend.service.gcp.GcpStorageService
 import com.soongan.soonganbackend.util.common.dto.MemberDetail
 import com.soongan.soonganbackend.util.common.exception.SoonganException
 import com.soongan.soonganbackend.util.common.exception.StatusCode
-import okhttp3.OkHttpClient
-import okhttp3.Request
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.web.client.RestTemplate
+import org.springframework.web.client.getForObject
 import org.springframework.web.multipart.MultipartFile
 import java.time.LocalDateTime
 
@@ -34,12 +32,10 @@ class MemberService(
     private val memberAdapter: MemberAdapter,
     private val fcmTokenAdaptor: FcmTokenAdaptor,
     private val jwtService: JwtService,
+    private val gcpStorageService: GcpStorageService,
+    private val restTemplate: RestTemplate,
     private val env: Environment,
-    private val gcpStorageService: GcpStorageService
 ) {
-
-    private val httpClient = OkHttpClient()
-    private val gson = Gson()
 
     @Transactional
     fun login(userAgent: UserAgent, loginDto: LoginRequestDto): LoginResponseDto {
@@ -94,33 +90,32 @@ class MemberService(
 
     fun getKakaoMemberEmail(idToken: String): String {
         val url = "https://kapi.kakao.com/v2/user/me"
-        val request = Request.Builder()
-            .url(url)
-            .header("Authorization", "Bearer $idToken")
-            .build()
+        val headers = mapOf(
+            "Authorization" to "Bearer $idToken"
+        )
 
-        val response = httpClient.newCall(request).execute()
-        val userInfo = gson.fromJson(response.body?.string(), Map::class.java)["kakao_account"] as Map<*, *>
-        val email = userInfo["email"]
-            ?: throw SoonganException(StatusCode.INVALID_OAUTH2_ID_TOKEN, "Kakao IdToken이 유효하지 않아 회원 정보를 가져올 수 ���습니다.")
-        return email as String
+        val kakaoUserResponse = restTemplate.getForObject<Map<*, *>>(url, headers)
+        return kakaoUserResponse["kakao_account"]?.let { kakaoAccount ->
+            (kakaoAccount as Map<*, *>)["email"] as String
+        } ?: throw SoonganException(StatusCode.INVALID_OAUTH2_ID_TOKEN, "Kakao IdToken이 유효하지 않아 회원 정보를 가져올 수 없습니다.")
     }
 
     fun getAppleMemberEmail(idToken: String): String {
         val applePublicKeysUrl = "https://appleid.apple.com/auth/keys"
-        val request = Request.Builder()
-            .url(applePublicKeysUrl)
-            .build()
-
-        val response = httpClient.newCall(request).execute()
-        val applePublicKeySets = gson.fromJson(response.body?.string(), Map::class.java)["keys"] as List<Map<*, *>>
+        val applePublicKeySets = restTemplate.getForObject<Map<*, *>>(
+            applePublicKeysUrl
+        )["keys"] as List<*>
 
         val signedJWT = SignedJWT.parse(idToken)
         val header = signedJWT.header as JWSHeader
         val kid = header.keyID
 
-        val applePublicKeySet = applePublicKeySets.find { it["kid"] == kid }
-            ?: throw SoonganException(StatusCode.INVALID_OAUTH2_ID_TOKEN, "Applie IdToken이 유효하지 않아 회원 정보를 가져올 수 없습니다.")
+        val applePublicKeySet = applePublicKeySets.find { keySet ->
+            val keySetMap = keySet as Map<*, *>
+            keySetMap["kid"] == kid
+        }?.let {
+            it as Map<*, *>
+        } ?: throw SoonganException(StatusCode.INVALID_OAUTH2_ID_TOKEN, "Applie IdToken이 유효하지 않아 회원 정보를 가져올 수 없습니다.")
 
         val rsaKey = RSAKey.Builder(
             Base64URL(applePublicKeySet["n"] as String),

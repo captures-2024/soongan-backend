@@ -33,8 +33,6 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("io.jsonwebtoken:jjwt-api:0.12.5")
-    implementation("com.squareup.okhttp3:okhttp")
-    implementation("com.google.code.gson:gson")
     implementation("com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5")
     implementation("com.google.api-client:google-api-client:2.2.0")
     implementation("com.google.cloud:spring-cloud-gcp-starter-storage")
