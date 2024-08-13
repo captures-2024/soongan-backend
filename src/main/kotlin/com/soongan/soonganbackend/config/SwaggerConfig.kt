@@ -31,7 +31,12 @@ class SwaggerConfig {
     fun apiInfo(): Info {
         return Info()
             .title("Soongan API")
-            .description("로그인, Jwt 리프레쉬 Api 외에는 로그인시 발급되는 Authorization Bearer Token이 필요합니다.")
+            .description("""
+                ### 아래 Api들을 제외하면 모두 JWT 인증이 필요합니다.
+                - 로그인 [POST] /members/login
+                - JWT 갱신 [PATCH] /members/refresh
+                - 주간 콘테스트 게시글 조회 [GET] /weekly/contests/posts
+            """.trimIndent())
             .version("1.0.0")
     }
 }
