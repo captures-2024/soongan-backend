@@ -80,6 +80,7 @@ class GlobalExceptionHandler {
                         exception.message
                     }
                 }
+                else -> exception.message.toString()
             }
 
         logger.error { exception.stackTraceToString() }

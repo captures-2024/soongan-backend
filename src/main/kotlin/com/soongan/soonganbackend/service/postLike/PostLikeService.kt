@@ -2,7 +2,6 @@ package com.soongan.soonganbackend.service.postLike
 
 import com.soongan.soonganbackend.interfaces.postLike.dto.PostLikeRequestDto
 import com.soongan.soonganbackend.interfaces.postLike.dto.PostLikeResponseDto
-import com.soongan.soonganbackend.persistence.member.MemberAdapter
 import com.soongan.soonganbackend.persistence.member.MemberEntity
 import com.soongan.soonganbackend.persistence.postLike.PostLikeAdapter
 import com.soongan.soonganbackend.persistence.weeklyContestPost.WeeklyContestPostAdapter
@@ -12,13 +11,11 @@ import com.soongan.soonganbackend.util.common.exception.StatusCode
 import com.soongan.soonganbackend.util.domain.ContestTypeEnum
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
 
 @Service
 class PostLikeService(
     private val weeklyContestPostAdapter: WeeklyContestPostAdapter,
-    private val postLikeAdapter: PostLikeAdapter,
-    private val memberAdapter: MemberAdapter
+    private val postLikeAdapter: PostLikeAdapter
 ) {
 
     @Transactional
@@ -60,7 +57,7 @@ class PostLikeService(
             val updatedPost: WeeklyContestPostEntity = weeklyContestPostAdapter.getByIdOrNull(postLikeRequest.postId)?.let { post ->
 
                 // 좋아요 취소
-                postLikeAdapter.cancelLike(post.id!!, postLikeRequest.contestType, member)
+                postLikeAdapter.cancelLike(post.id!!, postLikeRequest.contestType, loginMember)
 
                 // 좋아요 개수 감소
                 weeklyContestPostAdapter.save(
