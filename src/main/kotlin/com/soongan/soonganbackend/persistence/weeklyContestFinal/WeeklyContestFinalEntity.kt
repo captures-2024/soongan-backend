@@ -44,7 +44,7 @@ data class WeeklyContestFinalEntity(
     val score: BigDecimal
 ) {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null
 
     @CreatedDate
