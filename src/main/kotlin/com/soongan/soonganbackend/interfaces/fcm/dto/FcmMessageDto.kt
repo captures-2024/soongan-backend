@@ -6,10 +6,10 @@ data class FcmMessageDto(
 
 data class Message(
     val token: String,
-    val notification: NotificationDto
+    val notification: Notification
 )
 
-data class NotificationDto(
+data class Notification(
     val title: String,
     val body: String
 )

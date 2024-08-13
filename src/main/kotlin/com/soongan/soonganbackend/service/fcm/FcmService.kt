@@ -2,20 +2,27 @@ package com.soongan.soonganbackend.service.fcm
 
 import com.google.auth.oauth2.GoogleCredentials
 import com.soongan.soonganbackend.enums.UserAgent
-import com.soongan.soonganbackend.interfaces.fcm.dto.FcmRegistRequestDto
-import com.soongan.soonganbackend.interfaces.fcm.dto.FcmTokenInfoResponseDto
+import com.soongan.soonganbackend.interfaces.fcm.dto.*
 import com.soongan.soonganbackend.persistence.fcm.FcmTokenAdaptor
 import com.soongan.soonganbackend.persistence.fcm.FcmTokenEntity
 import com.soongan.soonganbackend.util.common.exception.SoonganException
 import com.soongan.soonganbackend.util.common.exception.StatusCode
+import org.springframework.core.ParameterizedTypeReference
 import org.springframework.core.env.Environment
 import org.springframework.core.io.ClassPathResource
+import org.springframework.http.HttpEntity
+import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpMethod
+import org.springframework.http.MediaType
+import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.web.client.RestTemplate
 
 @Service
 class FcmService(
     private val fcmTokenAdaptor: FcmTokenAdaptor,
+    private val restTemplate: RestTemplate,
     private val env: Environment
 ) {
 
@@ -55,6 +62,32 @@ class FcmService(
             deviceId = savedFcmToken.deviceId,
             deviceType = savedFcmToken.deviceType
         )
+    }
+
+    fun pushFcmMessage(fcmToken: String, notification: Notification): ResponseEntity<Map<String, Any>> {
+        val firebaseProjectId = env.getProperty("firebase.project-id").toString()
+        val url = "https://fcm.googleapis.com/v1/projects/${firebaseProjectId}/messages:send"
+        val message = Message(
+            token = fcmToken,
+            notification = notification
+        )
+
+        val headers = HttpHeaders().apply {
+            setBearerAuth(getFcmAccessToken())
+            contentType = MediaType.APPLICATION_JSON
+        }
+
+        val fcmMessageDto = FcmMessageDto(message = message)
+        val request = HttpEntity(fcmMessageDto, headers)
+
+        val response = restTemplate.exchange(
+            url,
+            HttpMethod.POST,
+            request,
+            object : ParameterizedTypeReference<Map<String, Any>>() {}
+        )
+
+        return response
     }
 
     fun getFcmAccessToken(): String {
