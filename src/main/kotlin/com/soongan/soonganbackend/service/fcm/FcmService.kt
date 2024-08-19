@@ -87,6 +87,10 @@ class FcmService(
             object : ParameterizedTypeReference<Map<String, Any>>() {}
         )
 
+        if (!response.statusCode.is2xxSuccessful) {
+            throw SoonganException(StatusCode.SOONGAN_API_FAILED_PUSH_FCM_MESSAGE)
+        }
+
         return response
     }
 
