@@ -12,7 +12,8 @@ import java.time.LocalDateTime
 @Table(name = "fcm_token",
     indexes = [
         Index(name = "fcm_token_idx_member_id", columnList = "member_id"),
-        Index(name = "fcm_token_idx_device_type", columnList = "device_type")
+        Index(name = "fcm_token_idx_device_type", columnList = "device_type"),
+        Index(name = "fcm_token_idx_token", columnList = "token"),
     ]
 )
 @EntityListeners(AuditingEntityListener::class)

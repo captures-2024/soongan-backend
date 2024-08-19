@@ -11,3 +11,4 @@ CREATE TABLE fcm_token
 
 create index fcm_token_idx_member_id on fcm_token (member_id);
 create index fcm_token_idx_device_type on fcm_token (device_type);
+create index fcm_token_idx_token on fcm_token (token);
