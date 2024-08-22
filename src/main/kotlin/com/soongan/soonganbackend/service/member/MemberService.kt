@@ -3,7 +3,6 @@ package com.soongan.soonganbackend.service.member
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport
 import com.google.api.client.json.gson.GsonFactory
-import com.google.gson.Gson
 import com.nimbusds.jose.JWSHeader
 import com.nimbusds.jose.crypto.RSASSAVerifier
 import com.nimbusds.jose.jwk.RSAKey
@@ -12,6 +11,7 @@ import com.nimbusds.jwt.SignedJWT
 import com.soongan.soonganbackend.enums.Provider
 import com.soongan.soonganbackend.enums.UserAgent
 import com.soongan.soonganbackend.interfaces.member.dto.*
+import com.soongan.soonganbackend.persistence.fcm.FcmTokenAdaptor
 import com.soongan.soonganbackend.persistence.member.MemberAdapter
 import com.soongan.soonganbackend.service.jwt.JwtService
 import com.soongan.soonganbackend.persistence.member.MemberEntity
@@ -19,24 +19,25 @@ import com.soongan.soonganbackend.service.gcp.GcpStorageService
 import com.soongan.soonganbackend.util.common.dto.MemberDetail
 import com.soongan.soonganbackend.util.common.exception.SoonganException
 import com.soongan.soonganbackend.util.common.exception.StatusCode
-import okhttp3.OkHttpClient
-import okhttp3.Request
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
+import org.springframework.web.client.RestTemplate
+import org.springframework.web.client.getForObject
 import org.springframework.web.multipart.MultipartFile
 import java.time.LocalDateTime
 
 @Service
 class MemberService(
     private val memberAdapter: MemberAdapter,
+    private val fcmTokenAdaptor: FcmTokenAdaptor,
     private val jwtService: JwtService,
+    private val gcpStorageService: GcpStorageService,
+    private val restTemplate: RestTemplate,
     private val env: Environment,
-    private val gcpStorageService: GcpStorageService
 ) {
 
-    private val httpClient = OkHttpClient()
-    private val gson = Gson()
-
+    @Transactional
     fun login(userAgent: UserAgent, loginDto: LoginRequestDto): LoginResponseDto {
         val provider = loginDto.provider
         val idToken = loginDto.idToken
@@ -55,6 +56,12 @@ class MemberService(
                     authorities = "ROLE_MEMBER"
                 )
             )
+
+        fcmTokenAdaptor.findByToken(loginDto.fcmToken)?.let { foundFcmToken ->
+            if (foundFcmToken.member == null || foundFcmToken.member.id != member.id) {
+                fcmTokenAdaptor.save(foundFcmToken.copy(member = member))
+            }
+        } ?: throw SoonganException(StatusCode.SOONGAN_API_NOT_FOUND_FCM_TOKEN)
 
         val issuedTokens = jwtService.issueTokens(member.email, member.authorities.split(","))
         return LoginResponseDto(
@@ -83,33 +90,32 @@ class MemberService(
 
     fun getKakaoMemberEmail(idToken: String): String {
         val url = "https://kapi.kakao.com/v2/user/me"
-        val request = Request.Builder()
-            .url(url)
-            .header("Authorization", "Bearer $idToken")
-            .build()
+        val headers = mapOf(
+            "Authorization" to "Bearer $idToken"
+        )
 
-        val response = httpClient.newCall(request).execute()
-        val userInfo = gson.fromJson(response.body?.string(), Map::class.java)["kakao_account"] as Map<*, *>
-        val email = userInfo["email"]
-            ?: throw SoonganException(StatusCode.INVALID_OAUTH2_ID_TOKEN, "Kakao IdToken이 유효하지 않아 회원 정보를 가져올 수 ���습니다.")
-        return email as String
+        val kakaoUserResponse = restTemplate.getForObject<Map<*, *>>(url, headers)
+        return kakaoUserResponse["kakao_account"]?.let { kakaoAccount ->
+            (kakaoAccount as Map<*, *>)["email"] as String
+        } ?: throw SoonganException(StatusCode.INVALID_OAUTH2_ID_TOKEN, "Kakao IdToken이 유효하지 않아 회원 정보를 가져올 수 없습니다.")
     }
 
     fun getAppleMemberEmail(idToken: String): String {
         val applePublicKeysUrl = "https://appleid.apple.com/auth/keys"
-        val request = Request.Builder()
-            .url(applePublicKeysUrl)
-            .build()
-
-        val response = httpClient.newCall(request).execute()
-        val applePublicKeySets = gson.fromJson(response.body?.string(), Map::class.java)["keys"] as List<Map<*, *>>
+        val applePublicKeySets = restTemplate.getForObject<Map<*, *>>(
+            applePublicKeysUrl
+        )["keys"] as List<*>
 
         val signedJWT = SignedJWT.parse(idToken)
         val header = signedJWT.header as JWSHeader
         val kid = header.keyID
 
-        val applePublicKeySet = applePublicKeySets.find { it["kid"] == kid }
-            ?: throw SoonganException(StatusCode.INVALID_OAUTH2_ID_TOKEN, "Applie IdToken이 유효하지 않아 회원 정보를 가져올 수 없습니다.")
+        val applePublicKeySet = applePublicKeySets.find { keySet ->
+            val keySetMap = keySet as Map<*, *>
+            keySetMap["kid"] == kid
+        }?.let {
+            it as Map<*, *>
+        } ?: throw SoonganException(StatusCode.INVALID_OAUTH2_ID_TOKEN, "Applie IdToken이 유효하지 않아 회원 정보를 가져올 수 없습니다.")
 
         val rsaKey = RSAKey.Builder(
             Base64URL(applePublicKeySet["n"] as String),
@@ -133,12 +139,14 @@ class MemberService(
         }
     }
 
+    @Transactional
     fun withdraw(loginMember: MemberEntity) {
         val softDeletedMember = loginMember.copy(withdrawalAt = LocalDateTime.now())
         memberAdapter.save(softDeletedMember)
         jwtService.deleteToken(loginMember.email)
     }
 
+    @Transactional
     fun refresh(refreshRequestDto: RefreshRequestDto): LoginResponseDto {
         val payload = jwtService.validateRefreshRequest(refreshRequestDto)
         val memberEmail = payload["sub"] as String
@@ -152,10 +160,12 @@ class MemberService(
         )
     }
 
+    @Transactional(readOnly = true)
     fun checkNickname(nickname: String): Boolean {
         return memberAdapter.getByNickname(nickname) == null
     }
 
+    @Transactional
     fun updateNickname(loginMember: MemberEntity, newNickname: String): UpdateNicknameResponseDto {
         val updatedMember = loginMember.copy(nickname = newNickname)
         memberAdapter.save(updatedMember)
@@ -166,6 +176,7 @@ class MemberService(
         )
     }
 
+    @Transactional
     fun updateProfileImage(loginMember: MemberEntity, profileImage: MultipartFile) {
         if (loginMember.profileImageUrl != null) {
             gcpStorageService.deleteFile(loginMember.profileImageUrl)

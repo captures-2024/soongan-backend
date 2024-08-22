@@ -28,6 +28,9 @@ enum class StatusCode(val code: String, val message: String) {
     SOONGAN_API_INVALID_CONTEST_TYPE("1004", "Invalid Contest Type"),
     SOONGAN_API_DUPLICATED_LIKE("1005", "Duplicated Like"),
     SOONGAN_API_FAIL_TO_LOGOUT("1006", "Fail to Logout"),
+    SOONGAN_API_ALREADY_EXIST_FCM_TOKEN("1007", "Already Exist FCM Token"),
+    SOONGAN_API_NOT_FOUND_FCM_TOKEN("1008", "Not Found FCM Token"),
+    SOONGAN_API_FAILED_PUSH_FCM_MESSAGE("1009", "Failed Push FCM Message"),
 
 
     // 9000 Common Status Code
