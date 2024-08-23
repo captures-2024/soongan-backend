@@ -28,6 +28,10 @@ class ApiResponseBodyWrapper: ResponseBodyAdvice<Any> {
         request: ServerHttpRequest,
         response: ServerHttpResponse
     ): Any? {
+        if (request.uri.path.contains("/api-docs")) {
+            return body
+        }
+
         return when (body) {
             is CommonErrorResponseDto -> {
                 body
