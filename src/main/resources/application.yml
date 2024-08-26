@@ -22,6 +22,7 @@ spring:
 springdoc:
   swagger-ui:
     path: /api-docs
+    disable-swagger-default-url: true
 
 server:
   port: 443

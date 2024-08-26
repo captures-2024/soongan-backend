@@ -32,5 +32,7 @@ object Uri {
         MEMBERS + REFRESH,
 
         WEEKLY + CONTESTS + POSTS,
+
+        FCM,
     )
 }
