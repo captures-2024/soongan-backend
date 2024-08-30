@@ -22,6 +22,10 @@ object Uri {
 
     const val FCM = "/fcm"
 
+    const val CALLBACK = "/callback"
+    const val APPLE_LOGIN = "/apple_login"
+    const val SUCCESS = "/success"
+
     val passUris = listOf(
         API_DOCS,
         SWAGGER_UI + "/**",
@@ -34,5 +38,8 @@ object Uri {
         WEEKLY + CONTESTS + POSTS,
 
         FCM,
+
+        CALLBACK + APPLE_LOGIN,
+        CALLBACK + APPLE_LOGIN + SUCCESS
     )
 }
