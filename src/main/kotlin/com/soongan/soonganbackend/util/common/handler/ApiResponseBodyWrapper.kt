@@ -1,5 +1,6 @@
 package com.soongan.soonganbackend.util.common.handler
 
+import com.soongan.soonganbackend.util.common.constant.Uri
 import com.soongan.soonganbackend.util.common.dto.CommonErrorResponseDto
 import com.soongan.soonganbackend.util.common.dto.ExportResponseDto
 import com.soongan.soonganbackend.util.common.exception.StatusCode
@@ -28,7 +29,8 @@ class ApiResponseBodyWrapper: ResponseBodyAdvice<Any> {
         request: ServerHttpRequest,
         response: ServerHttpResponse
     ): Any? {
-        if (request.uri.path.contains("/api-docs")) {
+        val requestPath = request.uri.path
+        if (Uri.notWrapUris.contains(requestPath)) {
             return body
         }
 
