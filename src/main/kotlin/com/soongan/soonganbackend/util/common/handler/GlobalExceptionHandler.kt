@@ -86,6 +86,6 @@ class GlobalExceptionHandler {
             }
 
         logger.error { exception.stackTraceToString() }
-        return CommonErrorResponseDto.from(statusCode, statusCode.message)
+        return CommonErrorResponseDto.from(statusCode, errorMessage)
     }
 }
