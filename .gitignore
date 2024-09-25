@@ -8,6 +8,7 @@ build/
 application-*.yml
 *.p12
 soongan-*.json
+logback.xml
 
 ### macOS ###
 .DS_Store

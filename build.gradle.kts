@@ -8,6 +8,12 @@ plugins {
     kotlin("plugin.jpa") version "1.9.23"
 }
 
+configurations {
+    all {
+        exclude(group="commons-logging", module="commons-logging")
+    }
+}
+
 group = "com.soongan"
 version = "0.0.1-SNAPSHOT"
 
@@ -39,6 +45,7 @@ dependencies {
     implementation("com.nimbusds:nimbus-jose-jwt:9.37.3")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0")
     implementation("io.github.oshai:kotlin-logging-jvm:5.1.0")
+    implementation("net.logstash.logback:logstash-logback-encoder:7.4")
     implementation("com.google.firebase:firebase-admin:9.2.0")
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.5")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.5")
