@@ -13,11 +13,11 @@ spring:
     include: jasypt, db
   cloud:
     gcp:
-      project-id: ENC(w4SR5ImNLUFMoOfBD/hlRXg0I/gQMmyL)
+      project-id: ENC(mONxGermhM5bU+13G8tPHg==)
       credentials:
-        location: ENC(OLvIhWs1Vp5uXUbP0IIWqLt6dsGBLoxqfN6NCv7ikpCbLGY4s1Pjlg==)
+        location: ENC(LQslraULdvQzT5CSqfOM6ywMu8A+N+un9mgO9pspoBeH9t71fU2y/iW6eHMszUDT)
       storage:
-        bucket: ENC(w4SR5ImNLUFMoOfBD/hlRXg0I/gQMmyL)
+        bucket: ENC(mONxGermhM5bU+13G8tPHg==)
 
 springdoc:
   swagger-ui:
