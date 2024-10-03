@@ -1,6 +1,7 @@
 package com.soongan.soonganbackend.util.common.constant
 
 object Uri {
+    const val API = "/api"
     const val V3 = "/v3"
     const val DOCS = "/docs"
     const val API_DOCS = "/api-docs"

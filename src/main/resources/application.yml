@@ -26,6 +26,8 @@ springdoc:
 
 server:
   port: 8080
+  servlet:
+    context-path: /api
 
 oauth2:
   android:
