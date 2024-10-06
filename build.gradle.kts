@@ -23,6 +23,8 @@ extra["springCloudGcpVersion"] = "5.4.3"
 extra["springCloudVersion"] = "2023.0.2"
 
 dependencies {
+    implementation(project(":soongan-persistence"))
+
     implementation("org.springframework.boot:spring-boot-starter-batch")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-data-redis")

@@ -1,49 +1,49 @@
-spring:
-  application:
-    name: soongan-backend
-  jpa:
-    hibernate:
-      ddl-auto: none
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
-        use_sql_comments: true
-  profiles:
-    include: jasypt, db
-  cloud:
-    gcp:
-      project-id: ENC(w4SR5ImNLUFMoOfBD/hlRXg0I/gQMmyL)
-      credentials:
-        location: ENC(OLvIhWs1Vp5uXUbP0IIWqLt6dsGBLoxqfN6NCv7ikpCbLGY4s1Pjlg==)
-      storage:
-        bucket: ENC(w4SR5ImNLUFMoOfBD/hlRXg0I/gQMmyL)
-
-springdoc:
-  swagger-ui:
-    path: /api-docs
-    disable-swagger-default-url: true
-
-server:
-  port: 443
-  ssl:
-    key-store: ENC(CceBs5V+bc8OAFUqT941Rpl1zIKGGnQS)
-    key-store-password: ENC(INhsKSUZ4Dt6qO+udiiqpCY2EoCVIkuC)
-    key-store-type: ENC(/a8N3/iKX6zawiBT/n1AjQ==)
-    key-alias: ENC(BPQBUsjoKG1RMNDe17HgxQ==)
-
-oauth2:
-  android:
-    google:
-      client-id: ENC(ZWeHYcVoYY4PbLoeWPVIrOvsfrGjbwtqAPQsQi7Yox9LwVTjQi89IJnuqFonyGi5/y1CwrPXzC1OKnGWRSR85nPrWyaIJ/zJx8YUMb5gPNp7S7oM/3/IsA==)
-  ios:
-    google:
-      client-id: ENC(teK8fJZvVa2yHpTi/sBcuXMF7vrnsbrZtGMD5fkycc+a7s/Xjz0TTD8mCdgNLPBldzkTfewAINd0r/IlidxUew/3KwNvm3Gf0KhGrDkksT36Fra0RZqPPQ==)
-
-
-jwt:
-  secret: ENC(Uet8sXoFY7S7ZDmqS2RuCOhRbluWH1jyGlNbOo3G3kPlxipkxqmvo2IKeaU2Hv+X)
-
-firebase:
-  project-id: ENC(5YLSshIxITz1cQ1o2Dsf62PVAryHEo1W)
-  keypath: ENC(hN8sOLKoQ/s2TyXj+DKxmSexUv5jT2HfT+G3wqCrhOMcTD2kNXq+a02VkVu2uBIpoE3t/3HmjOgK/y9Bon0p6A==)
+#spring:
+#  application:
+#    name: soongan-backend
+#  jpa:
+#    hibernate:
+#      ddl-auto: none
+#    show-sql: true
+#    properties:
+#      hibernate:
+#        format_sql: true
+#        use_sql_comments: true
+#  profiles:
+#    include: jasypt, db
+#  cloud:
+#    gcp:
+#      project-id: ENC(w4SR5ImNLUFMoOfBD/hlRXg0I/gQMmyL)
+#      credentials:
+#        location: ENC(OLvIhWs1Vp5uXUbP0IIWqLt6dsGBLoxqfN6NCv7ikpCbLGY4s1Pjlg==)
+#      storage:
+#        bucket: ENC(w4SR5ImNLUFMoOfBD/hlRXg0I/gQMmyL)
+#
+#springdoc:
+#  swagger-ui:
+#    path: /api-docs
+#    disable-swagger-default-url: true
+#
+#server:
+#  port: 443
+#  ssl:
+#    key-store: ENC(CceBs5V+bc8OAFUqT941Rpl1zIKGGnQS)
+#    key-store-password: ENC(INhsKSUZ4Dt6qO+udiiqpCY2EoCVIkuC)
+#    key-store-type: ENC(/a8N3/iKX6zawiBT/n1AjQ==)
+#    key-alias: ENC(BPQBUsjoKG1RMNDe17HgxQ==)
+#
+#oauth2:
+#  android:
+#    google:
+#      client-id: ENC(ZWeHYcVoYY4PbLoeWPVIrOvsfrGjbwtqAPQsQi7Yox9LwVTjQi89IJnuqFonyGi5/y1CwrPXzC1OKnGWRSR85nPrWyaIJ/zJx8YUMb5gPNp7S7oM/3/IsA==)
+#  ios:
+#    google:
+#      client-id: ENC(teK8fJZvVa2yHpTi/sBcuXMF7vrnsbrZtGMD5fkycc+a7s/Xjz0TTD8mCdgNLPBldzkTfewAINd0r/IlidxUew/3KwNvm3Gf0KhGrDkksT36Fra0RZqPPQ==)
+#
+#
+#jwt:
+#  secret: ENC(Uet8sXoFY7S7ZDmqS2RuCOhRbluWH1jyGlNbOo3G3kPlxipkxqmvo2IKeaU2Hv+X)
+#
+#firebase:
+#  project-id: ENC(5YLSshIxITz1cQ1o2Dsf62PVAryHEo1W)
+#  keypath: ENC(hN8sOLKoQ/s2TyXj+DKxmSexUv5jT2HfT+G3wqCrhOMcTD2kNXq+a02VkVu2uBIpoE3t/3HmjOgK/y9Bon0p6A==)
