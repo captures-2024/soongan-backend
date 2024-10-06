@@ -1,4 +1,4 @@
-package com.soongan.soonganbackend.soonganpersistence.storage.persistence.fcm
+package com.soongan.soonganbackend.soonganpersistence.storage.fcm
 
 import org.springframework.data.jpa.repository.JpaRepository
 

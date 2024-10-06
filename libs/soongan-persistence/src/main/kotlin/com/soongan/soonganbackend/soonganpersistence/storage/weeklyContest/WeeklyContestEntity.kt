@@ -1,4 +1,4 @@
-package com.soongan.soonganbackend.soonganpersistence.storage.persistence.weeklyContest
+package com.soongan.soonganbackend.soonganpersistence.storage.weeklyContest
 
 import jakarta.persistence.Column
 import jakarta.persistence.Entity

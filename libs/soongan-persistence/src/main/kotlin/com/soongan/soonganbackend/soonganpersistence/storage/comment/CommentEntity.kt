@@ -1,6 +1,6 @@
-package com.soongan.soonganbackend.soonganpersistence.storage.persistence.comment
+package com.soongan.soonganbackend.soonganpersistence.storage.comment
 
-import com.soongan.soonganbackend.soonganpersistence.storage.persistence.member.MemberEntity
+import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.EntityListeners

@@ -3,7 +3,7 @@ package com.soongan.soonganbackend.soonganapi.interfaces.weeklyContest
 import com.soongan.soonganbackend.soonganapi.interfaces.weeklyContest.dto.WeeklyContestPostRegisterRequestDto
 import com.soongan.soonganbackend.soonganapi.interfaces.weeklyContest.dto.WeeklyContestPostRegisterResponseDto
 import com.soongan.soonganbackend.soonganapi.interfaces.weeklyContest.dto.WeeklyContestPostResponseDto
-import com.soongan.soonganbackend.soonganpersistence.storage.persistence.member.MemberEntity
+import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
 import com.soongan.soonganbackend.soonganapi.service.weeklyContest.WeeklyContestPostOrderCriteriaEnum
 import com.soongan.soonganbackend.soonganapi.service.weeklyContest.WeeklyContestService
 import com.soongan.soonganbackend.soongansupport.util.constant.Uri

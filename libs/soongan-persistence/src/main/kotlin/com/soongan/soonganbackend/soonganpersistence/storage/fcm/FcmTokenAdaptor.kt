@@ -1,4 +1,4 @@
-package com.soongan.soonganbackend.soonganpersistence.storage.persistence.fcm
+package com.soongan.soonganbackend.soonganpersistence.storage.fcm
 
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional

@@ -13,9 +13,9 @@ import com.soongan.soonganbackend.soonganapi.interfaces.member.dto.LoginResponse
 import com.soongan.soonganbackend.soonganapi.interfaces.member.dto.MemberInfoResponseDto
 import com.soongan.soonganbackend.soonganapi.interfaces.member.dto.RefreshRequestDto
 import com.soongan.soonganbackend.soonganapi.interfaces.member.dto.UpdateNicknameResponseDto
-import com.soongan.soonganbackend.soonganpersistence.storage.persistence.fcm.FcmTokenAdaptor
-import com.soongan.soonganbackend.soonganpersistence.storage.persistence.member.MemberAdapter
-import com.soongan.soonganbackend.soonganpersistence.storage.persistence.member.MemberEntity
+import com.soongan.soonganbackend.soonganpersistence.storage.fcm.FcmTokenAdaptor
+import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberAdapter
+import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
 import com.soongan.soonganbackend.soonganapi.service.gcp.GcpStorageService
 import com.soongan.soonganbackend.soongansupport.domain.ProviderEnum
 import com.soongan.soonganbackend.soongansupport.domain.UserAgentEnum

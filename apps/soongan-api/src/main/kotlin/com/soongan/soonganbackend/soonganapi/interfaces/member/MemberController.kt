@@ -1,6 +1,6 @@
 package com.soongan.soonganbackend.soonganapi.interfaces.member
 
-import com.soongan.soonganbackend.soonganpersistence.storage.persistence.member.MemberEntity
+import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
 import com.soongan.soonganbackend.soonganapi.service.member.MemberService
 import com.soongan.soonganbackend.soonganapi.interfaces.member.dto.LoginRequestDto
 import com.soongan.soonganbackend.soonganapi.interfaces.member.dto.LoginResponseDto

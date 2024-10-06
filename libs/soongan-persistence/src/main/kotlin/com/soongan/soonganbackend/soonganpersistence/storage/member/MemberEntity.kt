@@ -1,4 +1,4 @@
-package com.soongan.soonganbackend.soonganpersistence.storage.persistence.member
+package com.soongan.soonganbackend.soonganpersistence.storage.member
 
 import com.soongan.soonganbackend.soongansupport.domain.ProviderEnum
 import jakarta.persistence.Column

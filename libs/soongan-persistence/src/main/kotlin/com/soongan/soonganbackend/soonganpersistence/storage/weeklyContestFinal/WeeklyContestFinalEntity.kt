@@ -1,7 +1,7 @@
-package com.soongan.soonganbackend.soonganpersistence.storage.persistence.weeklyContestFinal
+package com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestFinal
 
-import com.soongan.soonganbackend.soonganpersistence.storage.persistence.weeklyContest.WeeklyContestEntity
-import com.soongan.soonganbackend.soonganpersistence.storage.persistence.weeklyContestPost.WeeklyContestPostEntity
+import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContest.WeeklyContestEntity
+import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.WeeklyContestPostEntity
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.EntityListeners

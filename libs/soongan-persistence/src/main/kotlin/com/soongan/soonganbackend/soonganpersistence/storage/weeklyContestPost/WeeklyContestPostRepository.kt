@@ -1,4 +1,4 @@
-package com.soongan.soonganbackend.soonganpersistence.storage.persistence.weeklyContestPost
+package com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost
 
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Slice

@@ -1,7 +1,7 @@
-package com.soongan.soonganbackend.soonganpersistence.storage.persistence.postLike
+package com.soongan.soonganbackend.soonganpersistence.storage.postLike
 
-import com.soongan.soonganbackend.soonganpersistence.storage.persistence.comment.ContestTypeEnum
-import com.soongan.soonganbackend.soonganpersistence.storage.persistence.member.MemberEntity
+import com.soongan.soonganbackend.soonganpersistence.storage.comment.ContestTypeEnum
+import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 

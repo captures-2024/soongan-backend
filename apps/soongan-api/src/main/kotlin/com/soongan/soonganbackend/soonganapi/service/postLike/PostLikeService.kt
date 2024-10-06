@@ -2,11 +2,11 @@ package com.soongan.soonganbackend.soonganapi.service.postLike
 
 import com.soongan.soonganbackend.soonganapi.interfaces.postLike.dto.PostLikeRequestDto
 import com.soongan.soonganbackend.soonganapi.interfaces.postLike.dto.PostLikeResponseDto
-import com.soongan.soonganbackend.soonganpersistence.storage.persistence.comment.ContestTypeEnum
-import com.soongan.soonganbackend.soonganpersistence.storage.persistence.member.MemberEntity
-import com.soongan.soonganbackend.soonganpersistence.storage.persistence.postLike.PostLikeAdapter
-import com.soongan.soonganbackend.soonganpersistence.storage.persistence.weeklyContestPost.WeeklyContestPostAdapter
-import com.soongan.soonganbackend.soonganpersistence.storage.persistence.weeklyContestPost.WeeklyContestPostEntity
+import com.soongan.soonganbackend.soonganpersistence.storage.comment.ContestTypeEnum
+import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
+import com.soongan.soonganbackend.soonganpersistence.storage.postLike.PostLikeAdapter
+import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.WeeklyContestPostAdapter
+import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.WeeklyContestPostEntity
 import com.soongan.soonganbackend.soongansupport.util.exception.SoonganException
 import com.soongan.soonganbackend.soongansupport.util.exception.StatusCode
 import org.springframework.transaction.annotation.Transactional

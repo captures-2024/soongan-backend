@@ -1,6 +1,6 @@
-package com.soongan.soonganbackend.soonganpersistence.storage.persistence.fcm
+package com.soongan.soonganbackend.soonganpersistence.storage.fcm
 
-import com.soongan.soonganbackend.soonganpersistence.storage.persistence.member.MemberEntity
+import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
 import com.soongan.soonganbackend.soongansupport.domain.UserAgentEnum
 import jakarta.persistence.*
 import org.springframework.data.annotation.CreatedDate

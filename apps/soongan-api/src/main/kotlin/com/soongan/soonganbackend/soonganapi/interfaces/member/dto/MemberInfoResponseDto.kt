@@ -1,6 +1,6 @@
 package com.soongan.soonganbackend.soonganapi.interfaces.member.dto
 
-import com.soongan.soonganbackend.soonganpersistence.storage.persistence.member.MemberEntity
+import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
 import java.time.LocalDate
 
 data class MemberInfoResponseDto(

@@ -2,7 +2,7 @@ package com.soongan.soonganbackend.soonganapi.interfaces.postLike
 
 import com.soongan.soonganbackend.soonganapi.interfaces.postLike.dto.PostLikeRequestDto
 import com.soongan.soonganbackend.soonganapi.interfaces.postLike.dto.PostLikeResponseDto
-import com.soongan.soonganbackend.soonganpersistence.storage.persistence.member.MemberEntity
+import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
 import com.soongan.soonganbackend.soonganapi.service.postLike.PostLikeService
 import com.soongan.soonganbackend.soongansupport.util.constant.Uri
 import com.soongan.soonganbackend.soonganweb.resolver.LoginMember

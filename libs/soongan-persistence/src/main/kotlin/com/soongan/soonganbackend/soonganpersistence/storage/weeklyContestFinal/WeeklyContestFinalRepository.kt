@@ -1,4 +1,4 @@
-package com.soongan.soonganbackend.soonganpersistence.storage.persistence.weeklyContestFinal
+package com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestFinal
 
 import org.springframework.data.jpa.repository.JpaRepository
 

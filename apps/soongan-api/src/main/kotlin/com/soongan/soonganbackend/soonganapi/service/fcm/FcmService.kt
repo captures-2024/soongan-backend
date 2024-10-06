@@ -6,8 +6,8 @@ import com.soongan.soonganbackend.soonganapi.interfaces.fcm.dto.FcmRegistRequest
 import com.soongan.soonganbackend.soonganapi.interfaces.fcm.dto.FcmTokenInfoResponseDto
 import com.soongan.soonganbackend.soonganapi.interfaces.fcm.dto.Message
 import com.soongan.soonganbackend.soonganapi.interfaces.fcm.dto.Notification
-import com.soongan.soonganbackend.soonganpersistence.storage.persistence.fcm.FcmTokenAdaptor
-import com.soongan.soonganbackend.soonganpersistence.storage.persistence.fcm.FcmTokenEntity
+import com.soongan.soonganbackend.soonganpersistence.storage.fcm.FcmTokenAdaptor
+import com.soongan.soonganbackend.soonganpersistence.storage.fcm.FcmTokenEntity
 import com.soongan.soonganbackend.soongansupport.domain.UserAgentEnum
 import com.soongan.soonganbackend.soongansupport.util.exception.SoonganException
 import com.soongan.soonganbackend.soongansupport.util.exception.StatusCode
