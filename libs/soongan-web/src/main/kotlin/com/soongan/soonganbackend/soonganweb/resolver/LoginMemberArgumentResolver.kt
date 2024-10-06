@@ -1,7 +1,7 @@
 package com.soongan.soonganbackend.soonganweb.resolver
 
-import com.soongan.soonganbackend.soonganpersistence.storage.persistence.member.MemberAdapter
-import com.soongan.soonganbackend.soonganpersistence.storage.persistence.member.MemberEntity
+import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberAdapter
+import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
 import com.soongan.soonganbackend.soongansupport.util.dto.MemberDetail
 import com.soongan.soonganbackend.soongansupport.util.exception.SoonganException
 import com.soongan.soonganbackend.soongansupport.util.exception.StatusCode
