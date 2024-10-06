@@ -1,21 +1,23 @@
 package com.soongan.soonganbackend.soonganredis.config
 
 import com.soongan.soonganbackend.soonganredis.properties.RedisProperties
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.cache.annotation.EnableCaching
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 import org.springframework.data.redis.connection.RedisConnectionFactory
 import org.springframework.data.redis.connection.RedisPassword
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory
 import org.springframework.data.redis.core.RedisTemplate
+import org.springframework.data.redis.repository.configuration.EnableRedisRepositories
 
 
 @Configuration
 @EnableCaching
 @EnableConfigurationProperties(RedisProperties::class)
+@EnableRedisRepositories(basePackages = ["com.soongan.soonganbackend.soonganredis"])
 class RedisConfig(
     private val properties: RedisProperties
 ) {
