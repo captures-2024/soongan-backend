@@ -1,6 +1,4 @@
 spring:
-  data:
-    redis:
-      host: localhost
-      port: 63790
-      password: password
+  config:
+    import:
+      - optional:redis-connection.yml

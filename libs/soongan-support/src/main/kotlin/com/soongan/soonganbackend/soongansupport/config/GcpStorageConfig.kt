@@ -9,16 +9,20 @@ import org.springframework.core.env.Environment
 import java.io.File
 
 @Configuration
+
 class GcpStorageConfig(
     private val env: Environment
 ) {
 
     @Bean
-    fun storage(): Storage {
+    fun googleCloudStorage(): Storage {
+        // soongan-dev-IAM.json 파일의 경로 알아낸 방법..
+        val resource = this::class.java.classLoader.getResource("soongan-dev-IAM.json")
+
         return StorageOptions.newBuilder()
             .setCredentials(GoogleCredentials.fromStream(
                 env.getProperty("spring.cloud.gcp.credentials.location")?.let {
-                    File(it.replace("classpath:", "src/main/resources/")).inputStream()
+                    File(it.replace("classpath:", "build/resources/main/")).inputStream()
                 }
             ))
             .build()

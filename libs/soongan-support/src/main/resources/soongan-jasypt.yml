@@ -1,0 +1,8 @@
+jasypt:
+  encryptor:
+    bean: jasyptStringEncryptor   # java 빈 이름
+    algorithm: PBEWithMD5AndDES   # 사용 알고리즘
+    pool-size: 2    # 암호화 요청을 담을 pool 크기 설정
+    string-output-type: base64    # 암호화 이후 받을 타입
+    key-obtention-iterations: 1000    # 암호화를 수행할 반복할 해시 횟수
+    password: L4wYNABW4apaZsAv1096Im    # 암호화 키

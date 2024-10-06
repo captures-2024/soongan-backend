@@ -5,7 +5,10 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
+### configuration files ###
 application-*.yml
+soongan-jasypt.yml
+*-connection.yml
 *.p12
 soongan-*.json
 
