@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: soongan-web
+
+springdoc:
+  swagger-ui:
+    path: /api-docs
+    disable-swagger-default-url: true
