@@ -8,7 +8,7 @@ import org.springframework.validation.annotation.Validated
 @Validated
 data class RedisProperties (
     @NotEmpty
-    val host: String = "hello redis",
+    val host: String = "",
     val port: Int = 0,
     @NotEmpty
     val password: String = ""

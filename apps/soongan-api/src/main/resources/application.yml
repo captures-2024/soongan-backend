@@ -1,1 +1,7 @@
-spring.application.name=soongan-api
+spring:
+  application:
+    name: soongan-api
+  config:
+    import:
+      - optional:soongan-redis.yml
+

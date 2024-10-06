@@ -23,7 +23,6 @@ class RedisConfig(
     @Bean
     fun redisConnectionFactory(): RedisConnectionFactory {
         val redisStandaloneConfiguration = RedisStandaloneConfiguration()
-//        println("redisHost: ${properties.host}!!!")
         redisStandaloneConfiguration.hostName = properties.host
         redisStandaloneConfiguration.port = properties.port
         redisStandaloneConfiguration.password = RedisPassword.of(properties.password)

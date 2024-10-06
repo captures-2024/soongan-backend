@@ -4,8 +4,3 @@ spring:
       host: localhost
       port: 63790
       password: password
-
-#redis:
-#  host: localhost
-#  port: 63790
-#  password: password
