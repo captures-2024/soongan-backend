@@ -1,5 +1,6 @@
 package com.soongan.soonganbackend.soonganapi.interfaces.weeklyContestPost
 
+import com.soongan.soonganbackend.soonganapi.interfaces.weeklyContestPost.dto.MyWeeklyContestPostResponseDto
 import com.soongan.soonganbackend.soonganapi.interfaces.weeklyContestPost.dto.WeeklyContestPostRegisterRequestDto
 import com.soongan.soonganbackend.soonganapi.interfaces.weeklyContestPost.dto.WeeklyContestPostRegisterResponseDto
 import com.soongan.soonganbackend.soonganapi.interfaces.weeklyContestPost.dto.WeeklyContestPostResponseDto
@@ -34,7 +35,17 @@ class WeeklyContestPostController (
         @RequestParam(required = false, defaultValue = "0") page: Int,
         @RequestParam(required = false, defaultValue = "50") pageSize: Int
     ): WeeklyContestPostResponseDto {
-        return weeklyContestService.getWeeklyContestPost(round, orderCriteria, page, pageSize)
+        return weeklyContestService.getWeeklyContestPostList(round, orderCriteria, page, pageSize)
+    }
+
+    @GetMapping(Uri.MY + Uri.POSTS)
+    @Operation(summary = "내 주간 콘테스트 게시글 조회 Api", description = "내가 작성한 주간 콘테스트 게시글을 조회합니다.")
+    fun getMyWeeklyContestPost(
+        @LoginMember loginMember: MemberEntity,
+        @RequestParam(required = false, defaultValue = "0") page: Int,
+        @RequestParam(required = false, defaultValue = "50") pageSize: Int
+    ): MyWeeklyContestPostResponseDto {
+        return weeklyContestService.getMyWeeklyContestPostList(loginMember, page, pageSize)
     }
 
     @PostMapping(Uri.POSTS)

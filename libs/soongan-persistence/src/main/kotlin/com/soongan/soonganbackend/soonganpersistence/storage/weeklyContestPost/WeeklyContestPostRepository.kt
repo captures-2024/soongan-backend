@@ -2,6 +2,7 @@ package com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost
 
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContest.WeeklyContestEntity
+import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Slice
 import org.springframework.data.jpa.repository.JpaRepository
@@ -26,8 +27,14 @@ interface WeeklyContestPostRepository : JpaRepository<WeeklyContestPostEntity, L
         pageable: Pageable
     ): Slice<WeeklyContestPostEntity>
 
+
     fun countByWeeklyContestAndMember(
         weeklyContestEntity: WeeklyContestEntity,
         member: MemberEntity
     ): Int
+
+    fun findAllByMember(
+        member: MemberEntity,
+        pageable: Pageable
+    ): Page<WeeklyContestPostEntity>
 }

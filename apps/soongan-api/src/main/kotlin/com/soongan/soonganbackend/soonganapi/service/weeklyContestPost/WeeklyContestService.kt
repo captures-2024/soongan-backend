@@ -1,17 +1,17 @@
 package com.soongan.soonganbackend.soonganapi.service.weeklyContestPost
 
+import com.soongan.soonganbackend.soonganapi.interfaces.weeklyContestPost.dto.MyWeeklyContestPostResponseDto
 import com.soongan.soonganbackend.soonganapi.interfaces.weeklyContestPost.dto.WeeklyContestPostRegisterRequestDto
 import com.soongan.soonganbackend.soonganapi.interfaces.weeklyContestPost.dto.WeeklyContestPostRegisterResponseDto
 import com.soongan.soonganbackend.soonganapi.interfaces.weeklyContestPost.dto.WeeklyContestPostResponseDto
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
-import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContest.WeeklyContestAdapter
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContest.WeeklyContestEntity
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.WeeklyContestPostAdapter
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.WeeklyContestPostEntity
 import com.soongan.soonganbackend.soonganapi.service.gcp.GcpStorageService
 import com.soongan.soonganbackend.soonganapi.service.weeklyContest.WeeklyContestValidator
 import com.soongan.soonganbackend.soonganapi.service.weeklyContestPost.WeeklyContestPostOrderCriteriaEnum.*
-import com.soongan.soonganbackend.soongansupport.util.dto.PageDto
+import org.springframework.data.domain.Page
 import org.springframework.data.domain.Slice
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -19,18 +19,13 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class WeeklyContestService(
     private val weeklyContestPostAdapter: WeeklyContestPostAdapter,
-    private val weeklyContestAdapter: WeeklyContestAdapter,
     private val gcpStorageService: GcpStorageService,
     private val weeklyContestPostValidator: WeeklyContestPostValidator,
     private val weeklyContestValidator: WeeklyContestValidator
 ) {
-    companion object {
-        private const val DEFAULT_NICKNAME = "nickname"
-        private const val DEFAULT_PROFILE_IMAGE_URL = "profile_image_url"
-    }
 
     @Transactional(readOnly = true)
-    fun getWeeklyContestPost(
+    fun getWeeklyContestPostList(
         round: Int,
         orderCriteria: WeeklyContestPostOrderCriteriaEnum,
         page: Int,
@@ -52,24 +47,24 @@ class WeeklyContestService(
             }
         }
 
-        return WeeklyContestPostResponseDto(
-            round = round,
-            subject = weeklyContest.subject,
-            posts = weeklyContestPostSlice.content.map {
-                WeeklyContestPostResponseDto.WeeklyContestPostDto(
-                    nickname = it.member.nickname ?: DEFAULT_NICKNAME,
-                    profileImageUrl = it.member.profileImageUrl ?: DEFAULT_PROFILE_IMAGE_URL,
-                    postId = it.id!!,
-                    imageUrl = it.imageUrl,
-                )
-            },
-            pageInfo = PageDto(
-                page = weeklyContestPostSlice.number,
-                size = weeklyContestPostSlice.size,
-                hasNext = weeklyContestPostSlice.hasNext()
-            )
+        return WeeklyContestPostResponseDto.from(
+            weeklyContest, weeklyContestPostSlice
         )
     }
+
+    @Transactional(readOnly = true)
+    fun getMyWeeklyContestPostList(
+        loginMember: MemberEntity,
+        page: Int,
+        pageSize: Int
+    ): MyWeeklyContestPostResponseDto {
+        val weeklyContestPostPage: Page<WeeklyContestPostEntity> = weeklyContestPostAdapter.getAllWeeklyContestPostByMember(
+            loginMember, page, pageSize
+        )
+
+        return MyWeeklyContestPostResponseDto.from(weeklyContestPostPage)
+    }
+
 
     @Transactional
     fun registerWeeklyContestPost(

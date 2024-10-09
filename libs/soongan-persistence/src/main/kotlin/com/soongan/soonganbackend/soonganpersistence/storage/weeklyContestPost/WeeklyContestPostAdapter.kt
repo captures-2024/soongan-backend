@@ -2,6 +2,7 @@ package com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost
 
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContest.WeeklyContestEntity
+import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Slice
 import org.springframework.data.repository.findByIdOrNull
@@ -65,5 +66,17 @@ class WeeklyContestPostAdapter(
         member: MemberEntity,
     ): Int {
         return weeklyContestPostRepository.countByWeeklyContestAndMember(weeklyContest, member)
+    }
+
+    @Transactional(readOnly = true)
+    fun getAllWeeklyContestPostByMember(
+        member: MemberEntity,
+        page: Int,
+        size: Int
+    ): Page<WeeklyContestPostEntity> {
+        return weeklyContestPostRepository.findAllByMember(
+            member,
+            PageRequest.of(page, size)
+        )
     }
 }

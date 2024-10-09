@@ -19,6 +19,7 @@ object Uri {
     const val CONTESTS = "/contests"
     const val POSTS = "/posts"
     const val LIKE = "/like"
+    const val MY = "/my"
 
     const val FCM = "/fcm"
 
