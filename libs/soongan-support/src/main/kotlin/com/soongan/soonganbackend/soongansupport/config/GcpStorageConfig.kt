@@ -22,8 +22,7 @@ class GcpStorageConfig(
         return StorageOptions.newBuilder()
             .setCredentials(GoogleCredentials.fromStream(
                 env.getProperty("spring.cloud.gcp.credentials.location")?.let {
-                    File(it.replace("classpath:", "build/resources/main/")).inputStream()
-                }
+                    File(it.replace("classpath:", "libs/soongan-support/src/main/resources/")).inputStream()                }
             ))
             .build()
             .service

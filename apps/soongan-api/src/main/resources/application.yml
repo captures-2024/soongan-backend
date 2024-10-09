@@ -9,10 +9,4 @@ spring:
       - optional:soongan-web.yml
 
 server:
-  port: 443
-  ssl:
-    key-store: ENC(CceBs5V+bc8OAFUqT941Rpl1zIKGGnQS)
-    key-store-password: ENC(INhsKSUZ4Dt6qO+udiiqpCY2EoCVIkuC)
-    key-store-type: ENC(/a8N3/iKX6zawiBT/n1AjQ==)
-    key-alias: ENC(BPQBUsjoKG1RMNDe17HgxQ==)
-
+  port: 8080
