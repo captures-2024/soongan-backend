@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: soongan-consumer
+  config:
+    import:
+      - optional:soongan-redis.yml
+      - optional:soongan-persistence.yml
+      - optional:soongan-support.yml
+      - optional:soongan-web.yml

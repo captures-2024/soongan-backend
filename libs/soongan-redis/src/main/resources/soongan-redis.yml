@@ -1,0 +1,4 @@
+spring:
+  config:
+    import:
+      - optional:redis-connection.yml

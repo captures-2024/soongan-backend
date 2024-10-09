@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: soongan-api
+  config:
+    import:
+      - optional:soongan-redis.yml
+      - optional:soongan-persistence.yml
+      - optional:soongan-support.yml
+      - optional:soongan-web.yml
+
+server:
+  port: 8080
