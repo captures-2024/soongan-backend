@@ -1,4 +1,4 @@
-package com.soongan.soonganbackend.soonganapi.service.weeklyContest
+package com.soongan.soonganbackend.soonganapi.service.weeklyContestPost
 
 enum class WeeklyContestPostOrderCriteriaEnum {
     LATEST,

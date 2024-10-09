@@ -1,4 +1,4 @@
-package com.soongan.soonganbackend.soonganapi.interfaces.weeklyContest.dto
+package com.soongan.soonganbackend.soonganapi.interfaces.weeklyContestPost.dto
 
 import com.soongan.soonganbackend.soongansupport.util.dto.PageDto
 

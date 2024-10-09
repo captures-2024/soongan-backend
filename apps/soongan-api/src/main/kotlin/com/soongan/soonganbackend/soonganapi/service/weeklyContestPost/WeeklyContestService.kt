@@ -1,30 +1,29 @@
-package com.soongan.soonganbackend.soonganapi.service.weeklyContest
+package com.soongan.soonganbackend.soonganapi.service.weeklyContestPost
 
-import com.soongan.soonganbackend.soonganapi.interfaces.weeklyContest.dto.WeeklyContestPostRegisterRequestDto
-import com.soongan.soonganbackend.soonganapi.interfaces.weeklyContest.dto.WeeklyContestPostRegisterResponseDto
-import com.soongan.soonganbackend.soonganapi.interfaces.weeklyContest.dto.WeeklyContestPostResponseDto
-import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberAdapter
+import com.soongan.soonganbackend.soonganapi.interfaces.weeklyContestPost.dto.WeeklyContestPostRegisterRequestDto
+import com.soongan.soonganbackend.soonganapi.interfaces.weeklyContestPost.dto.WeeklyContestPostRegisterResponseDto
+import com.soongan.soonganbackend.soonganapi.interfaces.weeklyContestPost.dto.WeeklyContestPostResponseDto
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContest.WeeklyContestAdapter
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContest.WeeklyContestEntity
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.WeeklyContestPostAdapter
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.WeeklyContestPostEntity
 import com.soongan.soonganbackend.soonganapi.service.gcp.GcpStorageService
-import com.soongan.soonganbackend.soonganapi.service.weeklyContest.WeeklyContestPostOrderCriteriaEnum.*
+import com.soongan.soonganbackend.soonganapi.service.weeklyContest.WeeklyContestValidator
+import com.soongan.soonganbackend.soonganapi.service.weeklyContestPost.WeeklyContestPostOrderCriteriaEnum.*
 import com.soongan.soonganbackend.soongansupport.util.dto.PageDto
-import com.soongan.soonganbackend.soongansupport.util.exception.SoonganException
-import com.soongan.soonganbackend.soongansupport.util.exception.StatusCode
 import org.springframework.data.domain.Slice
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
-class WeeklyContestService (
+class WeeklyContestService(
     private val weeklyContestPostAdapter: WeeklyContestPostAdapter,
     private val weeklyContestAdapter: WeeklyContestAdapter,
-    private val memberAdapter: MemberAdapter,
-    private val gcpStorageService: GcpStorageService
-){
+    private val gcpStorageService: GcpStorageService,
+    private val weeklyContestPostValidator: WeeklyContestPostValidator,
+    private val weeklyContestValidator: WeeklyContestValidator
+) {
     companion object {
         private const val DEFAULT_NICKNAME = "nickname"
         private const val DEFAULT_PROFILE_IMAGE_URL = "profile_image_url"
@@ -37,18 +36,19 @@ class WeeklyContestService (
         page: Int,
         pageSize: Int
     ): WeeklyContestPostResponseDto {
-        val weeklyContest: WeeklyContestEntity = weeklyContestAdapter.getWeeklyContest(round) ?:
-            throw SoonganException(StatusCode.SOONGAN_API_NOT_FOUND_WEEKLY_CONTEST)
+        val weeklyContest = weeklyContestValidator.getWeeklyContestIfValidRound(round)
 
         val weeklyContestPostSlice: Slice<WeeklyContestPostEntity> = when (orderCriteria) {
             LATEST -> {
-                weeklyContestPostAdapter.getLatestPostWithSlicing(round, page, pageSize)
+                weeklyContestPostAdapter.getLatestPostWithSlicing(weeklyContest, page, pageSize)
             }
+
             MOST_LIKED -> {
-                weeklyContestPostAdapter.getMostLikedPostWithSlicing(round, page, pageSize)
+                weeklyContestPostAdapter.getMostLikedPostWithSlicing(weeklyContest, page, pageSize)
             }
+
             OLDEST -> {
-                weeklyContestPostAdapter.getOldestPostWithSlicing(round, page, pageSize)
+                weeklyContestPostAdapter.getOldestPostWithSlicing(weeklyContest, page, pageSize)
             }
         }
 
@@ -71,12 +71,15 @@ class WeeklyContestService (
         )
     }
 
+    @Transactional
     fun registerWeeklyContestPost(
         loginMember: MemberEntity,
         weeklyContestPostRegisterRequest: WeeklyContestPostRegisterRequestDto
     ): WeeklyContestPostRegisterResponseDto {
-        val weeklyContest: WeeklyContestEntity = weeklyContestAdapter.getWeeklyContest(weeklyContestPostRegisterRequest.weeklyContestRound) ?:
-            throw SoonganException(StatusCode.SOONGAN_API_NOT_FOUND_WEEKLY_CONTEST)
+        val weeklyContest: WeeklyContestEntity =
+            weeklyContestValidator.getWeeklyContestIfValidRound(weeklyContestPostRegisterRequest.weeklyContestRound)
+
+        weeklyContestPostValidator.validateMaxRegisterPost(weeklyContest, loginMember)
 
         val imageUrl = gcpStorageService.uploadFile(
             weeklyContestPostRegisterRequest.imageFile,

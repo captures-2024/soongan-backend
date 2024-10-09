@@ -1,5 +1,7 @@
 package com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost
 
+import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
+import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContest.WeeklyContestEntity
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Slice
 import org.springframework.data.repository.findByIdOrNull
@@ -22,17 +24,46 @@ class WeeklyContestPostAdapter(
     }
 
     @Transactional(readOnly = true)
-    fun getLatestPostWithSlicing(round: Int, page: Int, size: Int): Slice<WeeklyContestPostEntity> {
-        return weeklyContestPostRepository.findAllByWeeklyContestRoundOrderByCreatedAtDesc(round, PageRequest.of(page, size))
+    fun getLatestPostWithSlicing(
+        weeklyContest: WeeklyContestEntity,
+        page: Int,
+        size: Int
+    ): Slice<WeeklyContestPostEntity> {
+        return weeklyContestPostRepository.findAllByWeeklyContestOrderByCreatedAtDesc(
+            weeklyContest,
+            PageRequest.of(page, size)
+        )
     }
 
     @Transactional(readOnly = true)
-    fun getOldestPostWithSlicing(round: Int, page: Int, size: Int): Slice<WeeklyContestPostEntity> {
-        return weeklyContestPostRepository.findAllByWeeklyContestRoundOrderByCreatedAtAsc(round, PageRequest.of(page, size))
+    fun getOldestPostWithSlicing(
+        weeklyContest: WeeklyContestEntity,
+        page: Int,
+        size: Int
+    ): Slice<WeeklyContestPostEntity> {
+        return weeklyContestPostRepository.findAllByWeeklyContestOrderByCreatedAtAsc(
+            weeklyContest,
+            PageRequest.of(page, size)
+        )
     }
 
     @Transactional(readOnly = true)
-    fun getMostLikedPostWithSlicing(round: Int, page: Int, size: Int): Slice<WeeklyContestPostEntity> {
-        return weeklyContestPostRepository.findAllByWeeklyContestRoundOrderByLikeCountDesc(round, PageRequest.of(page, size))
+    fun getMostLikedPostWithSlicing(
+        weeklyContest: WeeklyContestEntity,
+        page: Int,
+        size: Int
+    ): Slice<WeeklyContestPostEntity> {
+        return weeklyContestPostRepository.findAllByWeeklyContestOrderByLikeCountDesc(
+            weeklyContest,
+            PageRequest.of(page, size)
+        )
+    }
+
+    @Transactional(readOnly = true)
+    fun countRegisteredPostByMember(
+        weeklyContest: WeeklyContestEntity,
+        member: MemberEntity,
+    ): Int {
+        return weeklyContestPostRepository.countByWeeklyContestAndMember(weeklyContest, member)
     }
 }

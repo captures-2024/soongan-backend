@@ -30,6 +30,9 @@ data class WeeklyContestEntity(
     @Column(name = "subject", nullable = false)
     val subject: String,
 
+    @Column(name = "max_post_allowed", nullable = false)
+    val maxPostAllowed: Int,
+
     @Column(name = "start_at", nullable = false)
     val startAt: LocalDateTime,
 
