@@ -79,4 +79,9 @@ class WeeklyContestPostAdapter(
             PageRequest.of(page, size)
         )
     }
+
+    @Transactional
+    fun deleteWeeklyContestPost(postId: Long) {
+        weeklyContestPostRepository.deleteById(postId)
+    }
 }

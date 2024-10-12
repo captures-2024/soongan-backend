@@ -16,11 +16,24 @@ class WeeklyContestPostValidator(
     fun validateMaxRegisterPost(
         weeklyContest: WeeklyContestEntity,
         member: MemberEntity
-    ){
+    ) {
         val registeredPostCount = weeklyContestPostAdapter.countRegisteredPostByMember(weeklyContest, member)
 
         if (weeklyContest.maxPostAllowed <= registeredPostCount + 1) {
             throw (SoonganException(StatusCode.SOONGAN_API_WEEKLY_CONTEST_POST_REGISTER_LIMIT_EXCEEDED))
+        }
+    }
+
+    // 게시물 작성자 검증
+    fun validatePostOwner(
+        member: MemberEntity,
+        postId: Long
+    ) {
+        val post = weeklyContestPostAdapter.getByIdOrNull(postId)
+            ?: throw SoonganException(StatusCode.SOONGAN_API_NOT_FOUND_WEEKLY_CONTEST_POST)
+
+        if (post.member != member) {
+            throw SoonganException(StatusCode.SOONGAN_API_NOT_OWNER_WEEKLY_CONTEST_POST)
         }
     }
 }

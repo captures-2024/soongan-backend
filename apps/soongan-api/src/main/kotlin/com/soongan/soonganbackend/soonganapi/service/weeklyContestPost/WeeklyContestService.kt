@@ -69,15 +69,15 @@ class WeeklyContestService(
     @Transactional
     fun registerWeeklyContestPost(
         loginMember: MemberEntity,
-        weeklyContestPostRegisterRequest: WeeklyContestPostRegisterRequestDto
+        request: WeeklyContestPostRegisterRequestDto
     ): WeeklyContestPostRegisterResponseDto {
         val weeklyContest: WeeklyContestEntity =
-            weeklyContestValidator.getWeeklyContestIfValidRound(weeklyContestPostRegisterRequest.weeklyContestRound)
+            weeklyContestValidator.getWeeklyContestIfValidRound(request.weeklyContestRound)
 
         weeklyContestPostValidator.validateMaxRegisterPost(weeklyContest, loginMember)
 
         val imageUrl = gcpStorageService.uploadFile(
-            weeklyContestPostRegisterRequest.imageFile,
+            request.imageFile,
             loginMember.id!!
         )
 
@@ -95,5 +95,14 @@ class WeeklyContestService(
             imageUrl = savedPost.imageUrl,
             registerNickname = loginMember.nickname!!
         )
+    }
+
+    @Transactional
+    fun deleteMyWeeklyContestPost(
+        loginMember: MemberEntity,
+        postId: Long
+    ) {
+        weeklyContestPostValidator.validatePostOwner(loginMember, postId)
+        weeklyContestPostAdapter.deleteWeeklyContestPost(postId)
     }
 }

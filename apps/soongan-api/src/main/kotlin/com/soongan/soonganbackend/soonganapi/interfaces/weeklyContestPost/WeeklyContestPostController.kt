@@ -12,9 +12,11 @@ import com.soongan.soonganbackend.soonganweb.resolver.LoginMember
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
@@ -55,5 +57,14 @@ class WeeklyContestPostController (
         @ModelAttribute @Valid weeklyContestPostRegisterRequest: WeeklyContestPostRegisterRequestDto
     ): WeeklyContestPostRegisterResponseDto {
         return weeklyContestService.registerWeeklyContestPost(loginMember, weeklyContestPostRegisterRequest)
+    }
+
+    @DeleteMapping(Uri.MY + Uri.POSTS)
+    @Operation(summary = "내 주간 콘테스트 게시글 삭제 Api", description = "내가 작성한 주간 콘테스트 게시글을 삭제합니다.")
+    fun deleteMyWeeklyContestPost(
+        @LoginMember loginMember: MemberEntity,
+        @RequestBody postId: Long
+    ) {
+        weeklyContestService.deleteMyWeeklyContestPost(loginMember, postId)
     }
 }
