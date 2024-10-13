@@ -17,6 +17,6 @@ class ExportResponseDto(
                 statusCode = statusCode.code,
                 message = statusCode.message,
                 responseData = responseData
-        )
+            )
     }
 }

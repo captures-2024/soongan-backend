@@ -28,7 +28,7 @@ class ApiResponseBodyWrapper: ResponseBodyAdvice<Any> {
         request: ServerHttpRequest,
         response: ServerHttpResponse
     ): Any? {
-        if (request.uri.path.contains("/api-docs")) {
+        if (request.uri.path.contains("/api-docs") || request.uri.path.contains("/callback")) {
             return body
         }
 
