@@ -2,6 +2,7 @@ package com.soongan.soonganbackend.soonganapi.interfaces.weeklyContestPost.dto
 
 import jakarta.validation.constraints.Min
 import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.NotNull
 import org.springframework.web.multipart.MultipartFile
 
 data class WeeklyContestPostRegisterRequestDto(
@@ -9,6 +10,6 @@ data class WeeklyContestPostRegisterRequestDto(
     val weeklyContestRound: Int,
     @field:NotBlank
     val subject: String,
-    @field:NotBlank
+    @field:NotNull
     val imageFile: MultipartFile
 )

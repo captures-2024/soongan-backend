@@ -2,6 +2,8 @@ package com.soongan.soonganbackend.soongansupport.util.constant
 
 object Uri {
     const val V3 = "/v3"
+    const val API = "/api"
+    const val DOCS = "/docs"
     const val API_DOCS = "/api-docs"
     const val SWAGGER_UI = "/swagger-ui"
     const val SWAGGER_RESOURCES = "/swagger-resources"
@@ -24,7 +26,7 @@ object Uri {
     const val FCM = "/fcm"
 
     val passUris = listOf(
-        API_DOCS,
+        DOCS,
         SWAGGER_UI + "/**",
         SWAGGER_RESOURCES + "/**",
         V3 + API_DOCS + "/**",

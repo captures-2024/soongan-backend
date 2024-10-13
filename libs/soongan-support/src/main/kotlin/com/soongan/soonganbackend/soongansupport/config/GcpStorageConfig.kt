@@ -16,9 +16,6 @@ class GcpStorageConfig(
 
     @Bean
     fun googleCloudStorage(): Storage {
-        // soongan-dev-IAM.json 파일의 경로 알아낸 방법..
-        val resource = this::class.java.classLoader.getResource("soongan-dev-IAM.json")
-
         return StorageOptions.newBuilder()
             .setCredentials(GoogleCredentials.fromStream(
                 env.getProperty("spring.cloud.gcp.credentials.location")?.let {

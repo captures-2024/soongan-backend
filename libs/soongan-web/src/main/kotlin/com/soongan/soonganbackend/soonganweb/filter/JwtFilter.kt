@@ -27,8 +27,11 @@ class JwtFilter(
 
     override fun shouldNotFilter(request: HttpServletRequest): Boolean {
         val requestUri = request.requestURI
+        println("requestUri: $requestUri")
 
-        return Uri.passUris.any { passUri ->
+        return Uri.passUris.map {
+            Uri.API + it
+        }.any { passUri ->
             if (passUri.endsWith("/**")) {
                 requestUri.startsWith(passUri.removeSuffix("/**"))
             } else {
