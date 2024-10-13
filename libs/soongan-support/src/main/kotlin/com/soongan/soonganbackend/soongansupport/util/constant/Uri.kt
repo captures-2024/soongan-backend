@@ -7,6 +7,7 @@ object Uri {
     const val API_DOCS = "/api-docs"
     const val SWAGGER_UI = "/swagger-ui"
     const val SWAGGER_RESOURCES = "/swagger-resources"
+    const val SWAGGER_CONFIG = "/swagger-config"
 
     const val MEMBERS = "/members"
     const val LOGIN = "/login"
@@ -44,5 +45,13 @@ object Uri {
 
         CALLBACK + APPLE_LOGIN,
         CALLBACK + APPLE_LOGIN + SUCCESS
+    )
+
+    val notWrapUris = listOf(
+        API + V3 + API_DOCS,
+        API + V3 + API_DOCS + SWAGGER_CONFIG,
+
+        API + CALLBACK + APPLE_LOGIN,
+        API + CALLBACK + APPLE_LOGIN + SUCCESS
     )
 }

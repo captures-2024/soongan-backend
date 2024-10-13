@@ -40,8 +40,8 @@ class SecurityConfig(
     @Bean
     fun corsConfigurationSource(): CorsConfigurationSource {
         val configuration = CorsConfiguration()
-        configuration.allowedOrigins = listOf("https://soongan.site")
-        configuration.allowedMethods = listOf("*")
+        configuration.allowedOrigins = listOf("https://soongan.site", "https://appleid.apple.com")
+        configuration.allowedMethods = listOf("GET", "POST", "PATCH", "PUT", "DELETE")
         configuration.allowedHeaders = listOf("*")
         configuration.allowCredentials = true
         configuration.maxAge = 3600L
