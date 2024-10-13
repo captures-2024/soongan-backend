@@ -48,10 +48,10 @@ object Uri {
     )
 
     val notWrapUris = listOf(
-        API + V3 + API_DOCS,
-        API + V3 + API_DOCS + SWAGGER_CONFIG,
+        V3 + API_DOCS,
+        V3 + API_DOCS + SWAGGER_CONFIG,
 
-        API + CALLBACK + APPLE_LOGIN,
-        API + CALLBACK + APPLE_LOGIN + SUCCESS
+        CALLBACK + APPLE_LOGIN,
+        CALLBACK + APPLE_LOGIN + SUCCESS
     )
 }
