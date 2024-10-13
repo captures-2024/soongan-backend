@@ -37,7 +37,7 @@ data class WeeklyContestPostEntity(
     val member: MemberEntity,
 
     @Column(name = "image_url", nullable = false)
-    val imageUrl: String,
+    val imageUrl: String = "",
 
     @Column(name = "ranking", nullable = false)
     val ranking: Int = 0,

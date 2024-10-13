@@ -31,6 +31,8 @@ enum class StatusCode(val code: String, val message: String) {
     SOONGAN_API_ALREADY_EXIST_FCM_TOKEN("1007", "Already Exist FCM Token"),
     SOONGAN_API_NOT_FOUND_FCM_TOKEN("1008", "Not Found FCM Token"),
     SOONGAN_API_FAILED_PUSH_FCM_MESSAGE("1009", "Failed Push FCM Message"),
+    SOONGAN_API_WEEKLY_CONTEST_POST_REGISTER_LIMIT_EXCEEDED("1010", "Weekly Contest Post Register Limit Exceeded"),
+    SOONGAN_API_NOT_OWNER_WEEKLY_CONTEST_POST("1011", "Not Owner Weekly Contest Post"),
 
 
     // 9000 Common Status Code
