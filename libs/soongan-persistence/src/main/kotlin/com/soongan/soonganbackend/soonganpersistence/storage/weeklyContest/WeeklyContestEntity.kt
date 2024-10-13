@@ -25,28 +25,28 @@ import java.time.LocalDateTime
 data class WeeklyContestEntity(
 
     @Column(name = "round", nullable = false)
-    val round: Int,
+    val round: Int = 0,
 
     @Column(name = "subject", nullable = false)
-    val subject: String,
+    val subject: String = "",
 
     @Column(name = "max_post_allowed", nullable = false)
-    val maxPostAllowed: Int,
+    val maxPostAllowed: Int = 0,
 
     @Column(name = "start_at", nullable = false)
-    val startAt: LocalDateTime,
+    val startAt: LocalDateTime = LocalDateTime.MIN,
 
     @Column(name = "end_at", nullable = false)
-    val endAt: LocalDateTime,
+    val endAt: LocalDateTime = LocalDateTime.MIN,
 
     @Column(name = "vote_start_at", nullable = false)
-    val voteStartAt: LocalDateTime,
+    val voteStartAt: LocalDateTime = LocalDateTime.MIN,
 
     @Column(name = "vote_end_at", nullable = false)
-    val voteEndAt: LocalDateTime,
+    val voteEndAt: LocalDateTime = LocalDateTime.MIN,
 
     @Column(name = "announced_at", nullable = false)
-    val announcedAt: LocalDateTime
+    val announcedAt: LocalDateTime = LocalDateTime.MIN
 ) {
 
     @Id
