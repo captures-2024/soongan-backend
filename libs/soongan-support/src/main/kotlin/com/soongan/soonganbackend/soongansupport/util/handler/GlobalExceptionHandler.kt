@@ -1,11 +1,13 @@
 package com.soongan.soonganbackend.soongansupport.util.handler
 
 import com.fasterxml.jackson.databind.exc.InvalidFormatException
+import com.soongan.soonganbackend.soongansupport.util.constant.ColorCode
 import com.soongan.soonganbackend.soongansupport.util.dto.CommonErrorResponseDto
 import com.soongan.soonganbackend.soongansupport.util.exception.SoonganException
 import com.soongan.soonganbackend.soongansupport.util.exception.StatusCode
 import io.github.oshai.kotlinlogging.KotlinLogging
 import jakarta.validation.ValidationException
+import org.slf4j.MDC
 import org.springframework.beans.TypeMismatchException
 import org.springframework.http.HttpStatus
 import org.springframework.http.converter.HttpMessageNotReadableException
@@ -34,14 +36,19 @@ class GlobalExceptionHandler {
     @ExceptionHandler(Exception::class)
     @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
     fun handleCommonException(ex: Exception): CommonErrorResponseDto {
-        logger.error { ex.stackTraceToString() }
+        val requestUuid = MDC.get("uuid")
+        logger.error {
+            "${ColorCode.GREEN}[${requestUuid}]${ColorCode.RED}[Error]${ColorCode.RESET} 500 Internal Server Error${ColorCode.RESET}\n${ex.stackTraceToString()}"
+        }
         return CommonErrorResponseDto.from(StatusCode.SERVICE_NOT_AVAILABLE)
     }
 
     @ExceptionHandler(SoonganException::class)
-    @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
     fun handleSoonganException(ex: SoonganException): CommonErrorResponseDto {
-        logger.error { ex.stackTraceToString() }
+        val requestUuid = MDC.get("uuid")
+        logger.error {
+            "${ColorCode.GREEN}[${requestUuid}]${ColorCode.RED}[Error]${ColorCode.RESET} ${ex.statusCode.code} ${ex.statusCode.message}${ColorCode.RESET}\n${ex.stackTraceToString()}"
+        }
         return CommonErrorResponseDto.from(ex.statusCode)
     }
 
