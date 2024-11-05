@@ -30,7 +30,7 @@ class ApiResponseBodyWrapper: ResponseBodyAdvice<Any> {
         response: ServerHttpResponse
     ): Any? {
         val requestPath = request.uri.path
-        if (Uri.notWrapUris.contains(requestPath)) {
+        if (Uri.notWrapUris.map { Uri.API + it }.contains(requestPath)) {
             return body
         }
 
