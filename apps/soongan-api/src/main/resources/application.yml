@@ -12,3 +12,11 @@ server:
   port: 8080
   servlet:
     context-path: /api
+
+oauth2:
+  android:
+    google:
+      client-id: ENC(3gLcgH4trbjMtAx3iMT6a6KijpfrLQk3lwQPiZANx9fHfkMRWqL9i1VtPvW1ycDQt+LnkRbsQFRRXaWX0ljerpvnB9zUTYuaeMi6fI4DmzKunhbeqhUcWA==)
+  ios:
+    google:
+      client-id: ENC(ULUYhauNR09LtLAblSQowxZLT/3Y7ujh11fIaghgFUlVYrXLnPrzQpvCDzDZJ87FU80KZfJGkpPe+VqKZad4xUIC3eA2U4yc3QVlyNvsMHxHkkVBWXjLTg==)
