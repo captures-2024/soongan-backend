@@ -1,3 +1,9 @@
+configurations {
+    all {
+        exclude(group="commons-logging", module="commons-logging")
+    }
+}
+
 dependencies {
     implementation(project(":soongan-support"))
     implementation(project(":soongan-persistence"))
@@ -7,6 +13,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 
+    implementation("net.logstash.logback:logstash-logback-encoder:7.4")
     implementation("io.jsonwebtoken:jjwt-api:0.12.5")
     implementation("io.github.oshai:kotlin-logging-jvm:5.1.0")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")

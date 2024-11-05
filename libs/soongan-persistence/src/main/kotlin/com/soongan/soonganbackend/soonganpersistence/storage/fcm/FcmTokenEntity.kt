@@ -18,6 +18,10 @@ import java.time.LocalDateTime
 )
 @EntityListeners(AuditingEntityListener::class)
 data class FcmTokenEntity(
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long? = null,
+
     @Column(name = "token", nullable = false)
     val token: String,
 
@@ -32,10 +36,6 @@ data class FcmTokenEntity(
     @Column(name = "device_id", nullable = false)
     val deviceId: String
 ) {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = null
-
     @CreatedDate
     @Column(nullable = false, updatable = false)
     var createdAt: LocalDateTime = LocalDateTime.now()

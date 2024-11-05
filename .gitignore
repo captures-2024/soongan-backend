@@ -11,6 +11,7 @@ soongan-jasypt.yml
 *-connection.yml
 *.p12
 soongan-*.json
+logback.xml
 
 ### macOS ###
 .DS_Store

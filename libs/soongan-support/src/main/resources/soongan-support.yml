@@ -6,8 +6,8 @@ spring:
       - optional:soongan-jasypt.yml
   cloud:
     gcp:
-      project-id: ENC(w4SR5ImNLUFMoOfBD/hlRXg0I/gQMmyL)
+      project-id: ENC(0AkK6w0khlMNdHQoqqtR8g==)
       credentials:
-        location: ENC(OLvIhWs1Vp5uXUbP0IIWqLt6dsGBLoxqfN6NCv7ikpCbLGY4s1Pjlg==)
+        location: ENC(9Rr9fU99iYnhoDtJNbbZdqqH7qyKgMn9urum8gCNGWyL+3YqHzwFzA==)
       storage:
-        bucket: ENC(w4SR5ImNLUFMoOfBD/hlRXg0I/gQMmyL)
+        bucket: ENC(0AkK6w0khlMNdHQoqqtR8g==)
