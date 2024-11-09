@@ -24,8 +24,8 @@ class AuthController(
 
     @Operation(summary = "로그인 Api", description = "idToken을 이용하여 로그인을 수행하고, JWT를 발급합니다.")
     @PostMapping(Uri.LOGIN)
-    fun login(@RequestHeader(value = "User-Agent") userAgentEnum: UserAgentEnum, @RequestBody @Valid loginDto: LoginRequestDto): LoginResponseDto {
-        return authService.login(userAgentEnum, loginDto)
+    fun login(@RequestHeader(value = "User-Agent") userAgent: UserAgentEnum, @RequestBody @Valid loginDto: LoginRequestDto): LoginResponseDto {
+        return authService.login(userAgent, loginDto)
     }
 
     @Operation(summary = "로그아웃 Api", description = "로그인시 발급한 JWT를 말소합니다.")
