@@ -1,4 +1,4 @@
-package com.soongan.soonganbackend.soonganapi.interfaces.fcm.dto
+package com.soongan.soonganbackend.soonganapi.interfaces.fcm.dto.request
 
 import jakarta.validation.constraints.NotNull
 

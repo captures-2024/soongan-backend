@@ -1,7 +1,7 @@
 package com.soongan.soonganbackend.soonganapi.service.postLike
 
-import com.soongan.soonganbackend.soonganapi.interfaces.postLike.dto.PostLikeRequestDto
-import com.soongan.soonganbackend.soonganapi.interfaces.postLike.dto.PostLikeResponseDto
+import com.soongan.soonganbackend.soonganapi.interfaces.postLike.dto.request.PostLikeRequestDto
+import com.soongan.soonganbackend.soonganapi.interfaces.postLike.dto.response.PostLikeResponseDto
 import com.soongan.soonganbackend.soonganpersistence.storage.comment.ContestTypeEnum
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
 import com.soongan.soonganbackend.soonganpersistence.storage.postLike.PostLikeAdapter

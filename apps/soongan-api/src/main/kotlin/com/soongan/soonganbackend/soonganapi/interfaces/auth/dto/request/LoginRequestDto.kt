@@ -1,4 +1,4 @@
-package com.soongan.soonganbackend.soonganapi.interfaces.auth.request
+package com.soongan.soonganbackend.soonganapi.interfaces.auth.dto.request
 
 import com.soongan.soonganbackend.soongansupport.domain.ProviderEnum
 import jakarta.validation.constraints.NotNull

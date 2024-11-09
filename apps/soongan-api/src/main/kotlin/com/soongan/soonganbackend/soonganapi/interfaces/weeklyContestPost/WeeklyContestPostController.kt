@@ -1,9 +1,9 @@
 package com.soongan.soonganbackend.soonganapi.interfaces.weeklyContestPost
 
-import com.soongan.soonganbackend.soonganapi.interfaces.weeklyContestPost.dto.MyWeeklyContestPostResponseDto
-import com.soongan.soonganbackend.soonganapi.interfaces.weeklyContestPost.dto.WeeklyContestPostRegisterRequestDto
-import com.soongan.soonganbackend.soonganapi.interfaces.weeklyContestPost.dto.WeeklyContestPostRegisterResponseDto
-import com.soongan.soonganbackend.soonganapi.interfaces.weeklyContestPost.dto.WeeklyContestPostResponseDto
+import com.soongan.soonganbackend.soonganapi.interfaces.weeklyContestPost.dto.response.MyWeeklyContestPostResponseDto
+import com.soongan.soonganbackend.soonganapi.interfaces.weeklyContestPost.dto.request.WeeklyContestPostRegisterRequestDto
+import com.soongan.soonganbackend.soonganapi.interfaces.weeklyContestPost.dto.response.WeeklyContestPostRegisterResponseDto
+import com.soongan.soonganbackend.soonganapi.interfaces.weeklyContestPost.dto.response.WeeklyContestPostResponseDto
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
 import com.soongan.soonganbackend.soonganapi.service.weeklyContestPost.WeeklyContestPostOrderCriteriaEnum
 import com.soongan.soonganbackend.soonganapi.service.weeklyContestPost.WeeklyContestService

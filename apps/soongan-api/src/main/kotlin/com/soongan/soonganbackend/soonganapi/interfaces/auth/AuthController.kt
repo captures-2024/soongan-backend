@@ -1,8 +1,8 @@
 package com.soongan.soonganbackend.soonganapi.interfaces.auth
 
-import com.soongan.soonganbackend.soonganapi.interfaces.auth.request.LoginRequestDto
-import com.soongan.soonganbackend.soonganapi.interfaces.auth.response.LoginResponseDto
-import com.soongan.soonganbackend.soonganapi.interfaces.auth.request.RefreshRequestDto
+import com.soongan.soonganbackend.soonganapi.interfaces.auth.dto.request.LoginRequestDto
+import com.soongan.soonganbackend.soonganapi.interfaces.auth.dto.response.LoginResponseDto
+import com.soongan.soonganbackend.soonganapi.interfaces.auth.dto.request.RefreshRequestDto
 import com.soongan.soonganbackend.soonganapi.service.auth.AuthService
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
 import com.soongan.soonganbackend.soongansupport.domain.UserAgentEnum

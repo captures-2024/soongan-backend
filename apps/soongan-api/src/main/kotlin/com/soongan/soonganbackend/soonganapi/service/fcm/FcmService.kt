@@ -1,11 +1,11 @@
 package com.soongan.soonganbackend.soonganapi.service.fcm
 
 import com.google.auth.oauth2.GoogleCredentials
-import com.soongan.soonganbackend.soonganapi.interfaces.fcm.dto.FcmMessageDto
-import com.soongan.soonganbackend.soonganapi.interfaces.fcm.dto.FcmRegistRequestDto
-import com.soongan.soonganbackend.soonganapi.interfaces.fcm.dto.FcmTokenInfoResponseDto
-import com.soongan.soonganbackend.soonganapi.interfaces.fcm.dto.Message
-import com.soongan.soonganbackend.soonganapi.interfaces.fcm.dto.Notification
+import com.soongan.soonganbackend.soonganapi.interfaces.fcm.dto.request.FcmMessageDto
+import com.soongan.soonganbackend.soonganapi.interfaces.fcm.dto.request.FcmRegistRequestDto
+import com.soongan.soonganbackend.soonganapi.interfaces.fcm.dto.response.FcmTokenInfoResponseDto
+import com.soongan.soonganbackend.soonganapi.interfaces.fcm.dto.request.Message
+import com.soongan.soonganbackend.soonganapi.interfaces.fcm.dto.request.Notification
 import com.soongan.soonganbackend.soonganpersistence.storage.fcm.FcmTokenAdaptor
 import com.soongan.soonganbackend.soonganpersistence.storage.fcm.FcmTokenEntity
 import com.soongan.soonganbackend.soongansupport.domain.UserAgentEnum

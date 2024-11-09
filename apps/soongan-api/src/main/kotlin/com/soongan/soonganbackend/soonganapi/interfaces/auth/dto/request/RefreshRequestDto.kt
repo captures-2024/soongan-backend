@@ -1,4 +1,4 @@
-package com.soongan.soonganbackend.soonganapi.interfaces.auth.request
+package com.soongan.soonganbackend.soonganapi.interfaces.auth.dto.request
 
 import jakarta.validation.constraints.NotNull
 
