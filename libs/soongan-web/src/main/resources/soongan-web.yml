@@ -6,3 +6,6 @@ springdoc:
   swagger-ui:
     path: /docs
     disable-swagger-default-url: true
+
+jwt:
+  secret: ENC(Q2TlKjGshq8I2EekQw4QIeaZ5P/qM43t29+a4gG974SnZUcHe00yRRwz4DZ9crQo)
