@@ -1,4 +1,4 @@
-package com.soongan.soonganbackend.soonganapi.interfaces.member.dto
+package com.soongan.soonganbackend.soonganapi.interfaces.auth.response
 
 data class LoginResponseDto(
     val accessToken: String,

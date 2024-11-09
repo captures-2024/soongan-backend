@@ -1,4 +1,4 @@
-package com.soongan.soonganbackend.soonganapi.interfaces.member.dto
+package com.soongan.soonganbackend.soonganapi.interfaces.member.dto.response
 
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
 import java.time.LocalDate
