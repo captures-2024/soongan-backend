@@ -34,7 +34,7 @@ data class MemberEntity(
 
     @Column
     @Enumerated(EnumType.STRING)
-    val providerEnum: ProviderEnum,
+    val provider: ProviderEnum,
 
     @Column(name = "authorities")
     val authorities: String,

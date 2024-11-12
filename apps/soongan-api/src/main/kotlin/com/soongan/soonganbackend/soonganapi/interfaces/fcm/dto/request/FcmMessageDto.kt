@@ -1,4 +1,4 @@
-package com.soongan.soonganbackend.soonganapi.interfaces.fcm.dto
+package com.soongan.soonganbackend.soonganapi.interfaces.fcm.dto.request
 
 data class FcmMessageDto(
     val message: Message

@@ -1,7 +1,7 @@
 package com.soongan.soonganbackend.soonganapi.interfaces.fcm
 
-import com.soongan.soonganbackend.soonganapi.interfaces.fcm.dto.FcmRegistRequestDto
-import com.soongan.soonganbackend.soonganapi.interfaces.fcm.dto.FcmTokenInfoResponseDto
+import com.soongan.soonganbackend.soonganapi.interfaces.fcm.dto.request.FcmRegistRequestDto
+import com.soongan.soonganbackend.soonganapi.interfaces.fcm.dto.response.FcmTokenInfoResponseDto
 import com.soongan.soonganbackend.soonganapi.service.fcm.FcmService
 import com.soongan.soonganbackend.soongansupport.domain.UserAgentEnum
 import com.soongan.soonganbackend.soongansupport.util.constant.Uri

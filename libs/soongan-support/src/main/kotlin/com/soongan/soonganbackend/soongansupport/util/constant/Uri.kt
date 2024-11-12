@@ -9,14 +9,16 @@ object Uri {
     const val SWAGGER_RESOURCES = "/swagger-resources"
     const val SWAGGER_CONFIG = "/swagger-config"
 
-    const val MEMBERS = "/members"
+    const val AUTH = "/auth"
     const val LOGIN = "/login"
     const val LOGOUT = "/logout"
     const val WITHDRAW = "/withdraw"
+    const val REFRESH = "/refresh"
+
+    const val MEMBERS = "/members"
     const val CHECK_NICKNAME = "/check-nickname"
     const val NICKNAME = "/nickname"
     const val PROFILE_IMAGE = "/profile-image"
-    const val REFRESH = "/refresh"
 
     const val WEEKLY = "/weekly"
     const val CONTESTS = "/contests"
@@ -36,8 +38,8 @@ object Uri {
         SWAGGER_RESOURCES + "/**",
         V3 + API_DOCS + "/**",
 
-        MEMBERS + LOGIN,
-        MEMBERS + REFRESH,
+        AUTH + LOGIN,
+        AUTH + REFRESH,
 
         WEEKLY + CONTESTS + POSTS,
 

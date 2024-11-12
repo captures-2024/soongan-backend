@@ -1,4 +1,4 @@
-package com.soongan.soonganbackend.soonganapi.interfaces.weeklyContestPost.dto
+package com.soongan.soonganbackend.soonganapi.interfaces.weeklyContestPost.dto.response
 
 data class WeeklyContestPostRegisterResponseDto(
     val postId: Long,

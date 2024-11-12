@@ -1,4 +1,4 @@
-package com.soongan.soonganbackend.soonganapi.interfaces.fcm.dto
+package com.soongan.soonganbackend.soonganapi.interfaces.fcm.dto.response
 
 import com.soongan.soonganbackend.soongansupport.domain.UserAgentEnum
 
