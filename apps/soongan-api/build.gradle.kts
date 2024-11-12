@@ -3,6 +3,7 @@ dependencies {
     implementation(project(":soongan-support"))
     implementation(project(":soongan-web"))
     implementation(project(":soongan-redis"))
+    implementation(project(":soongan-kafka"))
 
     implementation("com.google.auth:google-auth-library-oauth2-http:1.27.0")
     implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
