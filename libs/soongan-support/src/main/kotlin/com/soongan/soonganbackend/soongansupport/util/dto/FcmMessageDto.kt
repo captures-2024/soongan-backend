@@ -1,4 +1,4 @@
-package com.soongan.soonganbackend.soonganconsumer.service.fcm.dto
+package com.soongan.soonganbackend.soongansupport.util.dto
 
 data class FcmMessageDto(
     val message: Message

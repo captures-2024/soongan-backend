@@ -1,9 +1,8 @@
 package com.soongan.soonganbackend.soonganconsumer.service.fcm
 
 import com.google.auth.oauth2.GoogleCredentials
-import com.soongan.soonganbackend.soonganconsumer.service.fcm.dto.FcmMessageDto
-import com.soongan.soonganbackend.soonganconsumer.service.fcm.dto.Message
-import com.soongan.soonganbackend.soonganconsumer.service.fcm.dto.Notification
+import com.soongan.soonganbackend.soongansupport.util.dto.FcmMessageDto
+import com.soongan.soonganbackend.soongansupport.util.dto.Message
 import com.soongan.soonganbackend.soongansupport.util.exception.SoonganException
 import com.soongan.soonganbackend.soongansupport.util.exception.StatusCode
 import org.springframework.core.ParameterizedTypeReference
@@ -23,13 +22,9 @@ class FcmService(
     private val env: Environment
 ) {
 
-    fun pushFcmMessage(fcmToken: String, notification: Notification): ResponseEntity<Map<String, Any>> {
+    fun pushFcmMessage(message: Message): ResponseEntity<Map<String, Any>> {
         val firebaseProjectId = env.getProperty("firebase.project-id").toString()
         val url = "https://fcm.googleapis.com/v1/projects/${firebaseProjectId}/messages:send"
-        val message = Message(
-            token = fcmToken,
-            notification = notification
-        )
 
         val headers = HttpHeaders().apply {
             setBearerAuth(getFcmAccessToken())
