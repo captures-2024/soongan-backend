@@ -60,9 +60,9 @@ class AuthService(
         )
     }
 
-    fun logout(loginMember: MemberEntity) {
+    fun logout(loginMemberEmail: String) {
         try {
-            jwtHandler.deleteToken(loginMember.email)
+            jwtHandler.deleteToken(loginMemberEmail)
         } catch (e: Exception) {
             throw SoonganException(StatusCode.SOONGAN_API_FAIL_TO_LOGOUT)
         }
