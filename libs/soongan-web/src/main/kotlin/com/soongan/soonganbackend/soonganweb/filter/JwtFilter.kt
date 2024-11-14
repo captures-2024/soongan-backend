@@ -51,7 +51,7 @@ class JwtFilter(
             val payload = jwtHandler.getPayload(accessToken, JwtTypeEnum.ACCESS)
 
             val email = payload["sub"] as String
-            val authorities = payload["authorities"] as List<String>
+            val authorities = (payload["authorities"] as String).trim('[', ']').split(",") // TODO 삭제
 
             val memberDetail = MemberDetail(
                 email = email,

@@ -60,16 +60,9 @@ class JwtHandler(
     @Transactional(readOnly = true)
     fun getPayload(token: String, jwtTypeEnum: JwtTypeEnum): Map<String, *> {
         try {
-            when (jwtTypeEnum) {
-                JwtTypeEnum.ACCESS -> {
-                    jwtAdaptor.findByAccessToken(token)
-                        ?: throw SoonganUnauthorizedException(StatusCode.INVALID_JWT_ACCESS_TOKEN)
-                }
-
-                JwtTypeEnum.REFRESH -> {
-                    jwtAdaptor.findByRefreshToken(token)
-                        ?: throw SoonganUnauthorizedException(StatusCode.INVALID_JWT_REFRESH_TOKEN)
-                }
+            if (jwtTypeEnum == JwtTypeEnum.REFRESH) {
+                jwtAdaptor.findByRefreshToken(token)
+                    ?: throw SoonganUnauthorizedException(StatusCode.INVALID_JWT_REFRESH_TOKEN)
             }
 
             return generateValidatedPayload(token)

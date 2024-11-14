@@ -3,7 +3,9 @@ package com.soongan.soonganbackend.soonganapi.interfaces.member
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
 import com.soongan.soonganbackend.soonganapi.service.member.MemberService
 import com.soongan.soonganbackend.soonganapi.interfaces.member.dto.response.MemberInfoResponseDto
+import com.soongan.soonganbackend.soonganapi.interfaces.member.dto.response.UpdateBirthDateResponseDto
 import com.soongan.soonganbackend.soonganapi.interfaces.member.dto.response.UpdateNicknameResponseDto
+import com.soongan.soonganbackend.soonganapi.interfaces.member.dto.response.UpdateProfileImageResponseDto
 import com.soongan.soonganbackend.soongansupport.util.constant.Uri
 import com.soongan.soonganbackend.soonganweb.resolver.LoginMember
 import io.swagger.v3.oas.annotations.Operation
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RequestPart
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
+import java.time.LocalDate
 
 @RestController
 @RequestMapping(Uri.MEMBERS)
@@ -44,7 +47,14 @@ class MemberController(
 
     @Operation(summary = "프로필 사진 변경 Api", description = "프로필 사진을 변경합니다.")
     @PatchMapping(Uri.PROFILE_IMAGE, consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
-    fun updateProfileImage(@LoginMember loginMember: MemberEntity, @RequestPart("image") profileImage: MultipartFile) {
-        memberService.updateProfileImage(loginMember, profileImage)
+    fun updateProfileImage(@LoginMember loginMember: MemberEntity, @RequestPart("image") profileImage: MultipartFile): UpdateProfileImageResponseDto {
+        return memberService.updateProfileImage(loginMember, profileImage)
+    }
+
+    @Operation(summary = "생년월일 변경 Api", description = "생년월일을 변경합니다.")
+    @PatchMapping(Uri.BIRTH_DATE)
+    fun updateBirthDate(@LoginMember loginMember: MemberEntity, @RequestParam birthDate: LocalDate): UpdateBirthDateResponseDto {
+        println(birthDate)
+        return memberService.updateBirthDate(loginMember, birthDate)
     }
 }
