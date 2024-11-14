@@ -2,7 +2,6 @@ package com.soongan.soonganbackend.soonganweb.resolver
 
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberAdapter
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
-import com.soongan.soonganbackend.soongansupport.util.dto.MemberDetail
 import com.soongan.soonganbackend.soongansupport.util.exception.SoonganException
 import com.soongan.soonganbackend.soongansupport.util.exception.StatusCode
 import io.swagger.v3.oas.annotations.media.Schema
@@ -26,8 +25,8 @@ class LoginMemberArgumentResolver(
 
     override fun resolveArgument(parameter: MethodParameter, mavContainer: ModelAndViewContainer?, webRequest: NativeWebRequest, binderFactory: WebDataBinderFactory?): MemberEntity? {
         val authentication = SecurityContextHolder.getContext().authentication
-        val memberDetail = authentication.principal as MemberDetail
-        return memberAdapter.getByEmail(memberDetail.email) ?: throw SoonganException(StatusCode.NOT_FOUND_MEMBER_BY_EMAIL)
+        val email = authentication.principal as String
+        return memberAdapter.getByEmail(email) ?: throw SoonganException(StatusCode.NOT_FOUND_MEMBER_BY_EMAIL)
     }
 }
 

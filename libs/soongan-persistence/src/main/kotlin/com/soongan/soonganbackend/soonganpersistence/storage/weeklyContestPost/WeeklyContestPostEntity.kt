@@ -28,6 +28,10 @@ import java.time.LocalDateTime
 @EntityListeners(AuditingEntityListener::class)
 data class WeeklyContestPostEntity(
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long? = null,
+
     @ManyToOne(targetEntity = WeeklyContestEntity::class, fetch = FetchType.LAZY)
     @JoinColumn(name = "weekly_contest_id")
     val weeklyContest: WeeklyContestEntity,
@@ -45,10 +49,6 @@ data class WeeklyContestPostEntity(
     @Column(name = "like_count")
     val likeCount: Int = 0,
 ) {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = null
 
     @CreatedDate
     @Column(nullable = false, updatable = false)

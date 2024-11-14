@@ -28,6 +28,9 @@ import java.time.LocalDateTime
 )
 @EntityListeners(AuditingEntityListener::class)
 data class WeeklyContestFinalEntity(
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long? = null,
 
     @ManyToOne(targetEntity = WeeklyContestEntity::class, fetch = FetchType.LAZY)
     @JoinColumn(name = "weekly_contest_id")
@@ -43,9 +46,6 @@ data class WeeklyContestFinalEntity(
     @Column(name = "score")
     val score: BigDecimal
 ) {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = null
 
     @CreatedDate
     @Column(nullable = false, updatable = false)

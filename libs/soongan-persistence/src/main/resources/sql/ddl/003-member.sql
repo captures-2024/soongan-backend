@@ -6,7 +6,6 @@ create table member
     birth_date        datetime     null,
     profile_image_url varchar(255) null,
     provider          varchar(20)  not null,
-    authorities       varchar(20)  not null,
     withdrawal_at     datetime     null,
     created_at        datetime     null,
     updated_at        datetime     null

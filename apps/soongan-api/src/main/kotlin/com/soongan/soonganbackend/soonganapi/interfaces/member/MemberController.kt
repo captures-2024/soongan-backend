@@ -54,7 +54,6 @@ class MemberController(
     @Operation(summary = "생년월일 변경 Api", description = "생년월일을 변경합니다.")
     @PatchMapping(Uri.BIRTH_DATE)
     fun updateBirthDate(@LoginMember loginMember: MemberEntity, @RequestParam birthDate: LocalDate): UpdateBirthDateResponseDto {
-        println(birthDate)
         return memberService.updateBirthDate(loginMember, birthDate)
     }
 }
