@@ -51,8 +51,10 @@ class MemberService(
     }
 
     fun updateBirthDate(loginMember: MemberEntity, birthDate: LocalDate): UpdateBirthDateResponseDto {
-        val updatedMember = loginMember.copy(birthDate = birthDate)
-        memberAdapter.save(updatedMember)
+        if (loginMember.birthDate != birthDate) {
+            val updatedMember = loginMember.copy(birthDate = birthDate)
+            memberAdapter.save(updatedMember)
+        }
         return UpdateBirthDateResponseDto(
             updatedBirthDate = birthDate
         )
