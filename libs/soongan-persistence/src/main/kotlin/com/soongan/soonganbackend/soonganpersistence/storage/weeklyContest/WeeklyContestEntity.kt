@@ -24,6 +24,10 @@ import java.time.LocalDateTime
 @EntityListeners(AuditingEntityListener::class)
 data class WeeklyContestEntity(
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long? = null,
+
     @Column(name = "round", nullable = false)
     val round: Int = 0,
 
@@ -48,10 +52,6 @@ data class WeeklyContestEntity(
     @Column(name = "announced_at", nullable = false)
     val announcedAt: LocalDateTime = LocalDateTime.MIN
 ) {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = null
 
     @CreatedDate
     @Column(nullable = false, updatable = false)

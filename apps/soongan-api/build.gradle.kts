@@ -5,11 +5,12 @@ dependencies {
     implementation(project(":soongan-redis"))
     implementation(project(":soongan-kafka"))
 
-    implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
+    implementation("com.google.auth:google-auth-library-oauth2-http:1.27.0")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 
+    implementation("com.nimbusds:nimbus-jose-jwt:9.40")
     implementation("com.google.api-client:google-api-client:2.2.0")
     implementation("com.google.cloud:spring-cloud-gcp-starter-storage:5.4.3")
 

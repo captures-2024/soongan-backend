@@ -7,7 +7,6 @@ import com.soongan.soonganbackend.soonganapi.service.auth.AuthService
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
 import com.soongan.soonganbackend.soongansupport.domain.UserAgentEnum
 import com.soongan.soonganbackend.soongansupport.util.constant.Uri
-import com.soongan.soonganbackend.soongansupport.util.dto.MemberDetail
 import com.soongan.soonganbackend.soonganweb.resolver.LoginMember
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -30,8 +29,8 @@ class AuthController(
 
     @Operation(summary = "로그아웃 Api", description = "로그인시 발급한 JWT를 말소합니다.")
     @PostMapping(Uri.LOGOUT)
-    fun logout(@AuthenticationPrincipal loginMember: MemberDetail) {
-        authService.logout(loginMember)
+    fun logout(@AuthenticationPrincipal loginMemberEmail: String) {
+        authService.logout(loginMemberEmail)
     }
 
     @Operation(summary = "회원 탈퇴 Api", description = "회원을 탈퇴합니다.")
