@@ -5,6 +5,7 @@ import com.soongan.soonganbackend.soonganconsumer.service.fcm.FcmService
 import com.soongan.soonganbackend.soonganpersistence.storage.fcm.FcmTokenAdaptor
 import com.soongan.soonganbackend.soonganpersistence.storage.notification.NotificationAdaptor
 import com.soongan.soonganbackend.soonganpersistence.storage.notification.NotificationEntity
+import com.soongan.soonganbackend.soongansupport.domain.NotificationTypeEnum
 import com.soongan.soonganbackend.soongansupport.util.dto.Message
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.stereotype.Service
@@ -29,6 +30,7 @@ class KafkaNotiConsumer(
 
         notificationAdaptor.save(NotificationEntity(
             member = member,
+            type = notificationMessage.data.notificationType,
             title = notificationMessage.notification.title,
             body = notificationMessage.notification.body
         ))

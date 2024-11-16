@@ -1,6 +1,7 @@
 package com.soongan.soonganbackend.soonganpersistence.storage.notification
 
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
+import com.soongan.soonganbackend.soongansupport.domain.NotificationTypeEnum
 import jakarta.persistence.*
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
