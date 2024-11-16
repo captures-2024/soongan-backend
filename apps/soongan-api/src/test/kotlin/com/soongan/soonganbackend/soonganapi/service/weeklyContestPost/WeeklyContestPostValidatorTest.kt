@@ -33,8 +33,7 @@ class WeeklyContestPostValidatorTest {
         // given
         val member = MemberEntity(
             email = "email",
-            provider = ProviderEnum.APPLE,
-            authorities = ""
+            provider = ProviderEnum.APPLE
         )
 
         val weeklyContest = WeeklyContestEntity(
@@ -59,14 +58,12 @@ class WeeklyContestPostValidatorTest {
         // given
         val member = MemberEntity(
             email = "email1",
-            provider = ProviderEnum.APPLE,
-            authorities = ""
+            provider = ProviderEnum.APPLE
         )
 
         val wrongMember = MemberEntity(
             email = "email2",
-            provider = ProviderEnum.GOOGLE,
-            authorities = ""
+            provider = ProviderEnum.GOOGLE
         )
 
         val weeklyContest = WeeklyContestEntity(
