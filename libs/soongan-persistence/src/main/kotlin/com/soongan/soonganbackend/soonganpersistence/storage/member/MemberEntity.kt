@@ -20,6 +20,10 @@ import java.time.LocalDateTime
 @Table(name = "member")
 @EntityListeners(AuditingEntityListener::class)
 data class MemberEntity(
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long? = null,
+
     @Column(name = "email", unique = true, nullable = false)
     val email: String,
 
@@ -36,16 +40,9 @@ data class MemberEntity(
     @Enumerated(EnumType.STRING)
     val provider: ProviderEnum,
 
-    @Column(name = "authorities")
-    val authorities: String,
-
     @Column(name = "withdrawal_at")
     val withdrawalAt: LocalDateTime? = null
 ) {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = null
-
     @CreatedDate
     @Column(nullable = false, updatable = false)
     var createdAt: LocalDateTime = LocalDateTime.now()

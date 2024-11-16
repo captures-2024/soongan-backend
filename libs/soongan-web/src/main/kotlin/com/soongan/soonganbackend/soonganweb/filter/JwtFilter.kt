@@ -4,7 +4,6 @@ import com.soongan.soonganbackend.soonganredis.jwt.JwtTypeEnum
 import com.soongan.soonganbackend.soongansupport.util.constant.Uri
 import com.soongan.soonganbackend.soongansupport.util.converter.HttpMvcResponseJsonConverter
 import com.soongan.soonganbackend.soongansupport.util.dto.CommonErrorResponseDto
-import com.soongan.soonganbackend.soongansupport.util.dto.MemberDetail
 import com.soongan.soonganbackend.soongansupport.util.exception.SoonganUnauthorizedException
 import com.soongan.soonganbackend.soongansupport.util.exception.StatusCode
 import com.soongan.soonganbackend.soonganweb.resolver.JwtHandler
@@ -13,7 +12,6 @@ import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
-import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
@@ -49,16 +47,9 @@ class JwtFilter(
                 ?: throw SoonganUnauthorizedException(StatusCode.MISSING_JWT)
 
             val payload = jwtHandler.getPayload(accessToken, JwtTypeEnum.ACCESS)
-
             val email = payload["sub"] as String
-            val authorities = payload["authorities"] as List<String>
 
-            val memberDetail = MemberDetail(
-                email = email,
-                memberAuthorities = authorities.map { SimpleGrantedAuthority(it) }
-            )
-
-            val auth = UsernamePasswordAuthenticationToken(memberDetail, null, memberDetail.memberAuthorities)
+            val auth = UsernamePasswordAuthenticationToken(email, null, listOf())
             SecurityContextHolder.getContext().authentication = auth
             filterChain.doFilter(request, response)
         } catch (sue: SoonganUnauthorizedException) {

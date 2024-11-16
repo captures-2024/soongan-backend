@@ -23,9 +23,9 @@ class JwtHandler(
 ) {
 
     @Transactional
-    fun issueTokens(userEmail: String, authorities: List<String>): Pair<String, String> {
-        val accessToken = createToken(userEmail, authorities, JwtTypeEnum.ACCESS)
-        val refreshToken = createToken(userEmail, authorities, JwtTypeEnum.REFRESH)
+    fun issueTokens(userEmail: String): Pair<String, String> {
+        val accessToken = createToken(userEmail, JwtTypeEnum.ACCESS)
+        val refreshToken = createToken(userEmail, JwtTypeEnum.REFRESH)
 
         jwtAdaptor.save(
             JwtData(
@@ -38,9 +38,9 @@ class JwtHandler(
         return Pair(accessToken, refreshToken)
     }
 
-    fun createToken(userEmail: String, authorities: List<String>, jwtTypeEnum: JwtTypeEnum): String {
-        val claims = Jwts.claims().subject(userEmail)  // Jwt payload에 저장되는 정보
-            .add("authorities", authorities)  // 유저의 권한 정보도 저장
+    fun createToken(userEmail: String, jwtTypeEnum: JwtTypeEnum): String {
+        val claims = Jwts.claims()  // Jwt payload에 저장되는 정보
+            .subject(userEmail)
             .build()
 
         val issuedAt = Date()
@@ -60,16 +60,9 @@ class JwtHandler(
     @Transactional(readOnly = true)
     fun getPayload(token: String, jwtTypeEnum: JwtTypeEnum): Map<String, *> {
         try {
-            when (jwtTypeEnum) {
-                JwtTypeEnum.ACCESS -> {
-                    jwtAdaptor.findByAccessToken(token)
-                        ?: throw SoonganUnauthorizedException(StatusCode.INVALID_JWT_ACCESS_TOKEN)
-                }
-
-                JwtTypeEnum.REFRESH -> {
-                    jwtAdaptor.findByRefreshToken(token)
-                        ?: throw SoonganUnauthorizedException(StatusCode.INVALID_JWT_REFRESH_TOKEN)
-                }
+            if (jwtTypeEnum == JwtTypeEnum.REFRESH) {
+                jwtAdaptor.findByRefreshToken(token)
+                    ?: throw SoonganUnauthorizedException(StatusCode.INVALID_JWT_REFRESH_TOKEN)
             }
 
             return generateValidatedPayload(token)

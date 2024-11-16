@@ -29,6 +29,9 @@ import java.time.LocalDateTime
 )
 @EntityListeners(AuditingEntityListener::class)
 data class PostLikeEntity(
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long? = null,
 
     @ManyToOne(targetEntity = MemberEntity::class, fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
@@ -41,9 +44,6 @@ data class PostLikeEntity(
     @Enumerated(EnumType.STRING)
     val contestType: ContestTypeEnum
 ) {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = null
 
     @CreatedDate
     @Column(nullable = false, updatable = false)

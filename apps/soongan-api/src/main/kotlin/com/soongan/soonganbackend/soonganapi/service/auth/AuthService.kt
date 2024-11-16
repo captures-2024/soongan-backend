@@ -11,7 +11,6 @@ import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberAdapte
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
 import com.soongan.soonganbackend.soongansupport.domain.ProviderEnum
 import com.soongan.soonganbackend.soongansupport.domain.UserAgentEnum
-import com.soongan.soonganbackend.soongansupport.util.dto.MemberDetail
 import com.soongan.soonganbackend.soongansupport.util.exception.SoonganException
 import com.soongan.soonganbackend.soongansupport.util.exception.StatusCode
 import com.soongan.soonganbackend.soonganweb.resolver.JwtHandler
@@ -45,7 +44,6 @@ class AuthService(
                 MemberEntity(
                     email = memberEmail,
                     provider = provider,
-                    authorities = "ROLE_MEMBER"
                 )
             )
 
@@ -55,16 +53,16 @@ class AuthService(
             }
         } ?: throw SoonganException(StatusCode.SOONGAN_API_NOT_FOUND_FCM_TOKEN)
 
-        val issuedTokens = jwtHandler.issueTokens(member.email, member.authorities.split(","))
+        val issuedTokens = jwtHandler.issueTokens(member.email)
         return LoginResponseDto(
             accessToken = issuedTokens.first,
             refreshToken = issuedTokens.second
         )
     }
 
-    fun logout(loginMember: MemberDetail) {
+    fun logout(loginMemberEmail: String) {
         try {
-            jwtHandler.deleteToken(loginMember.email)
+            jwtHandler.deleteToken(loginMemberEmail)
         } catch (e: Exception) {
             throw SoonganException(StatusCode.SOONGAN_API_FAIL_TO_LOGOUT)
         }
@@ -84,7 +82,7 @@ class AuthService(
         val member = memberAdapter.getByEmail(memberEmail)
             ?: throw SoonganException(StatusCode.NOT_FOUND_MEMBER_BY_EMAIL)
 
-        val issuedTokens = jwtHandler.issueTokens(member.email, member.authorities.split(","))
+        val issuedTokens = jwtHandler.issueTokens(member.email)
         return LoginResponseDto(
             accessToken = issuedTokens.first,
             refreshToken = issuedTokens.second

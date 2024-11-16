@@ -30,6 +30,9 @@ import java.time.LocalDateTime
 )
 @EntityListeners(AuditingEntityListener::class)
 data class CommentLikeEntity(
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long? = null,
 
     @ManyToOne(targetEntity = MemberEntity::class, fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
@@ -42,10 +45,6 @@ data class CommentLikeEntity(
     @Enumerated(EnumType.STRING)
     val contestType: ContestTypeEnum
 ) {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = null
 
     @CreatedDate
     @Column(nullable = false, updatable = false)

@@ -28,6 +28,10 @@ import java.time.LocalDateTime
     ])
 @EntityListeners(AuditingEntityListener::class)
 data class CommentEntity(
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long? = null,
+
     @ManyToOne(targetEntity = MemberEntity::class)
     @JoinColumn(name = "member_id")
     val member: MemberEntity,
@@ -53,10 +57,6 @@ data class CommentEntity(
     @Column(name = "like_count")
     val likeCount: Int = 0
     ) {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = null
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
