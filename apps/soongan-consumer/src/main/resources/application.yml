@@ -3,7 +3,15 @@ spring:
     name: soongan-consumer
   config:
     import:
-      - optional:soongan-redis.yml
       - optional:soongan-persistence.yml
       - optional:soongan-support.yml
+      - optional:soongan-kafka.yml
       - optional:soongan-web.yml
+      - optional:soongan-redis.yml
+
+server:
+  port: 8081
+
+firebase:
+  project-id: ENC(YnIuCYTbbvKguEmV59GFjmlvT5k7yE0W)
+  keypath: ENC(HrvzYIU+FVnEgO9n+2c9wRSeDAIPDzv7lkd182jCK7rRYxNvyJNBSvf15copCykm5t3wxfrTWbOxua4YN0+ydjSs9FD6keuW)
