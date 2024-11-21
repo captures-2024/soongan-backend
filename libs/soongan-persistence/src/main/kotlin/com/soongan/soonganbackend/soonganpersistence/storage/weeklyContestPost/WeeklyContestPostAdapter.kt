@@ -80,6 +80,17 @@ class WeeklyContestPostAdapter(
         )
     }
 
+    @Transactional(readOnly = true)
+    fun getAllWeeklyContestPostByMemberAndWeeklyContest(
+        member: MemberEntity,
+        weeklyContest: WeeklyContestEntity
+    ): List<WeeklyContestPostEntity> {
+        return weeklyContestPostRepository.findAllByMemberAndWeeklyContestOrderByCreatedAtDesc(
+            member,
+            weeklyContest
+        )
+    }
+
     @Transactional
     fun deleteWeeklyContestPost(postId: Long) {
         weeklyContestPostRepository.deleteById(postId)

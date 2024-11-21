@@ -21,9 +21,12 @@ object Uri {
     const val PROFILE_IMAGE = "/profile-image"
     const val BIRTH_DATE = "/birth-date"
 
+    const val HOME = "/home"
+
     const val WEEKLY = "/weekly"
     const val CONTESTS = "/contests"
     const val POSTS = "/posts"
+    const val COMMENTS = "/comments"
     const val LIKE = "/like"
     const val MY = "/my"
 
