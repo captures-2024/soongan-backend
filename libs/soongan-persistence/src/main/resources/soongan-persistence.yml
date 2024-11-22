@@ -1,7 +1,10 @@
 spring:
-  config:
-    import:
-      - optional:persistence-connection.yml
+  datasource:
+    url: jdbc:mysql://${MYSQL_HOST}:${MYSQL_PORT}/${MYSQL_DATABASE}
+    username: ${MYSQL_USERNAME}
+    password: ${MYSQL_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
   jpa:
     hibernate:
       ddl-auto: none
@@ -11,3 +14,4 @@ spring:
         dialect: org.hibernate.dialect.MySQLDialect
         format_sql: true
         use_sql_comments: true
+

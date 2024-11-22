@@ -10,14 +10,14 @@ spring:
       - optional:soongan-kafka.yml
 
 server:
-  port: 8080
+  port: ${SERVER_PORT}
   servlet:
     context-path: /api
 
 oauth2:
   android:
     google:
-      client-id: ENC(X5Fveb+YUEGGunq37whc6q5j7cnkh+EFW7AATZMWw7zn8Y/fOWzYwu8kYLogfMhTZ6+nx16AyGPIzEKytaT9oTLpDovOrPfZTdwzarQUeJsCDhIHuKEzRQ==)
+      client-id: ${OAUTH2_ANDROID_GOOGLE_CLIENT_ID}
   ios:
     google:
-      client-id: ENC(ULUYhauNR09LtLAblSQowxZLT/3Y7ujh11fIaghgFUlVYrXLnPrzQpvCDzDZJ87FU80KZfJGkpPe+VqKZad4xUIC3eA2U4yc3QVlyNvsMHxHkkVBWXjLTg==)
+      client-id: ${OAUTH2_IOS_GOOGLE_CLIENT_ID}

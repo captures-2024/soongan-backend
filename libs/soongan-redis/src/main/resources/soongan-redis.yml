@@ -1,4 +1,6 @@
 spring:
-  config:
-    import:
-      - optional:redis-connection.yml
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+      password: ${REDIS_PASSWORD}

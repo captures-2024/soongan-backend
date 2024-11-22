@@ -49,3 +49,6 @@ out/
 
 ### Kotlin ###
 .kotlin
+
+### infisical ###
+.infisical.json

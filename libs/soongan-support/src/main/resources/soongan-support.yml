@@ -1,13 +1,17 @@
 spring:
-  application:
-    name: soongan-support
-  config:
-    import:
-      - optional:soongan-jasypt.yml
   cloud:
     gcp:
-      project-id: ENC(0AkK6w0khlMNdHQoqqtR8g==)
+      project-id: ${GCP_STORAGE_PROJECT_ID}
       credentials:
-        location: ENC(9Rr9fU99iYnhoDtJNbbZdqqH7qyKgMn9urum8gCNGWyL+3YqHzwFzA==)
+        location: ${GCP_STORAGE_CREDENTIALS_LOCATION}
       storage:
-        bucket: ENC(0AkK6w0khlMNdHQoqqtR8g==)
+        bucket: ${GCP_STORAGE_BUCKET}
+
+jasypt:
+  encryptor:
+    bean: jasyptStringEncryptor   # java 빈 이름
+    algorithm: PBEWithMD5AndDES   # 사용 알고리즘
+    pool-size: 2    # 암호화 요청을 담을 pool 크기 설정
+    string-output-type: base64    # 암호화 이후 받을 타입
+    key-obtention-iterations: 1000    # 암호화를 수행할 반복할 해시 횟수
+    password: ${JASYPT_ENCRYPTOR_PASSWORD}    # 암호화 키
