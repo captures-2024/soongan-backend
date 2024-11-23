@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping(Uri.LIKE)
+@RequestMapping(Uri.POSTS + Uri.LIKE)
 @Tag(name = "Post Like Apis", description = "게시글 좋아요 관련 API")
 class PostLikeController (
     private val postLikeService: PostLikeService
@@ -24,7 +24,7 @@ class PostLikeController (
     @PutMapping
     @Operation(summary = "게시글 좋아요 Api", description = "게시글에 좋아요를 추가합니다.")
     fun addLikePost(@LoginMember loginMember: MemberEntity, @RequestBody postLikeRequest: PostLikeRequestDto): PostLikeResponseDto {
-        return postLikeService.addLikePost(loginMember, postLikeRequest)
+        return postLikeService.addLike(loginMember, postLikeRequest)
     }
 
     @DeleteMapping
@@ -33,6 +33,6 @@ class PostLikeController (
         @LoginMember loginMember: MemberEntity,
         @RequestBody postLikeRequest: PostLikeRequestDto
     ): PostLikeResponseDto {
-        return postLikeService.cancelLikePost(loginMember, postLikeRequest)
+        return postLikeService.cancelLike(loginMember, postLikeRequest)
     }
 }

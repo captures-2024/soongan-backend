@@ -1,5 +1,6 @@
 package com.soongan.soonganbackend.soonganapi.service.postLike
 
+import com.soongan.soonganbackend.soonganapi.helper.LikeInterface
 import com.soongan.soonganbackend.soonganapi.interfaces.postLike.dto.request.PostLikeRequestDto
 import com.soongan.soonganbackend.soonganapi.interfaces.postLike.dto.response.PostLikeResponseDto
 import com.soongan.soonganbackend.soonganpersistence.storage.comment.ContestTypeEnum
@@ -9,30 +10,27 @@ import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.W
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.WeeklyContestPostEntity
 import com.soongan.soonganbackend.soongansupport.util.exception.SoonganException
 import com.soongan.soonganbackend.soongansupport.util.exception.StatusCode
-import org.springframework.transaction.annotation.Transactional
 import org.springframework.stereotype.Service
 
 @Service
 class PostLikeService(
     private val weeklyContestPostAdapter: WeeklyContestPostAdapter,
     private val postLikeAdapter: PostLikeAdapter
-) {
+): LikeInterface<PostLikeRequestDto, PostLikeResponseDto>{
 
-    @Transactional
-    fun addLikePost(loginMember: MemberEntity, postLikeRequest: PostLikeRequestDto): PostLikeResponseDto {
+
+    override fun addLike(loginMember: MemberEntity, request: PostLikeRequestDto): PostLikeResponseDto {
         // todo: DAILY Contest 추가되면 구조 리팩토링 필요할 듯 (중복 발생할 듯)
-        if (postLikeRequest.contestType == ContestTypeEnum.WEEKLY) {
-            val updatedPost: WeeklyContestPostEntity = weeklyContestPostAdapter.getByIdOrNull(postLikeRequest.postId)?.let { post ->
+        if (request.contestType == ContestTypeEnum.WEEKLY) {
+            val updatedPost: WeeklyContestPostEntity = weeklyContestPostAdapter.getByIdOrNull(request.postId)?.let { post ->
 
                 // 중복 좋아요 방지
-                if (isDuplicatedLike(post.id!!, postLikeRequest.contestType, loginMember)) {
-                    throw SoonganException(StatusCode.SOONGAN_API_DUPLICATED_LIKE)
-                }
+                isDuplicateLike(post.id!!, request.contestType, loginMember)
 
                 // 좋아요 추가
                 postLikeAdapter.addLike(
-                    postLikeRequest.postId,
-                    postLikeRequest.contestType,
+                    request.postId,
+                    request.contestType,
                     member = loginMember
                 )
 
@@ -51,13 +49,13 @@ class PostLikeService(
         }
     }
 
-    @Transactional
-    fun cancelLikePost(loginMember: MemberEntity, postLikeRequest: PostLikeRequestDto): PostLikeResponseDto {
-        if (postLikeRequest.contestType == ContestTypeEnum.WEEKLY) {
-            val updatedPost: WeeklyContestPostEntity = weeklyContestPostAdapter.getByIdOrNull(postLikeRequest.postId)?.let { post ->
+
+    override fun cancelLike(loginMember: MemberEntity, request: PostLikeRequestDto): PostLikeResponseDto {
+        if (request.contestType == ContestTypeEnum.WEEKLY) {
+            val updatedPost: WeeklyContestPostEntity = weeklyContestPostAdapter.getByIdOrNull(request.postId)?.let { post ->
 
                 // 좋아요 취소
-                postLikeAdapter.cancelLike(post.id!!, postLikeRequest.contestType, loginMember)
+                postLikeAdapter.cancelLike(post.id!!, request.contestType, loginMember)
 
                 // 좋아요 개수 감소
                 weeklyContestPostAdapter.save(
@@ -74,7 +72,9 @@ class PostLikeService(
         }
     }
 
-    private fun isDuplicatedLike(postId: Long, contestType: ContestTypeEnum, member: MemberEntity): Boolean {
-        return postLikeAdapter.getByPostIdAndContestTypeAndMember(postId, contestType, member)?.let { true } ?: false
+    override fun isDuplicateLike(id: Long, contestType: ContestTypeEnum, loginMember: MemberEntity) {
+        if (postLikeAdapter.existsByPostIdAndContestTypeAndMember(id, contestType, loginMember)) {
+            throw SoonganException(StatusCode.SOONGAN_API_DUPLICATED_LIKE)
+        }
     }
 }

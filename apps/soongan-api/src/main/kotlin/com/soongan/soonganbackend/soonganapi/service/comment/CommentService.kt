@@ -25,7 +25,8 @@ class CommentService(
 
     @Transactional
     fun saveComment(loginMember: MemberEntity, request: CommentSaveRequestDto) {
-        val weeklyContestPost = weeklyContestPostAdapter.getByIdOrNull(request.postId) ?: throw SoonganException(StatusCode.SOONGAN_API_NOT_FOUND_WEEKLY_CONTEST_POST)
+        val weeklyContestPost = weeklyContestPostAdapter.getByIdOrNull(request.postId)
+            ?: throw SoonganException(StatusCode.SOONGAN_API_NOT_FOUND_WEEKLY_CONTEST_POST)
 
         val parentComment: CommentEntity? = request.parentCommentId?.let {
             commentAdapter.getByIdOrNull(it) ?: throw SoonganException(StatusCode.SOONGAN_API_NOT_FOUND_PARENT_COMMENT)
