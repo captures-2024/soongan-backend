@@ -1,0 +1,51 @@
+name: Deploy Api Dev Server to GCP VM
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set Up SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.GCP_SSH_PRIVATE_KEY_API_DEV }}
+
+      - name: Add instance IP to known hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan ${{ secrets.GCP_INSTANCE_IP }} >> ~/.ssh/known_hosts
+
+      - name: Deploy to GCP VM
+        env:
+          GCP_USERNAME: ${{ secrets.GCP_USERNAME_DEV }}
+          GCP_INSTANCE_IP: ${{ secrets.GCP_INSTANCE_IP }}
+          INFISICAL_TOKEN: ${{ secrets.INFISICAL_TOKEN_API_DEV }}
+          INFISICAL_PROJECT_ID: ${{ secrets.INFISICAL_PROJECT_ID }}
+        run: |
+          # 프로젝트 파일들을 VM으로 전송
+          ssh $GCP_USERNAME@$GCP_INSTANCE_IP 'mkdir -p ~/app'
+          scp -r $(find . -type f -not -path "./.git/*") $GCP_USERNAME@$GCP_INSTANCE_IP:~/app/
+          
+          ssh $GCP_USERNAME@$GCP_INSTANCE_IP '
+            cd ~/app && \
+            docker build \
+              --build-arg INFISICAL_TOKEN=${{ secrets.INFISICAL_TOKEN }} \
+              --build-arg INFISICAL_PROJECT_ID=${{ secrets.INFISICAL_PROJECT_ID }} \
+              --cache-from=soongan-api-dev \
+              -t soongan-api-dev . && \
+            docker stop soongan-api-dev || true && \
+            docker rm soongan-api-dev || true && \
+            docker run -d \
+              --name soongan-api-dev \
+              -p 8080:8080 \
+              soongan-api-dev && \
+            curl -f http://localhost:8080/health || echo "API 서버 실행 실패"
+          '
