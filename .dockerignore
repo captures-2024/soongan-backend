@@ -1,0 +1,57 @@
+# Git
+.git
+.gitignore
+
+# Gradle
+.gradle
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# IDE files
+.idea/
+*.iml
+*.iws
+*.ipr
+.vscode/
+*.sublime-workspace
+*.sublime-project
+
+# Compiled files
+*.class
+*.jar
+!gradle/wrapper/gradle-wrapper.jar
+
+# Logs
+logs/
+*.log
+
+# OS specific
+.DS_Store
+Thumbs.db
+
+# Test reports
+**/test-results/
+**/reports/
+
+# Local configuration
+**/application-local.yml
+**/application-local.properties
+
+# Docker
+.docker/
+docker-compose*.yml
+Dockerfile*
+
+# Node modules (if any)
+node_modules/
+
+# Documentation
+README.md
+docs/
+
+# Other
+*.md
+*.txt
+*.pdf
+tmp/
+temp/

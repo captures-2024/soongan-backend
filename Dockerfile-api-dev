@@ -1,22 +1,31 @@
 # jdk17 image 사용하여 빌드
 FROM gradle:jdk17-jammy AS build
 WORKDIR /app
-COPY . .
+
+# 의존성 캐싱을 위해 build.gradle.kts와 settings.gradle.kts만 먼저 복사
+COPY build.gradle.kts settings.gradle.kts ./
+COPY gradle gradle
+COPY gradlew .
 RUN chmod +x ./gradlew
+
+# 의존성 다운로드
+RUN ./gradlew dependencies --no-daemon
+
+# 나머지 소스 복사 및 빌드
+COPY . .
 RUN ./gradlew :soongan-api:build --no-daemon -x test
 
 # jre17 image 사용하여 실행
 FROM eclipse-temurin:17-jre-jammy
 
-# infisical-cli 설치
-RUN apt-get update && apt-get install -y curl && \
-    curl -1sLf \
-    'https://dl.cloudsmith.io/public/infisical/infisical-cli/setup.deb.sh' \
-    | bash && \
-    apt-get update && \
-    apt-get install -y infisical && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+# infisical-cli 설치 최적화
+RUN apt-get update && apt-get install -y curl \
+    && curl -1sLf 'https://dl.cloudsmith.io/public/infisical/infisical-cli/setup.deb.sh' | bash \
+    && apt-get update \
+    && apt-get install -y infisical \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* \
+    && rm -rf /var/cache/apt/*
 
 WORKDIR /app
 
@@ -25,11 +34,18 @@ COPY --from=build /app/apps/soongan-api/build/libs/*.jar app.jar
 
 # infisical-cli를 사용하여 실행하는 스크립트 작성
 RUN echo '#!/bin/sh\n\
-infisical run --env=dev -- java -jar app.jar' > /app/start.sh && \
+infisical run --env=dev -- java \
+    -XX:+UseContainerSupport \
+    -XX:MaxRAMPercentage=75.0 \
+    -jar app.jar' > /app/start.sh && \
     chmod +x /app/start.sh
 
 # 8080 포트 오픈
 EXPOSE 8080
+
+# Healthcheck 추가
+HEALTHCHECK --interval=30s --timeout=3s \
+    CMD curl -f http://localhost:8080/actuator/health || exit 1
 
 # 스크립트 실행
 CMD ["/app/start.sh"]
