@@ -23,7 +23,6 @@ class SwaggerConfig {
         )
 
         return OpenAPI()
-            .addServersItem(Server().url("/api"))
             .components(Components())
             .info(apiInfo())
             .addSecurityItem(securityRequirement)

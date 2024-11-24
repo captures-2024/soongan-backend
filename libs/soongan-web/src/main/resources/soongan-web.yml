@@ -4,7 +4,7 @@ spring:
 
 springdoc:
   swagger-ui:
-    path: /docs
+    path: /api-docs
     disable-swagger-default-url: true
 
 jwt:

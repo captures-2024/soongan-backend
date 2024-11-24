@@ -11,8 +11,6 @@ spring:
 
 server:
   port: ${SERVER_PORT}
-  servlet:
-    context-path: /api
 
 oauth2:
   android:
