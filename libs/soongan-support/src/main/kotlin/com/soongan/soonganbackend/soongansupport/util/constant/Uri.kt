@@ -33,6 +33,7 @@ object Uri {
     const val SUCCESS = "/success"
 
     val passUris = listOf(
+        "/_health",
         API_DOCS,
         SWAGGER_UI + "/**",
         SWAGGER_RESOURCES + "/**",
@@ -50,6 +51,7 @@ object Uri {
     )
 
     val notWrapUris = listOf(
+        "/_health",
         V3 + API_DOCS,
         V3 + API_DOCS + SWAGGER_CONFIG,
 

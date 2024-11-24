@@ -37,6 +37,7 @@ jobs:
           ssh $GCP_USERNAME@$GCP_INSTANCE_IP '
             cd ~/app && \
             docker build \
+              -f Dockerfile-api-dev \
               --build-arg INFISICAL_TOKEN=${{ secrets.INFISICAL_TOKEN }} \
               --build-arg INFISICAL_PROJECT_ID=${{ secrets.INFISICAL_PROJECT_ID }} \
               --cache-from=soongan-api-dev \
