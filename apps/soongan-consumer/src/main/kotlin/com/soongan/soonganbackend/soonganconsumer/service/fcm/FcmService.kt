@@ -5,9 +5,8 @@ import com.soongan.soonganbackend.soongansupport.util.dto.FcmMessageDto
 import com.soongan.soonganbackend.soongansupport.util.dto.Message
 import com.soongan.soonganbackend.soongansupport.util.exception.SoonganException
 import com.soongan.soonganbackend.soongansupport.util.exception.StatusCode
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.core.ParameterizedTypeReference
-import org.springframework.core.env.Environment
-import org.springframework.core.io.ClassPathResource
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
@@ -18,12 +17,16 @@ import org.springframework.web.client.RestTemplate
 
 @Service
 class FcmService(
-    private val restTemplate: RestTemplate,
-    private val env: Environment
+    private val restTemplate: RestTemplate
 ) {
 
+    @Value("\${firebase.project-id}")
+    private lateinit var firebaseProjectId: String
+
+    @Value("\${firebase.key-json-string}")
+    private lateinit var firebaseKeyJsonString: String
+
     fun pushFcmMessage(message: Message): ResponseEntity<Map<String, Any>> {
-        val firebaseProjectId = env.getProperty("firebase.project-id").toString()
         val url = "https://fcm.googleapis.com/v1/projects/${firebaseProjectId}/messages:send"
 
         val headers = HttpHeaders().apply {
@@ -49,8 +52,7 @@ class FcmService(
     }
 
     fun getFcmAccessToken(): String {
-        val firebaseKeyPath = env.getProperty("firebase.keypath").toString()
-        val googleCredentials = GoogleCredentials.fromStream(ClassPathResource(firebaseKeyPath).inputStream)
+        val googleCredentials = GoogleCredentials.fromStream(firebaseKeyJsonString.byteInputStream())
             .createScoped("https://www.googleapis.com/auth/cloud-platform")
         googleCredentials.refreshIfExpired()
         return googleCredentials.accessToken.tokenValue
