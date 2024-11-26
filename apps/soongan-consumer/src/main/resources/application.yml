@@ -22,5 +22,5 @@ server:
   port: 8081
 
 firebase:
-  project-id: ENC(YnIuCYTbbvKguEmV59GFjmlvT5k7yE0W)
-  keypath: ENC(HrvzYIU+FVnEgO9n+2c9wRSeDAIPDzv7lkd182jCK7rRYxNvyJNBSvf15copCykm5t3wxfrTWbOxua4YN0+ydjSs9FD6keuW)
+  project-id: ${FCM_FIREBASE_PROJECT_ID}
+  key-json-string: ${FCM_FIREBASE_KEY_JSON}

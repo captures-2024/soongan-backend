@@ -8,7 +8,7 @@ import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContest.WeeklyContestEntity
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.WeeklyContestPostAdapter
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.WeeklyContestPostEntity
-import com.soongan.soonganbackend.soonganapi.service.gcp.GcpStorageService
+import com.soongan.soonganbackend.soongansupport.service.GcpStorageService
 import com.soongan.soonganbackend.soonganapi.service.weeklyContest.WeeklyContestValidator
 import com.soongan.soonganbackend.soonganapi.service.weeklyContestPost.WeeklyContestPostOrderCriteriaEnum.*
 import org.springframework.data.domain.Page
