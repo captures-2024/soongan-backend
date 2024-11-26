@@ -1,11 +1,14 @@
 spring:
   cloud:
     gcp:
-      project-id: ${GCP_STORAGE_PROJECT_ID}
-      credentials:
-        location: ${GCP_STORAGE_CREDENTIALS_LOCATION}
+      core:
+        enabled: false
       storage:
+        enabled: false
         bucket: ${GCP_STORAGE_BUCKET}
+      project-id: ${GCP_PROJECT_ID}
+      credentials:
+        key-json-string: ${GCP_STORAGE_MANAGER_KEY_JSON}
 
 jasypt:
   encryptor:

@@ -6,7 +6,7 @@ import com.soongan.soonganbackend.soonganapi.interfaces.member.dto.response.Upda
 import com.soongan.soonganbackend.soonganapi.interfaces.member.dto.response.UpdateProfileImageResponseDto
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberAdapter
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
-import com.soongan.soonganbackend.soonganapi.service.gcp.GcpStorageService
+import com.soongan.soonganbackend.soongansupport.service.GcpStorageService
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.multipart.MultipartFile

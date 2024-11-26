@@ -1,4 +1,4 @@
-package com.soongan.soonganbackend.soonganapi.service.gcp
+package com.soongan.soonganbackend.soongansupport.service
 
 import com.google.cloud.storage.BlobId
 import com.google.cloud.storage.BlobInfo
