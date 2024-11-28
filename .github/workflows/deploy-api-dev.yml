@@ -7,6 +7,8 @@ on:
     paths:
       - 'apps/soongan-api/**'
       - 'libs/**'
+      - 'Dockerfile-api-dev'
+      - '.github/workflows/deploy-api-dev.yml'
 
 jobs:
   build-and-deploy:
@@ -40,8 +42,8 @@ jobs:
           script: |
             sudo docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_TOKEN }}
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/soongan-api-dev:latest
-            sudo docker stop $(docker ps -q) || true
-            sudo docker rm $(docker ps -a -q) || true
+            sudo docker stop $(sudo docker ps -q) || true
+            sudo docker rm $(sudo docker ps -a -q) || true
             sudo docker run -d --name soongan-api-dev -p 8080:8080 \
               -e INFISICAL_TOKEN=${{ secrets.INFISICAL_TOKEN_API_DEV }} \
               -e INFISICAL_PROJECT_ID=${{ secrets.INFISICAL_PROJECT_ID_API }} \
