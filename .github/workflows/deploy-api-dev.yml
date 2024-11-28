@@ -10,6 +10,7 @@ on:
 
 jobs:
   build-and-deploy:
+    if: github.repository_owner == 'captures-2024'
     runs-on: ubuntu-latest
 
     steps:
