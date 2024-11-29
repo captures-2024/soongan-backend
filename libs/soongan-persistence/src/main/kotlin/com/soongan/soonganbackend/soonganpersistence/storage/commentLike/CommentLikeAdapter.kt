@@ -26,7 +26,7 @@ class CommentLikeAdapter(
         commentLikeRepository.deleteByCommentIdAndContestTypeAndMember(commentId, contestType, member)
     }
 
-    fun existsByPostIdAndContestTypeAndMember(commentId: Long, contestType: ContestTypeEnum, member: MemberEntity): Boolean {
+    fun existsByCommentIdAndContestTypeAndMember(commentId: Long, contestType: ContestTypeEnum, member: MemberEntity): Boolean {
         return commentLikeRepository.existsByCommentIdAndContestTypeAndMember(commentId, contestType, member)
     }
 

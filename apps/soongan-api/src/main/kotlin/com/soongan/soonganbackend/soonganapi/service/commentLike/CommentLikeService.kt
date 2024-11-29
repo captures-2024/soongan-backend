@@ -72,7 +72,7 @@ class CommentLikeService(
     }
 
     override fun isDuplicateLike(id: Long, contestType: ContestTypeEnum, loginMember: MemberEntity) {
-        if (commentLikeAdapter.existsByPostIdAndContestTypeAndMember(id, contestType, loginMember)) {
+        if (commentLikeAdapter.existsByCommentIdAndContestTypeAndMember(id, contestType, loginMember)) {
             throw SoonganException(StatusCode.SOONGAN_API_DUPLICATED_LIKE)
         }
     }
