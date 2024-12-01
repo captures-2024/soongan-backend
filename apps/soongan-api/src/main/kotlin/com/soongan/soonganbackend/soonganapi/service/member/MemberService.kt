@@ -23,6 +23,7 @@ class MemberService(
         return memberAdapter.getByNickname(nickname) == null
     }
 
+    @Transactional
     fun updateBirthDate(loginMember: MemberEntity, birthDate: LocalDate): UpdateBirthDateResponseDto {
         if (loginMember.birthDate != birthDate) {
             val updatedMember = loginMember.copy(birthDate = birthDate)
@@ -33,6 +34,7 @@ class MemberService(
         )
     }
 
+    @Transactional
     fun updateProfile(loginMember: MemberEntity, request: UpdateProfileRequestDto): UpdateProfileResponseDto {
         val oldProfileImageUrl = loginMember.profileImageUrl
         val updateProfileImageUrl = request.profileImage?.let {
