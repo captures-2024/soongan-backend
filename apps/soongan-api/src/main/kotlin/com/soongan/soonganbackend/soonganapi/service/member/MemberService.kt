@@ -24,13 +24,13 @@ class MemberService(
     }
 
     @Transactional
-    fun updateBirthDate(loginMember: MemberEntity, birthDate: LocalDate): UpdateBirthDateResponseDto {
-        if (loginMember.birthDate != birthDate) {
-            val updatedMember = loginMember.copy(birthDate = birthDate)
+    fun updateBirthDate(loginMember: MemberEntity, birthYear: Int): UpdateBirthDateResponseDto {
+        if (loginMember.birthYear != birthYear) {
+            val updatedMember = loginMember.copy(birthYear = birthYear)
             memberAdapter.save(updatedMember)
         }
         return UpdateBirthDateResponseDto(
-            updatedBirthDate = birthDate
+            birthYear = birthYear
         )
     }
 
@@ -57,9 +57,9 @@ class MemberService(
         }
 
         return UpdateProfileResponseDto(
-            newNickname = request.nickname,
-            newSelfIntroduction = request.selfIntroduction,
-            newProfileImageUrl = updateProfileImageUrl
+            nickname = request.nickname,
+            selfIntroduction = request.selfIntroduction,
+            profileImageUrl = updateProfileImageUrl
         )
     }
 }

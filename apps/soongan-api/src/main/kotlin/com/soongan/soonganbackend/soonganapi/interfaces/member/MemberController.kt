@@ -8,14 +8,12 @@ import com.soongan.soonganbackend.soongansupport.util.constant.Uri
 import com.soongan.soonganbackend.soonganweb.resolver.LoginMember
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
-import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-import java.time.LocalDate
 
 @RestController
 @RequestMapping(Uri.MEMBERS)
@@ -36,15 +34,13 @@ class MemberController(
         return memberService.checkNickname(nickname)
     }
 
-    @Operation(summary = "생년월일 변경 Api", description = "생년월일을 변경합니다.")
-    @PatchMapping(Uri.BIRTH_DATE)
-    fun updateBirthDate(
+    @Operation(summary = "출생 연도 변경 Api", description = "출생 연도를 변경합니다.")
+    @PatchMapping(Uri.BIRTH_YEAR)
+    fun updateBirthYear(
         @LoginMember loginMember: MemberEntity,
-        @RequestParam
-        @DateTimeFormat(pattern = "yyyy-MM-dd")
-        birthDate: LocalDate
+        @RequestParam birthYear: Int
     ): UpdateBirthDateResponseDto {
-        return memberService.updateBirthDate(loginMember, birthDate)
+        return memberService.updateBirthDate(loginMember, birthYear)
     }
 
     @Operation(summary = "프로필 변경 Api", description = "프로필 사진, 닉네임, 자기소개 등 프로필 정보를 변경합니다.")

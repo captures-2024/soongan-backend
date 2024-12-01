@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class UpdateProfileResponseDto(
-    val newNickname: String? = null,
-    val newSelfIntroduction: String? = null,
-    val newProfileImageUrl: String? = null
+    val nickname: String? = null,
+    val selfIntroduction: String? = null,
+    val profileImageUrl: String? = null
 )
