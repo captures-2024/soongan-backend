@@ -8,6 +8,7 @@ import com.soongan.soonganbackend.soongansupport.util.constant.Uri
 import com.soongan.soonganbackend.soonganweb.resolver.LoginMember
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
+import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PatchMapping
@@ -37,7 +38,12 @@ class MemberController(
 
     @Operation(summary = "생년월일 변경 Api", description = "생년월일을 변경합니다.")
     @PatchMapping(Uri.BIRTH_DATE)
-    fun updateBirthDate(@LoginMember loginMember: MemberEntity, @RequestParam birthDate: LocalDate): UpdateBirthDateResponseDto {
+    fun updateBirthDate(
+        @LoginMember loginMember: MemberEntity,
+        @RequestParam
+        @DateTimeFormat(pattern = "yyyy-MM-dd")
+        birthDate: LocalDate
+    ): UpdateBirthDateResponseDto {
         return memberService.updateBirthDate(loginMember, birthDate)
     }
 
