@@ -1,9 +1,7 @@
 package com.soongan.soonganbackend.soonganapi.service.member
 
-import com.soongan.soonganbackend.soonganapi.interfaces.member.dto.response.MemberInfoResponseDto
-import com.soongan.soonganbackend.soonganapi.interfaces.member.dto.response.UpdateBirthDateResponseDto
-import com.soongan.soonganbackend.soonganapi.interfaces.member.dto.response.UpdateNicknameResponseDto
-import com.soongan.soonganbackend.soonganapi.interfaces.member.dto.response.UpdateProfileImageResponseDto
+import com.soongan.soonganbackend.soonganapi.interfaces.member.dto.request.UpdateProfileRequestDto
+import com.soongan.soonganbackend.soonganapi.interfaces.member.dto.response.*
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberAdapter
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
 import com.soongan.soonganbackend.soongansupport.service.GcpStorageService
@@ -57,6 +55,29 @@ class MemberService(
         }
         return UpdateBirthDateResponseDto(
             updatedBirthDate = birthDate
+        )
+    }
+
+    fun updateProfile(loginMember: MemberEntity, request: UpdateProfileRequestDto): UpdateProfileResponseDto {
+        val updateProfileImageUrl = request.profileImage?.let {
+            gcpStorageService.uploadProfileImage(it, loginMember.id!!)
+        }
+
+        val updatedMember = loginMember.copy(
+            nickname = request.nickname ?: loginMember.nickname,
+            selfIntroduction = request.selfIntroduction ?: loginMember.selfIntroduction,
+            profileImageUrl = updateProfileImageUrl ?: loginMember.profileImageUrl
+        )
+        memberAdapter.save(updatedMember)
+
+        if (updateProfileImageUrl != null) {
+            loginMember.profileImageUrl?.let { gcpStorageService.deleteFile(it) }
+        }
+
+        return UpdateProfileResponseDto(
+            newNickname = request.nickname,
+            newSelfIntroduction = request.selfIntroduction,
+            newProfileImageUrl = updateProfileImageUrl
         )
     }
 }
