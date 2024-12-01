@@ -16,13 +16,15 @@ class GcpStorageService(
     private val gcpStorage: Storage
 ) {
 
+    private val bucket = env.getProperty("spring.cloud.gcp.storage.bucket")
+
     fun uploadProfileImage(file: MultipartFile, memberId: Long): String {
-        val blobId = BlobId.of(env.getProperty("spring.cloud.gcp.storage.bucket"), "${memberId}/profile-image/${file.originalFilename}")
+        val blobId = BlobId.of(bucket, "${memberId}/profile-image/${file.originalFilename}-${System.currentTimeMillis()}")
         return uploadFile(blobId, file)
     }
 
     fun uploadContestImage(file: MultipartFile, memberId: Long, contestType: ContestTypeEnum, round: Int): String {
-        val blobId = BlobId.of(env.getProperty("spring.cloud.gcp.storage.bucket"), "${memberId}/${contestType.type}/${round}/${file.originalFilename}")
+        val blobId = BlobId.of(bucket, "${memberId}/${contestType.type}/${round}/${file.originalFilename}-${System.currentTimeMillis()}")
         return uploadFile(blobId, file)
     }
 
@@ -33,10 +35,9 @@ class GcpStorageService(
     }
 
     fun deleteFile(fileUrl: String) {
-        val bucketName = env.getProperty("spring.cloud.gcp.storage.bucket")
-        val blobName = fileUrl.substringAfter("/${bucketName}/")
+        val blobName = fileUrl.substringAfter("/${bucket}/")
         val decodedBlobName = URLDecoder.decode(blobName, StandardCharsets.UTF_8.name())
-        gcpStorage.delete(bucketName, decodedBlobName)
+        gcpStorage.delete(bucket, decodedBlobName)
     }
 
     fun deleteMemberFiles(memberId: Long) {

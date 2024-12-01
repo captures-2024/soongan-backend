@@ -59,6 +59,7 @@ class MemberService(
     }
 
     fun updateProfile(loginMember: MemberEntity, request: UpdateProfileRequestDto): UpdateProfileResponseDto {
+        val oldProfileImageUrl = loginMember.profileImageUrl
         val updateProfileImageUrl = request.profileImage?.let {
             gcpStorageService.uploadProfileImage(it, loginMember.id!!)
         }
@@ -66,12 +67,16 @@ class MemberService(
         val updatedMember = loginMember.copy(
             nickname = request.nickname ?: loginMember.nickname,
             selfIntroduction = request.selfIntroduction ?: loginMember.selfIntroduction,
-            profileImageUrl = updateProfileImageUrl ?: loginMember.profileImageUrl
+            profileImageUrl = updateProfileImageUrl ?: oldProfileImageUrl
         )
         memberAdapter.save(updatedMember)
 
         if (updateProfileImageUrl != null) {
-            loginMember.profileImageUrl?.let { gcpStorageService.deleteFile(it) }
+            oldProfileImageUrl?.let {
+                if (oldProfileImageUrl != updateProfileImageUrl) {
+                    gcpStorageService.deleteFile(oldProfileImageUrl)
+                }
+            }
         }
 
         return UpdateProfileResponseDto(
