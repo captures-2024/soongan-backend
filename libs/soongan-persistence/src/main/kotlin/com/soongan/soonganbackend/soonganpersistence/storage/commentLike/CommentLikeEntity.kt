@@ -1,6 +1,6 @@
 package com.soongan.soonganbackend.soonganpersistence.storage.commentLike
 
-import com.soongan.soonganbackend.soonganpersistence.storage.comment.ContestTypeEnum
+import com.soongan.soonganbackend.soongansupport.domain.ContestTypeEnum
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
 import jakarta.persistence.Column
 import jakarta.persistence.Entity

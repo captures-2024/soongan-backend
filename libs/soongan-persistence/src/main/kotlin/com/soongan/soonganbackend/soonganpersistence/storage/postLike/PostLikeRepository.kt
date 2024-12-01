@@ -1,6 +1,6 @@
 package com.soongan.soonganbackend.soonganpersistence.storage.postLike
 
-import com.soongan.soonganbackend.soonganpersistence.storage.comment.ContestTypeEnum
+import com.soongan.soonganbackend.soongansupport.domain.ContestTypeEnum
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
 import org.springframework.data.jpa.repository.JpaRepository
 

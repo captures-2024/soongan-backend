@@ -42,7 +42,7 @@ class MemberService(
             gcpStorageService.deleteFile(loginMember.profileImageUrl!!)
         }
 
-        val updatedProfileImageUrl = gcpStorageService.uploadFile(profileImage, loginMember.id!!)
+        val updatedProfileImageUrl = gcpStorageService.uploadProfileImage(profileImage, loginMember.id!!)
         val updatedMember = loginMember.copy(profileImageUrl = updatedProfileImageUrl)
         memberAdapter.save(updatedMember)
         return UpdateProfileImageResponseDto(

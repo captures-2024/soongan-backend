@@ -3,6 +3,7 @@ package com.soongan.soonganbackend.soongansupport.service
 import com.google.cloud.storage.BlobId
 import com.google.cloud.storage.BlobInfo
 import com.google.cloud.storage.Storage
+import com.soongan.soonganbackend.soongansupport.domain.ContestTypeEnum
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
@@ -15,11 +16,18 @@ class GcpStorageService(
     private val gcpStorage: Storage
 ) {
 
-    fun uploadFile(file: MultipartFile, memberId: Long): String {
-        val blobId = BlobId.of(env.getProperty("spring.cloud.gcp.storage.bucket"), "${memberId}/${file.originalFilename}")
-        val blobInfo = BlobInfo.newBuilder(blobId)
-            .setContentType(file.contentType)
-            .build()
+    fun uploadProfileImage(file: MultipartFile, memberId: Long): String {
+        val blobId = BlobId.of(env.getProperty("spring.cloud.gcp.storage.bucket"), "${memberId}/profile-image/${file.originalFilename}")
+        return uploadFile(blobId, file)
+    }
+
+    fun uploadContestImage(file: MultipartFile, memberId: Long, contestType: ContestTypeEnum, round: Int): String {
+        val blobId = BlobId.of(env.getProperty("spring.cloud.gcp.storage.bucket"), "${memberId}/${contestType.type}/${round}/${file.originalFilename}")
+        return uploadFile(blobId, file)
+    }
+
+    private fun uploadFile(blobId: BlobId, file: MultipartFile): String {
+        val blobInfo = BlobInfo.newBuilder(blobId).setContentType(file.contentType).build()
         val blob = gcpStorage.create(blobInfo, file.inputStream.readBytes())
         return "https://storage.cloud.google.com/${blob.bucket}/${blob.name}"
     }
