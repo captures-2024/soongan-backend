@@ -8,15 +8,12 @@ import com.soongan.soonganbackend.soongansupport.util.constant.Uri
 import com.soongan.soonganbackend.soonganweb.resolver.LoginMember
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
-import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RequestPart
 import org.springframework.web.bind.annotation.RestController
-import org.springframework.web.multipart.MultipartFile
 import java.time.LocalDate
 
 @RestController
@@ -36,18 +33,6 @@ class MemberController(
     @GetMapping(Uri.CHECK_NICKNAME)
     fun checkNickname(@RequestParam nickname: String): Boolean {
         return memberService.checkNickname(nickname)
-    }
-
-    @Operation(summary = "닉네임 변경 Api", description = "닉네임을 변경합니다.")
-    @PatchMapping(Uri.NICKNAME)
-    fun updateNickname(@LoginMember loginMember: MemberEntity, @RequestParam newNickname: String): UpdateNicknameResponseDto {
-        return memberService.updateNickname(loginMember, newNickname)
-    }
-
-    @Operation(summary = "프로필 사진 변경 Api", description = "프로필 사진을 변경합니다.")
-    @PatchMapping(Uri.PROFILE_IMAGE, consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
-    fun updateProfileImage(@LoginMember loginMember: MemberEntity, @RequestPart("image") profileImage: MultipartFile): UpdateProfileImageResponseDto {
-        return memberService.updateProfileImage(loginMember, profileImage)
     }
 
     @Operation(summary = "생년월일 변경 Api", description = "생년월일을 변경합니다.")
