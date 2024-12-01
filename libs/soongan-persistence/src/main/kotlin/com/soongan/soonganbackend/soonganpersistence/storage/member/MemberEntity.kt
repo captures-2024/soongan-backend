@@ -33,6 +33,9 @@ data class MemberEntity(
     @Column(name = "birth_date")
     val birthDate: LocalDate? = null,
 
+    @Column(name = "self_introduction")
+    val selfIntroduction: String? = null,
+
     @Column(name = "profile_image_url")
     val profileImageUrl: String? = null,
 
