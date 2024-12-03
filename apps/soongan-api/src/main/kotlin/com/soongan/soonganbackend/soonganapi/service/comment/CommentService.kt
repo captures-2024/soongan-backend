@@ -4,6 +4,7 @@ import com.soongan.soonganbackend.soonganapi.interfaces.comment.dto.request.Comm
 import com.soongan.soonganbackend.soonganapi.interfaces.comment.dto.request.CommentUpdateRequestDto
 import com.soongan.soonganbackend.soonganapi.interfaces.comment.dto.response.GetCommentResponseDto
 import com.soongan.soonganbackend.soonganapi.interfaces.comment.dto.response.GetMyCommentResponseDto
+import com.soongan.soonganbackend.soonganapi.interfaces.comment.dto.response.GetCommentReplyResponseDto
 import com.soongan.soonganbackend.soonganpersistence.storage.comment.CommentAdapter
 import com.soongan.soonganbackend.soonganpersistence.storage.comment.CommentEntity
 import com.soongan.soonganbackend.soonganpersistence.storage.comment.CommentStatusEnum
@@ -56,6 +57,15 @@ class CommentService(
         return GetCommentResponseDto.from(
             postId = postId,
             commentSlice = postCommentSlice
+        )
+    }
+
+    @Transactional(readOnly = true)
+    fun getCommentsReplies(contestType: ContestTypeEnum, parentCommentId: Long, page: Int, size: Int): GetCommentReplyResponseDto {
+        val commentSlice: Slice<CommentEntity> = commentAdapter.getPostCommentsReplies(parentCommentId, contestType, page, size)
+
+        return GetCommentReplyResponseDto.from(
+            commentSlice = commentSlice
         )
     }
 

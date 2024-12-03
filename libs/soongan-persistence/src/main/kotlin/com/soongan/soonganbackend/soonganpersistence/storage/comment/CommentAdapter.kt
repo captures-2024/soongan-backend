@@ -28,6 +28,11 @@ class CommentAdapter(
     }
 
     @Transactional(readOnly = true)
+    fun getPostCommentsReplies(parentCommentId: Long, contestType: ContestTypeEnum, page: Int, size: Int): Slice<CommentEntity> {
+        return commentRepository.findAllByParentCommentIdAndContestTypeOrderByCreatedAt(parentCommentId, contestType, PageRequest.of(page, size))
+    }
+
+    @Transactional(readOnly = true)
     fun getMyComments(member: MemberEntity, contestType: ContestTypeEnum, page: Int, size: Int): Slice<CommentEntity> {
         return commentRepository.findAllByMemberAndContestTypeOrderByCreatedAtDesc(member, contestType, PageRequest.of(page, size))
     }

@@ -4,6 +4,7 @@ import com.soongan.soonganbackend.soonganapi.interfaces.comment.dto.request.Comm
 import com.soongan.soonganbackend.soonganapi.interfaces.comment.dto.request.CommentUpdateRequestDto
 import com.soongan.soonganbackend.soonganapi.interfaces.comment.dto.response.GetCommentResponseDto
 import com.soongan.soonganbackend.soonganapi.interfaces.comment.dto.response.GetMyCommentResponseDto
+import com.soongan.soonganbackend.soonganapi.interfaces.comment.dto.response.GetCommentReplyResponseDto
 import com.soongan.soonganbackend.soonganapi.service.comment.CommentService
 import com.soongan.soonganbackend.soonganpersistence.storage.comment.ContestTypeEnum
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
@@ -45,6 +46,17 @@ class CommentController(
         @RequestParam(required = false, defaultValue = "10") size: Int
     ): GetCommentResponseDto {
         return commentService.getPostComments(postId, contestType, page, size)
+    }
+
+    @GetMapping
+    @Operation(summary = "콘테스트 게시글 대댓글 조회 api", description = "한 콘테스트 게시글의 대댓글을 조회합니다.")
+    fun getCommentsReplies(
+        @RequestParam contestType: ContestTypeEnum,
+        @RequestParam parentCommentId: Long,
+        @RequestParam(required = false, defaultValue = "0") page: Int,
+        @RequestParam(required = false, defaultValue = "10") size: Int
+    ): GetCommentReplyResponseDto {
+        return commentService.getCommentsReplies(contestType, parentCommentId, page, size)
     }
 
     @GetMapping

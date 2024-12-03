@@ -10,4 +10,6 @@ interface CommentRepository: JpaRepository<CommentEntity, Long> {
     fun findAllByPostIdAndContestTypeOrderByCreatedAt(postId: Long, contestType: ContestTypeEnum, pageable: Pageable): Slice<CommentEntity>
 
     fun findAllByMemberAndContestTypeOrderByCreatedAtDesc(member: MemberEntity, contestType: ContestTypeEnum, pageable: Pageable): Slice<CommentEntity>
+
+    fun findAllByParentCommentIdAndContestTypeOrderByCreatedAt(parentCommentId: Long, contestType: ContestTypeEnum, pageable: Pageable): Slice<CommentEntity>
 }
