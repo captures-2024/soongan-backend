@@ -16,9 +16,8 @@ object Uri {
 
     const val MEMBERS = "/members"
     const val CHECK_NICKNAME = "/check-nickname"
-    const val NICKNAME = "/nickname"
-    const val PROFILE_IMAGE = "/profile-image"
-    const val BIRTH_DATE = "/birth-date"
+    const val PROFILE = "/profile"
+    const val BIRTH_YEAR = "/birth-year"
 
     const val WEEKLY = "/weekly"
     const val CONTESTS = "/contests"

@@ -13,7 +13,6 @@ import jakarta.persistence.Table
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
-import java.time.LocalDate
 import java.time.LocalDateTime
 
 @Entity
@@ -31,7 +30,10 @@ data class MemberEntity(
     val nickname: String? = null,
 
     @Column(name = "birth_date")
-    val birthDate: LocalDate? = null,
+    val birthYear: Int? = null,
+
+    @Column(name = "self_introduction")
+    val selfIntroduction: String? = null,
 
     @Column(name = "profile_image_url")
     val profileImageUrl: String? = null,

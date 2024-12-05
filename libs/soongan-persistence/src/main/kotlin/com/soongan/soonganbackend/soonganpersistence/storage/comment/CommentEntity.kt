@@ -1,6 +1,7 @@
 package com.soongan.soonganbackend.soonganpersistence.storage.comment
 
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
+import com.soongan.soonganbackend.soongansupport.domain.ContestTypeEnum
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.EntityListeners

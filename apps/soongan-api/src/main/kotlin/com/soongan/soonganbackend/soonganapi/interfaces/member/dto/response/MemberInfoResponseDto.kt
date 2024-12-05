@@ -1,12 +1,13 @@
 package com.soongan.soonganbackend.soonganapi.interfaces.member.dto.response
 
+import com.fasterxml.jackson.annotation.JsonInclude
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
-import java.time.LocalDate
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 data class MemberInfoResponseDto(
     val email: String,
     val nickname: String?,
-    val birthDate: LocalDate?,
+    val birthYear: Int?,
     val profileImageUrl: String?
 ) {
     companion object {
@@ -14,7 +15,7 @@ data class MemberInfoResponseDto(
             return MemberInfoResponseDto(
                 email = member.email,
                 nickname = member.nickname,
-                birthDate = member.birthDate,
+                birthYear = member.birthYear,
                 profileImageUrl = member.profileImageUrl
             )
         }
