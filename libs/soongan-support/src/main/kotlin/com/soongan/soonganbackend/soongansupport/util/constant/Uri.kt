@@ -27,7 +27,7 @@ object Uri {
     const val COMMENTS = "/comments"
     const val REPLIES = "/replies"
     const val LIKE = "/like"
-    const val MY = "/my"
+    const val MY_HISTORY = "/my-hisotry"
 
     const val FCM = "/fcm"
 

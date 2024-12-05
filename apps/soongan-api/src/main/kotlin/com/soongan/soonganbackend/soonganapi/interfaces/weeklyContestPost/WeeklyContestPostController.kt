@@ -22,14 +22,14 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping(Uri.WEEKLY + Uri.CONTESTS)
+@RequestMapping(Uri.WEEKLY + Uri.CONTESTS + Uri.POSTS)
 @Tag(name = "Weekly Contest Apis", description = "주간 콘테스트 관련 API")
 class WeeklyContestPostController (
     private val weeklyContestService: WeeklyContestService
 ){
 
 
-    @GetMapping(Uri.POSTS)
+    @GetMapping
     @Operation(summary = "주간 콘테스트 게시글 조회 Api", description = "주간 콘테스트 게시글을 조회합니다. 라운드와 정렬 기준을 이용하여 조회할 수 있습니다.")
     fun getWeeklyContestPost(
         @RequestParam round: Int,
@@ -40,7 +40,7 @@ class WeeklyContestPostController (
         return weeklyContestService.getWeeklyContestPostList(round, orderCriteria, page, pageSize)
     }
 
-    @GetMapping(Uri.MY + Uri.POSTS)
+    @GetMapping(Uri.MY_HISTORY)
     @Operation(summary = "내 주간 콘테스트 게시글 조회 Api", description = "내가 작성한 주간 콘테스트 게시글을 조회합니다.")
     fun getMyWeeklyContestPost(
         @LoginMember loginMember: MemberEntity,
@@ -50,7 +50,7 @@ class WeeklyContestPostController (
         return weeklyContestService.getMyWeeklyContestPostList(loginMember, page, pageSize)
     }
 
-    @PostMapping(Uri.POSTS)
+    @PostMapping
     @Operation(summary = "주간 콘테스트 게시글 등록 Api", description = "주간 콘테스트 게시글을 등록합니다.")
     fun registerWeeklyContestPost(
         @LoginMember loginMember: MemberEntity,
@@ -59,7 +59,7 @@ class WeeklyContestPostController (
         return weeklyContestService.registerWeeklyContestPost(loginMember, weeklyContestPostRegisterRequest)
     }
 
-    @DeleteMapping(Uri.MY + Uri.POSTS)
+    @DeleteMapping(Uri.POSTS)
     @Operation(summary = "내 주간 콘테스트 게시글 삭제 Api", description = "내가 작성한 주간 콘테스트 게시글을 삭제합니다.")
     fun deleteMyWeeklyContestPost(
         @LoginMember loginMember: MemberEntity,

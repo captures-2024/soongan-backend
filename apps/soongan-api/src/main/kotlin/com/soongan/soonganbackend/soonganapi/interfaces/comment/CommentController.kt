@@ -59,7 +59,7 @@ class CommentController(
         return commentService.getCommentsReplies(contestType, parentCommentId, page, size)
     }
 
-    @GetMapping
+    @GetMapping(Uri.MY_HISTORY)
     @Operation(summary = "내가 작성한 콘테스트 게시글 댓글 조회 api", description = "내가 작성한 콘테스트 게시글의 댓글들을 조회합니다.")
     fun getMyComments(
         @LoginMember loginMember: MemberEntity,
