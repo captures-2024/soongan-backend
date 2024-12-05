@@ -1,6 +1,6 @@
 package com.soongan.soonganbackend.soonganapi.interfaces.comment.dto.request
 
-import com.soongan.soonganbackend.soonganpersistence.storage.comment.ContestTypeEnum
+import com.soongan.soonganbackend.soongansupport.domain.ContestTypeEnum
 import jakarta.validation.constraints.NotEmpty
 
 data class CommentSaveRequestDto (

@@ -1,7 +1,7 @@
 package com.soongan.soonganbackend.soonganpersistence.storage.commentLike
 
-import com.soongan.soonganbackend.soonganpersistence.storage.comment.ContestTypeEnum
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
+import com.soongan.soonganbackend.soongansupport.domain.ContestTypeEnum
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 

@@ -1,6 +1,7 @@
 package com.soongan.soonganbackend.soonganpersistence.storage.comment
 
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
+import com.soongan.soonganbackend.soongansupport.domain.ContestTypeEnum
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Slice
 import org.springframework.data.repository.findByIdOrNull

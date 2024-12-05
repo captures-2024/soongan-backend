@@ -5,9 +5,9 @@ import com.soongan.soonganbackend.soonganapi.interfaces.commentLike.dto.request.
 import com.soongan.soonganbackend.soonganapi.interfaces.commentLike.dto.response.CommentLikeResponseDto
 import com.soongan.soonganbackend.soonganpersistence.storage.comment.CommentAdapter
 import com.soongan.soonganbackend.soonganpersistence.storage.comment.CommentEntity
-import com.soongan.soonganbackend.soonganpersistence.storage.comment.ContestTypeEnum
 import com.soongan.soonganbackend.soonganpersistence.storage.commentLike.CommentLikeAdapter
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
+import com.soongan.soonganbackend.soongansupport.domain.ContestTypeEnum
 import com.soongan.soonganbackend.soongansupport.util.exception.SoonganException
 import com.soongan.soonganbackend.soongansupport.util.exception.StatusCode
 import org.springframework.stereotype.Service

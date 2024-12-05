@@ -6,8 +6,8 @@ import com.soongan.soonganbackend.soonganapi.interfaces.comment.dto.response.Get
 import com.soongan.soonganbackend.soonganapi.interfaces.comment.dto.response.GetMyCommentResponseDto
 import com.soongan.soonganbackend.soonganapi.interfaces.comment.dto.response.GetCommentReplyResponseDto
 import com.soongan.soonganbackend.soonganapi.service.comment.CommentService
-import com.soongan.soonganbackend.soonganpersistence.storage.comment.ContestTypeEnum
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
+import com.soongan.soonganbackend.soongansupport.domain.ContestTypeEnum
 import com.soongan.soonganbackend.soongansupport.util.constant.Uri
 import com.soongan.soonganbackend.soonganweb.resolver.LoginMember
 import io.swagger.v3.oas.annotations.Operation
