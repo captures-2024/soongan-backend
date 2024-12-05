@@ -12,5 +12,5 @@ create table comment
     updated_at        datetime    null
 );
 
-create index comment_idx_member_id on comment (member_id);
-create unique index comment_uidx_contest_type_post_id on comment (contest_type, post_id);
+create index comment_idx_member_id_contest_type on comment (member_id, contest_type);
+create unique index comment_uidx_contest_type_post_id on comment (post_id, contest_type);

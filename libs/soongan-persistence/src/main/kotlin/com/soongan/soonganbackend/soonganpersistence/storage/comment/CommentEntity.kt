@@ -24,8 +24,8 @@ import java.time.LocalDateTime
 @Table(
     name = "comment",
     indexes = [
-        Index(name = "comment_idx_member_id", columnList = "member_id"),
-        Index(name = "comment_uidx_contest_type_post_id", columnList = "contest_type,post_id", unique = true),
+        Index(name = "comment_idx_member_id_contest_type", columnList = "member_id_contest_type"),
+        Index(name = "comment_uidx_post_id_contest_type", columnList = "post_id,contest_type", unique = true),
     ])
 @EntityListeners(AuditingEntityListener::class)
 data class CommentEntity(

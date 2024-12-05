@@ -27,7 +27,7 @@ class PostLikeAdapter(
     }
 
     @Transactional(readOnly = true)
-    fun getByPostIdAndContestTypeAndMember(postId: Long, contestType: ContestTypeEnum, member: MemberEntity): PostLikeEntity? {
-        return postLikeRepository.findByPostIdAndContestTypeAndMember(postId, contestType, member)
+    fun existsByPostIdAndContestTypeAndMember(postId: Long, contestType: ContestTypeEnum, member: MemberEntity): Boolean {
+        return postLikeRepository.existsByPostIdAndContestTypeAndMember(postId, contestType, member)
     }
 }

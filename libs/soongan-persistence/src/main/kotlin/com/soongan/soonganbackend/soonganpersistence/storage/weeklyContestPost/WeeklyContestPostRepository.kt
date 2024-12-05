@@ -37,4 +37,9 @@ interface WeeklyContestPostRepository : JpaRepository<WeeklyContestPostEntity, L
         member: MemberEntity,
         pageable: Pageable
     ): Page<WeeklyContestPostEntity>
+
+    fun findAllByMemberAndWeeklyContestOrderByCreatedAtDesc(
+        member: MemberEntity,
+        weeklyContestEntity: WeeklyContestEntity
+    ): List<WeeklyContestPostEntity>
 }

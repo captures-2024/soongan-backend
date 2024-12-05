@@ -48,6 +48,9 @@ data class WeeklyContestPostEntity(
 
     @Column(name = "like_count")
     val likeCount: Int = 0,
+
+    @Column(name = "comment_count")
+    val commentCount: Int = 0
 ) {
 
     @CreatedDate
