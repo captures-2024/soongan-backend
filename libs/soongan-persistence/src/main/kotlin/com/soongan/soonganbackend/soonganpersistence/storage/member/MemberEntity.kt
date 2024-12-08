@@ -29,7 +29,7 @@ data class MemberEntity(
     @Column(name = "nickname")
     val nickname: String? = null,
 
-    @Column(name = "birth_date")
+    @Column(name = "birth_year")
     val birthYear: Int? = null,
 
     @Column(name = "self_introduction")

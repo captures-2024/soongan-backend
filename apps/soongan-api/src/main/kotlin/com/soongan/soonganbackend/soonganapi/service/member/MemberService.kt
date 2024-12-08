@@ -7,7 +7,6 @@ import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
 import com.soongan.soonganbackend.soongansupport.service.GcpStorageService
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.time.LocalDate
 
 @Service
 class MemberService(
@@ -24,12 +23,12 @@ class MemberService(
     }
 
     @Transactional
-    fun updateBirthDate(loginMember: MemberEntity, birthYear: Int): UpdateBirthDateResponseDto {
+    fun updateBirthYear(loginMember: MemberEntity, birthYear: Int): UpdateBirthYearResponseDto {
         if (loginMember.birthYear != birthYear) {
             val updatedMember = loginMember.copy(birthYear = birthYear)
             memberAdapter.save(updatedMember)
         }
-        return UpdateBirthDateResponseDto(
+        return UpdateBirthYearResponseDto(
             birthYear = birthYear
         )
     }

@@ -39,8 +39,8 @@ class MemberController(
     fun updateBirthYear(
         @LoginMember loginMember: MemberEntity,
         @RequestParam birthYear: Int
-    ): UpdateBirthDateResponseDto {
-        return memberService.updateBirthDate(loginMember, birthYear)
+    ): UpdateBirthYearResponseDto {
+        return memberService.updateBirthYear(loginMember, birthYear)
     }
 
     @Operation(summary = "프로필 변경 Api", description = "프로필 사진, 닉네임, 자기소개 등 프로필 정보를 변경합니다.")
