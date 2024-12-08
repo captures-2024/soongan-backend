@@ -48,6 +48,7 @@ object Uri {
         WEEKLY + CONTESTS + POSTS,
 
         FCM,
+        FCM + "/test",
 
         CALLBACK + APPLE_LOGIN,
         CALLBACK + APPLE_LOGIN + SUCCESS

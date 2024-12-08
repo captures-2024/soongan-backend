@@ -1,5 +1,8 @@
 package com.soongan.soonganbackend.soonganapi.consumer
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.soongan.soonganbackend.soonganapi.service.fcm.FcmService
+import com.soongan.soonganbackend.soongansupport.util.dto.Message
 import org.slf4j.LoggerFactory
 import org.springframework.data.redis.connection.stream.Consumer
 import org.springframework.data.redis.connection.stream.ReadOffset
@@ -12,12 +15,15 @@ import java.time.Duration
 
 @Service
 class RedisNotiConsumer(
-    private val redisTemplate: RedisTemplate<String, Any>
+    private val redisTemplate: RedisTemplate<String, Any>,
+    private val fcmService: FcmService,
+    private val objectMapper: ObjectMapper
 ) {
 
     companion object {
         private const val NOTI_STREAM_KEY = "soongan-noti"
         private const val CONSUMER_GROUP = "soongan-consumer-group"
+        private const val CONSUMER_NAME = "soongan-consumer"
         private val logger = LoggerFactory.getLogger(RedisNotiConsumer::class.java)
     }
 
@@ -29,6 +35,7 @@ class RedisNotiConsumer(
         try {
             redisTemplate.opsForStream<String, Any>()
                 .createGroup(NOTI_STREAM_KEY, ReadOffset.from("0"), CONSUMER_GROUP)
+            logger.info("Consumer group created: $CONSUMER_GROUP")
         } catch (e: Exception) {
             logger.warn("Consumer group might already exist: $CONSUMER_GROUP")
         }
@@ -43,7 +50,7 @@ class RedisNotiConsumer(
 
             val records = redisTemplate.opsForStream<String, Any>()
                 .read(
-                    Consumer.from(CONSUMER_GROUP, "soongan-consumer"),
+                    Consumer.from(CONSUMER_GROUP, CONSUMER_NAME),
                     readOptions,
                     StreamOffset.create(NOTI_STREAM_KEY, ReadOffset.lastConsumed())
                 )
@@ -65,6 +72,8 @@ class RedisNotiConsumer(
     }
 
     private fun processMessage(message: String) {
-        logger.info("Processing message: {}", message)
+        val notificationMessage = objectMapper.readValue(message, Message::class.java)
+        logger.info("Processing Noti Message: $notificationMessage")
+        fcmService.pushFcmMessage(notificationMessage)
     }
 }

@@ -22,4 +22,10 @@ class FcmController(
     ): FcmTokenInfoResponseDto {
         return fcmService.registFcmToken(userAgentEnum, fcmRegistRequestDto)
     }
+
+    @Operation(summary = "FCM 알림 푸시 테스트 Api", description = "FCM 알림 푸시 테스트를 위한 Api 입니다.")
+    @GetMapping("/test")
+    fun testFcmPush(@RequestParam("fcmToken") fcmToken: String) {
+        return fcmService.testFcmPush(fcmToken)
+    }
 }
