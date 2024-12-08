@@ -60,9 +60,9 @@ class RedisNotiConsumer(
                 logger.info("Received message: $message")
 
                 // 메시지 처리
-                processMessage(message)
+                processNotiMessage(message)
 
-                // 처리 완료 표시
+                // Redis Streams 메시지에 처리 완료 표시(Ack 상태로 변경)
                 redisTemplate.opsForStream<String, Any>()
                     .acknowledge(NOTI_STREAM_KEY, CONSUMER_GROUP, record.id)
             }
@@ -71,7 +71,7 @@ class RedisNotiConsumer(
         }
     }
 
-    private fun processMessage(message: String) {
+    private fun processNotiMessage(message: String) {
         val notificationMessage = objectMapper.readValue(message, Message::class.java)
         logger.info("Processing Noti Message: $notificationMessage")
         fcmService.pushFcmMessage(notificationMessage)
