@@ -14,5 +14,7 @@ dependencies {
     implementation("com.google.api-client:google-api-client:2.2.0")
     implementation("com.google.cloud:spring-cloud-gcp-starter-storage:5.4.3")
 
+    implementation("org.springframework.boot:spring-boot-starter-data-redis")
+
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0")
 }

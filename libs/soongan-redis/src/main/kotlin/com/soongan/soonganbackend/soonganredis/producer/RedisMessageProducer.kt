@@ -10,12 +10,14 @@ class RedisMessageProducer(
     private val redisTemplate: RedisTemplate<String, Any>
 ) {
 
-    private val logger = LoggerFactory.getLogger(RedisMessageProducer::class.java)
+    companion object {
+        private val logger = LoggerFactory.getLogger(RedisMessageProducer::class.java)
+    }
 
-    fun sendMessage(topicName: String, message: String) {
-        val record = StreamRecords.string(mapOf("message" to message)).withStreamKey(topicName)
+    fun sendMessage(streamKey: String, message: String) {
+        val record = StreamRecords.string(mapOf("message" to message)).withStreamKey(streamKey)
         val recordId = redisTemplate.opsForStream<String, Any>()
             .add(record)
-        logger.info("Message sent to $topicName with recordId: $recordId")
+        logger.info("Message sent to $streamKey with recordId: $recordId")
     }
 }
