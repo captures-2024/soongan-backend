@@ -11,6 +11,9 @@ import org.springframework.data.redis.connection.RedisStandaloneConfiguration
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories
+import org.springframework.data.redis.serializer.StringRedisSerializer
+
+
 
 
 @Configuration
@@ -32,8 +35,12 @@ class RedisConfig(
 
     @Bean
     fun redisTemplate(): RedisTemplate<String, Any> {
-        val redisTemplate = RedisTemplate<String, Any>()  // 이 redisTemplate으로 Redis에 접근하여 상호작용(삽입, 수정, 삭제,,) 가능
-        redisTemplate.connectionFactory = redisConnectionFactory()
-        return redisTemplate
+        return RedisTemplate<String, Any>().apply {
+            connectionFactory = redisConnectionFactory()
+            keySerializer = StringRedisSerializer()
+            hashKeySerializer = StringRedisSerializer()
+            valueSerializer = StringRedisSerializer()
+            hashValueSerializer = StringRedisSerializer()
+        }
     }
 }
