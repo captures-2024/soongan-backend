@@ -7,7 +7,6 @@ spring:
       - optional:soongan-persistence.yml
       - optional:soongan-support.yml
       - optional:soongan-web.yml
-      - optional:soongan-kafka.yml
 
 server:
   port: ${SERVER_PORT}

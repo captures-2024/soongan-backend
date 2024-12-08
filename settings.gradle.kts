@@ -11,7 +11,6 @@ listOf(
 
 // libs
 listOf(
-    "soongan-kafka",
     "soongan-persistence",
     "soongan-support",
     "soongan-redis",
