@@ -27,7 +27,13 @@ data class NotificationEntity(
     val title: String,
 
     @Column(name = "body", nullable = false)
-    val body: String
+    val body: String,
+
+    @Column(name = "link", nullable = false)
+    val link: String,
+
+    @Column(name = "is_read", nullable = false)
+    val isRead: Boolean = false
 ) {
     @CreatedDate
     @Column(nullable = false, updatable = false)
