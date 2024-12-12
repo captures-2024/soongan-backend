@@ -115,7 +115,7 @@ class FcmService(
             ),
             data = MessageData(
                 link = "https://api-dev.soongan.com/api-docs",
-                notificationType = NotificationTypeEnum.EVENT
+                notificationType = NotificationTypeEnum.ACTIVITY
             )
         )
         redisMessageProducer.sendMessage("soongan-noti", objectMapper.writeValueAsString(message))
