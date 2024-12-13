@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 
 @Component
-class JwtAdaptor(
+class JwtAdapter(
     private val jwtRepository: JwtRepository
 ) {
 

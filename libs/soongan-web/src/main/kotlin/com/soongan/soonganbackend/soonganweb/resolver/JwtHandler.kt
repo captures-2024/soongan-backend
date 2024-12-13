@@ -1,6 +1,6 @@
 package com.soongan.soonganbackend.soonganweb.resolver
 
-import com.soongan.soonganbackend.soonganredis.jwt.JwtAdaptor
+import com.soongan.soonganbackend.soonganredis.jwt.JwtAdapter
 import com.soongan.soonganbackend.soonganredis.jwt.JwtData
 import com.soongan.soonganbackend.soonganredis.jwt.JwtTypeEnum
 import com.soongan.soonganbackend.soongansupport.util.exception.SoonganException
@@ -18,7 +18,7 @@ import javax.crypto.SecretKey
 
 @Component
 class JwtHandler(
-    private val jwtAdaptor: JwtAdaptor,
+    private val jwtAdapter: JwtAdapter,
     private val env: Environment
 ) {
 
@@ -27,7 +27,7 @@ class JwtHandler(
         val accessToken = createToken(userEmail, JwtTypeEnum.ACCESS)
         val refreshToken = createToken(userEmail, JwtTypeEnum.REFRESH)
 
-        jwtAdaptor.save(
+        jwtAdapter.save(
             JwtData(
                 userEmail = userEmail,
                 accessToken = accessToken,
@@ -61,7 +61,7 @@ class JwtHandler(
     fun getPayload(token: String, jwtTypeEnum: JwtTypeEnum): Map<String, *> {
         try {
             if (jwtTypeEnum == JwtTypeEnum.REFRESH) {
-                jwtAdaptor.findByRefreshToken(token)
+                jwtAdapter.findByRefreshToken(token)
                     ?: throw SoonganUnauthorizedException(StatusCode.INVALID_JWT_REFRESH_TOKEN)
             }
 
@@ -87,7 +87,7 @@ class JwtHandler(
 
     @Transactional(readOnly = true)
     fun validateRefreshRequest(accessToken: String, refreshToken: String): Map<String, *> {
-        val jwtData = jwtAdaptor.findByRefreshToken(refreshToken)
+        val jwtData = jwtAdapter.findByRefreshToken(refreshToken)
             ?: throw SoonganException(StatusCode.INVALID_JWT_REFRESH_TOKEN)
 
         val payload = getPayload(refreshToken, JwtTypeEnum.REFRESH)
@@ -106,6 +106,6 @@ class JwtHandler(
 
     @Transactional
     fun deleteToken(email: String) {
-        jwtAdaptor.deleteByUserEmail(email)
+        jwtAdapter.deleteByUserEmail(email)
     }
 }
