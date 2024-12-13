@@ -8,6 +8,8 @@ spring:
       - optional:soongan-support.yml
       - optional:soongan-web.yml
       - optional:soongan-kafka.yml
+  profiles:
+    active: ${EXECUTION_ENV}
 
 server:
   port: ${SERVER_PORT}
