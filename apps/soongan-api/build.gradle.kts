@@ -13,6 +13,7 @@ dependencies {
     implementation("com.nimbusds:nimbus-jose-jwt:9.40")
     implementation("com.google.api-client:google-api-client:2.2.0")
     implementation("com.google.cloud:spring-cloud-gcp-starter-storage:5.4.3")
+    implementation("com.google.cloud:google-cloud-logging-logback:0.131.11-alpha")
 
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0")
 }
