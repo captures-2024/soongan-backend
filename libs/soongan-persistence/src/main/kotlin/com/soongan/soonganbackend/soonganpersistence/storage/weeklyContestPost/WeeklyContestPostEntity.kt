@@ -50,7 +50,10 @@ data class WeeklyContestPostEntity(
     val likeCount: Int = 0,
 
     @Column(name = "comment_count")
-    val commentCount: Int = 0
+    val commentCount: Int = 0,
+
+    @Column(name = "is_blind")
+    val isBlind: Boolean = false
 ) {
 
     @CreatedDate
