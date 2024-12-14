@@ -31,6 +31,8 @@ object Uri {
 
     const val FCM = "/fcm"
 
+    const val REPORT = "/report"
+
     const val CALLBACK = "/callback"
     const val APPLE_LOGIN = "/apple_login"
     const val SUCCESS = "/success"
@@ -49,6 +51,8 @@ object Uri {
 
         FCM,
         FCM + "/test",
+
+        REPORT,
 
         CALLBACK + APPLE_LOGIN,
         CALLBACK + APPLE_LOGIN + SUCCESS
