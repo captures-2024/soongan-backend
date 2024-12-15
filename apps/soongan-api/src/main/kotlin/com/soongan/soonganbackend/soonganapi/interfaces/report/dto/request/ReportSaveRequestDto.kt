@@ -4,7 +4,7 @@ import com.soongan.soonganbackend.soongansupport.domain.ReportReasonEnum
 import com.soongan.soonganbackend.soongansupport.domain.ReportTargetTypeEnum
 import jakarta.validation.constraints.NotNull
 
-data class CreateReportRequestDto(
+data class ReportSaveRequestDto(
     @field:NotNull
     val targetId: Long,
 

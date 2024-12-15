@@ -1,6 +1,6 @@
 package com.soongan.soonganbackend.soonganapi.interfaces.report
 
-import com.soongan.soonganbackend.soonganapi.interfaces.report.dto.request.CreateReportRequestDto
+import com.soongan.soonganbackend.soonganapi.interfaces.report.dto.request.ReportSaveRequestDto
 import com.soongan.soonganbackend.soonganapi.service.report.ReportService
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
 import com.soongan.soonganbackend.soongansupport.util.constant.Uri
@@ -21,7 +21,7 @@ class ReportController(
 
     @Operation(summary = "신고하기 Api", description = "게시글, 댓글을 신고합니다.")
     @PostMapping
-    fun report(@LoginMember loginMember: MemberEntity, @RequestBody createReportRequestDto: CreateReportRequestDto) {
-        return reportService.report(loginMember, createReportRequestDto)
+    fun report(@LoginMember loginMember: MemberEntity, @RequestBody reportSaveRequestDto: ReportSaveRequestDto) {
+        return reportService.report(loginMember, reportSaveRequestDto)
     }
 }
