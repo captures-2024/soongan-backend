@@ -7,6 +7,8 @@ spring:
       - optional:soongan-persistence.yml
       - optional:soongan-support.yml
       - optional:soongan-web.yml
+  profiles:
+    active: ${EXECUTION_ENV}
 
 server:
   port: ${SERVER_PORT}

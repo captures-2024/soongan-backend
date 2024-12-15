@@ -22,11 +22,16 @@ class SwaggerConfig {
             .bearerFormat("JWT")
         )
 
+        val devServer = Server()
+            .url("https://api-dev.soongan.site")
+            .description("Production Server")
+
         return OpenAPI()
-            .components(Components())
+            .components(components)
             .info(apiInfo())
             .addSecurityItem(securityRequirement)
             .components(components)
+            .servers(listOf(devServer))
     }
 
     fun apiInfo(): Info {

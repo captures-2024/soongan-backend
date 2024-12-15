@@ -40,7 +40,7 @@ class SecurityConfig(
     @Bean
     fun corsConfigurationSource(): CorsConfigurationSource {
         val configuration = CorsConfiguration()
-        configuration.allowedOrigins = listOf("https://soongan.site", "https://appleid.apple.com")
+        configuration.allowedOrigins = listOf("https://api-dev.soongan.site")
         configuration.allowedMethods = listOf("GET", "POST", "PATCH", "PUT", "DELETE")
         configuration.allowedHeaders = listOf("*")
         configuration.allowCredentials = true
