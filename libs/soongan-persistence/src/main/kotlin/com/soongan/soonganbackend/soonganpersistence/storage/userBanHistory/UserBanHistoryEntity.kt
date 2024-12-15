@@ -10,7 +10,7 @@ import java.time.LocalDateTime
 @Entity
 @Table(name = "user_ban_history")
 @EntityListeners(AuditingEntityListener::class)
-data class UserBanHistory(
+data class UserBanHistoryEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
