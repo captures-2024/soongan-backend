@@ -2,10 +2,10 @@ package com.soongan.soonganbackend.soonganweb.filter
 
 import com.soongan.soonganbackend.soongansupport.util.constant.ColorCode
 import com.soongan.soonganbackend.soongansupport.util.constant.MdcConstant
+import io.github.oshai.kotlinlogging.KotlinLogging
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
-import org.slf4j.LoggerFactory
 import org.slf4j.MDC
 import org.springframework.core.Ordered
 import org.springframework.core.annotation.Order
@@ -16,7 +16,7 @@ import org.springframework.web.filter.OncePerRequestFilter
 @Order(Ordered.HIGHEST_PRECEDENCE + 1)
 class HttpLoggingFilter: OncePerRequestFilter() {
 
-    private val httpLogger = LoggerFactory.getLogger(HttpLoggingFilter::class.java)
+    private val httpLogger = KotlinLogging.logger { }
 
     override fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, filterChain: FilterChain) {
         val requestTime = MDC.get(MdcConstant.REQUEST_TIME)?.toLong() ?: System.currentTimeMillis()

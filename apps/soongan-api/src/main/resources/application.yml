@@ -7,7 +7,6 @@ spring:
       - optional:soongan-persistence.yml
       - optional:soongan-support.yml
       - optional:soongan-web.yml
-      - optional:soongan-kafka.yml
   profiles:
     active: ${EXECUTION_ENV}
 
@@ -21,3 +20,7 @@ oauth2:
   ios:
     google:
       client-id: ${OAUTH2_IOS_GOOGLE_CLIENT_ID}
+
+firebase:
+  project-id: ${FCM_FIREBASE_PROJECT_ID}
+  key-json-string: ${FCM_FIREBASE_KEY_JSON}

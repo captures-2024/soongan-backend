@@ -2,6 +2,7 @@ package com.soongan.soonganbackend.soongansupport.util.dto
 
 import com.soongan.soonganbackend.soongansupport.domain.NotificationTypeEnum
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 data class FcmMessageDto(
     val message: Message
@@ -23,5 +24,5 @@ data class MessageData(
     val link: String,  // 알림 클릭 시 이동할 링크
     val notificationType: NotificationTypeEnum,
     val postId: Long? = null,  // 게시글 관련 알림일 시 게시글 ID
-    val timestamp: LocalDateTime = LocalDateTime.now()  // 알림 발생 시간
+    val timestamp: String = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)  // 알림 발생 시간 (ISO 8601 문자열)
 )
