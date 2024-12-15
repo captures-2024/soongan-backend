@@ -3,7 +3,7 @@ package com.soongan.soonganbackend.soonganapi.consumer
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.soongan.soonganbackend.soonganapi.service.fcm.FcmService
 import com.soongan.soonganbackend.soongansupport.util.dto.Message
-import org.slf4j.LoggerFactory
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.data.redis.connection.stream.Consumer
 import org.springframework.data.redis.connection.stream.ReadOffset
 import org.springframework.data.redis.connection.stream.StreamOffset
@@ -24,7 +24,7 @@ class RedisNotiConsumer(
         private const val NOTI_STREAM_KEY = "soongan-noti"
         private const val CONSUMER_GROUP = "soongan-consumer-group"
         private const val CONSUMER_NAME = "soongan-consumer"
-        private val logger = LoggerFactory.getLogger(RedisNotiConsumer::class.java)
+        private val logger = KotlinLogging.logger { }
     }
 
     init {

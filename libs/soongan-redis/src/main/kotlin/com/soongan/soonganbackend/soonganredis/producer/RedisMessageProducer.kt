@@ -1,6 +1,6 @@
 package com.soongan.soonganbackend.soonganredis.producer
 
-import org.slf4j.LoggerFactory
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.data.redis.connection.stream.StreamRecords
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.stereotype.Service
@@ -11,7 +11,7 @@ class RedisMessageProducer(
 ) {
 
     companion object {
-        private val logger = LoggerFactory.getLogger(RedisMessageProducer::class.java)
+        private val logger = KotlinLogging.logger { }
     }
 
     fun sendMessage(streamKey: String, message: String) {
