@@ -52,8 +52,6 @@ object Uri {
         FCM,
         FCM + "/test",
 
-        REPORT,
-
         CALLBACK + APPLE_LOGIN,
         CALLBACK + APPLE_LOGIN + SUCCESS
     )
