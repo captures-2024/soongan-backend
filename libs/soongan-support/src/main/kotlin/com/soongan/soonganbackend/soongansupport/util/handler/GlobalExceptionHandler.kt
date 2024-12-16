@@ -47,14 +47,24 @@ class GlobalExceptionHandler {
 
     @ExceptionHandler(SoonganException::class)
     @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
-    fun handleSoonganException(ex: SoonganException, res: HttpServletResponse): CommonErrorResponseDto {
-        return processCustomErrorResponse(ex)
+    fun handleSoonganException(ex: SoonganException): CommonErrorResponseDto {
+        val requestUuid = MDC.get("uuid")
+        logger.error {
+            "${ColorCode.GREEN}[${requestUuid}]${ColorCode.RED}[Error]${ColorCode.RESET} ${ex.statusCode.code} ${ex.statusCode.message}${ColorCode.RESET}\n${ex.stackTraceToString()}"
+        }
+
+        return CommonErrorResponseDto.from(ex.statusCode)
     }
 
     @ExceptionHandler(SoonganUnauthorizedException::class)
     @ResponseStatus(code = HttpStatus.UNAUTHORIZED)
     fun handleSoonganUnauthorizedException(ex: SoonganUnauthorizedException): CommonErrorResponseDto {
-        return processCustomErrorResponse(ex)
+        val requestUuid = MDC.get("uuid")
+        logger.error {
+            "${ColorCode.GREEN}[${requestUuid}]${ColorCode.RED}[Error]${ColorCode.RESET} ${ex.statusCode.code} ${ex.statusCode.message}${ColorCode.RESET}\n${ex.stackTraceToString()}"
+        }
+
+        return CommonErrorResponseDto.from(StatusCode.UNAUTHORIZED)
     }
 
     @ExceptionHandler(
@@ -99,16 +109,5 @@ class GlobalExceptionHandler {
 
         logger.error { exception.stackTraceToString() }
         return CommonErrorResponseDto.from(statusCode, errorMessage)
-    }
-
-    private fun processCustomErrorResponse(
-        ex: SoonganException
-    ): CommonErrorResponseDto {
-        val requestUuid = MDC.get("uuid")
-        logger.error {
-            "${ColorCode.GREEN}[${requestUuid}]${ColorCode.RED}[Error]${ColorCode.RESET} ${ex.statusCode.code} ${ex.statusCode.message}${ColorCode.RESET}\n${ex.stackTraceToString()}"
-        }
-
-        return CommonErrorResponseDto.from(ex.statusCode)
     }
 }
