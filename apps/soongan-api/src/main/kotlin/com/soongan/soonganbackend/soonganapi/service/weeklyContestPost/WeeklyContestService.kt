@@ -27,7 +27,7 @@ class WeeklyContestService(
 
     @Transactional(readOnly = true)
     fun getWeeklyContestPostList(
-        round: Int,
+        round: Int?,
         orderCriteria: WeeklyContestPostOrderCriteriaEnum,
         page: Int,
         pageSize: Int

@@ -1,6 +1,7 @@
 package com.soongan.soonganbackend.soonganapi.service.home
 
 import com.soongan.soonganbackend.soonganapi.interfaces.home.dto.response.HomeResponseDto
+import com.soongan.soonganbackend.soonganapi.service.weeklyContest.WeeklyContestValidator
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContest.WeeklyContestAdapter
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContest.WeeklyContestEntity
@@ -13,18 +14,12 @@ import java.time.LocalDateTime
 
 @Service
 class HomeService(
-    private val weeklyContestAdapter: WeeklyContestAdapter,
-    private val weeklyContestPostAdapter: WeeklyContestPostAdapter
+    private val weeklyContestPostAdapter: WeeklyContestPostAdapter,
+    private val weeklyContestValidator: WeeklyContestValidator
 ) {
 
     fun getHome(loginMember: MemberEntity): HomeResponseDto {
-        val now = LocalDateTime.now()
-
-        // 진행 중인 Contest 없으면, 가장 최신 종료된 Contest 조회
-        val weeklyContest: WeeklyContestEntity = weeklyContestAdapter.getInProgressWeeklyContest(now)
-            ?: weeklyContestAdapter.getLatestEndedWeeklyContest(now)
-            ?: throw SoonganException(StatusCode.SOONGAN_API_NOT_FOUND_WEEKLY_CONTEST)
-
+        val weeklyContest: WeeklyContestEntity = weeklyContestValidator.getWeeklyContestIfValidRound()
 
         val homeWeeklyContestPostList: List<WeeklyContestPostEntity> =
             weeklyContestPostAdapter.getAllWeeklyContestPostByMemberAndWeeklyContest(

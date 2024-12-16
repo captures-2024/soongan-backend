@@ -32,7 +32,7 @@ class WeeklyContestPostController (
     @GetMapping
     @Operation(summary = "주간 콘테스트 게시글 조회 Api", description = "주간 콘테스트 게시글을 조회합니다. 라운드와 정렬 기준을 이용하여 조회할 수 있습니다.")
     fun getWeeklyContestPost(
-        @RequestParam round: Int,
+        @RequestParam(required = false) round: Int? = null,
         @RequestParam orderCriteria: WeeklyContestPostOrderCriteriaEnum,
         @RequestParam(required = false, defaultValue = "0") page: Int,
         @RequestParam(required = false, defaultValue = "50") pageSize: Int
