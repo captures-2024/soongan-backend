@@ -30,6 +30,8 @@ object Uri {
     const val MY_HISTORY = "/my-hisotry"
 
     const val FCM = "/fcm"
+    const val NOTIFICATIONS = "/notifications"
+    const val COUNT = "/count"
 
     const val REPORT = "/report"
 

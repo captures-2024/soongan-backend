@@ -1,6 +1,7 @@
 package com.soongan.soonganbackend.soonganpersistence.storage.notification
 
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
+import com.soongan.soonganbackend.soongansupport.domain.NotificationSubTypeEnum
 import com.soongan.soonganbackend.soongansupport.domain.NotificationTypeEnum
 import jakarta.persistence.*
 import org.springframework.data.annotation.CreatedDate
@@ -23,14 +24,17 @@ data class NotificationEntity(
     @Column(name = "type", nullable = false)
     val type: NotificationTypeEnum,
 
+    @Column(name = "sub_type", nullable = false)
+    val subType: NotificationSubTypeEnum,
+
     @Column(name = "title", nullable = false)
     val title: String,
 
-    @Column(name = "body", nullable = false)
-    val body: String,
+    @Column(name = "content", nullable = false)
+    val content: String,
 
-    @Column(name = "link", nullable = false)
-    val link: String,
+    @Column(name = "redirect_url")
+    val redirectUrl: String? = null,
 
     @Column(name = "is_read", nullable = false)
     val isRead: Boolean = false

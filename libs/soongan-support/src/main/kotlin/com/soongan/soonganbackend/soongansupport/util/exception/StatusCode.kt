@@ -40,14 +40,19 @@ enum class StatusCode(val code: Int, val message: String) {
     SOONGAN_API_WEEKLY_CONTEST_POST_REGISTER_LIMIT_EXCEEDED(1103, "Weekly Contest Post Register Limit Exceeded"),
     SOONGAN_API_NOT_OWNER_WEEKLY_CONTEST_POST(1104, "Not Owner Weekly Contest Post"),
 
-    // 1200 ~ 1300 Like Status Code
+    // 1200 ~ 1299 Like Status Code
     SOONGAN_API_DUPLICATED_LIKE(1200, "Duplicated Like"),
 
-    // 1300 ~ 1400 Comment Status Code
+    // 1300 ~ 1399 Comment Status Code
     SOONGAN_API_NOT_FOUND_PARENT_COMMENT(1300, "Not Found Parent Comment"),
     SOONGAN_API_NOT_FOUND_COMMENT(1301, "Not Found Comment"),
     SOONGAN_API_NOT_OWNER_COMMENT(1302, "Not Owner Comment"),
     SOONGAN_API_NOT_FOUND_WEEKLY_CONTEST_COMMENT(1303, "Not Found Weekly Contest Comment"),
+
+    // 1400 ~ 1499 Notification Status Code
+    SOONGAN_API_NOT_FOUND_NOTIFICATION(1400, "Not Found Notification"),
+    SOONGAN_API_ALREADY_READ_NOTIFICATION(1401, "Already Read Notification"),
+    SOONGAN_API_CANNOT_DELETE_REPORT_CLARIFICATION(1402, "Cannot Delete Report Clarification"),
 
 
 
