@@ -22,11 +22,11 @@ class HttpLoggingFilter: OncePerRequestFilter() {
         val requestTime = MDC.get(MdcConstant.REQUEST_TIME)?.toLong() ?: System.currentTimeMillis()
         val requestUuid = MDC.get(MdcConstant.UUID) ?: "N/A"
 
-        httpLogger.info("${ColorCode.GREEN}[${MDC.get(MdcConstant.UUID)}]${ColorCode.CYAN}[Request]${ColorCode.RESET} ${request.method} ${request.requestURI}")
+        httpLogger.info { "${ColorCode.GREEN}[${MDC.get(MdcConstant.UUID)}]${ColorCode.CYAN}[Request]${ColorCode.RESET} ${request.method} ${request.requestURI}" }
 
         filterChain.doFilter(request, response)
 
         val spendTime = System.currentTimeMillis() - requestTime
-        httpLogger.info("${ColorCode.GREEN}[${requestUuid}]${ColorCode.BLUE}[Response]${ColorCode.RESET} status: ${response.status} ${ColorCode.YELLOW}- ${spendTime}ms${ColorCode.RESET}")
+        httpLogger.info { "${ColorCode.GREEN}[${requestUuid}]${ColorCode.BLUE}[Response]${ColorCode.RESET} status: ${response.status} ${ColorCode.YELLOW}- ${spendTime}ms${ColorCode.RESET}" }
     }
 }
