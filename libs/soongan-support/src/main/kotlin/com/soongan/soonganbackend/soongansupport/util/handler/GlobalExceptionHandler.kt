@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.exc.InvalidFormatException
 import com.soongan.soonganbackend.soongansupport.util.constant.ColorCode
 import com.soongan.soonganbackend.soongansupport.util.dto.CommonErrorResponseDto
 import com.soongan.soonganbackend.soongansupport.util.exception.SoonganException
+import com.soongan.soonganbackend.soongansupport.util.exception.SoonganUnauthorizedException
 import com.soongan.soonganbackend.soongansupport.util.exception.StatusCode
 import io.github.oshai.kotlinlogging.KotlinLogging
 import jakarta.servlet.http.HttpServletResponse
@@ -45,14 +46,15 @@ class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(SoonganException::class)
+    @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
     fun handleSoonganException(ex: SoonganException, res: HttpServletResponse): CommonErrorResponseDto {
-        val requestUuid = MDC.get("uuid")
-        logger.error {
-            "${ColorCode.GREEN}[${requestUuid}]${ColorCode.RED}[Error]${ColorCode.RESET} ${ex.statusCode.code} ${ex.statusCode.message}${ColorCode.RESET}\n${ex.stackTraceToString()}"
-        }
+        return processCustomErrorResponse(ex)
+    }
 
-        res.status = ex.statusCode.code
-        return CommonErrorResponseDto.from(ex.statusCode)
+    @ExceptionHandler(SoonganUnauthorizedException::class)
+    @ResponseStatus(code = HttpStatus.UNAUTHORIZED)
+    fun handleSoonganUnauthorizedException(ex: SoonganUnauthorizedException): CommonErrorResponseDto {
+        return processCustomErrorResponse(ex)
     }
 
     @ExceptionHandler(
@@ -97,5 +99,16 @@ class GlobalExceptionHandler {
 
         logger.error { exception.stackTraceToString() }
         return CommonErrorResponseDto.from(statusCode, errorMessage)
+    }
+
+    private fun processCustomErrorResponse(
+        ex: SoonganException
+    ): CommonErrorResponseDto {
+        val requestUuid = MDC.get("uuid")
+        logger.error {
+            "${ColorCode.GREEN}[${requestUuid}]${ColorCode.RED}[Error]${ColorCode.RESET} ${ex.statusCode.code} ${ex.statusCode.message}${ColorCode.RESET}\n${ex.stackTraceToString()}"
+        }
+
+        return CommonErrorResponseDto.from(ex.statusCode)
     }
 }
