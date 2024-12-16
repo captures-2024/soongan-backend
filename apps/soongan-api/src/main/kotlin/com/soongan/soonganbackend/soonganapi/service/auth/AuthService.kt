@@ -64,7 +64,7 @@ class AuthService(
         try {
             jwtHandler.deleteToken(loginMemberEmail)
         } catch (e: Exception) {
-            throw SoonganException(StatusCode.SOONGAN_API_FAIL_TO_LOGOUT)
+            throw SoonganException(StatusCode.SOONGAN_MEMBER_API_FAIL_TO_LOGOUT)
         }
     }
 
@@ -80,7 +80,7 @@ class AuthService(
         val payload = jwtHandler.validateRefreshRequest(refreshRequestDto.accessToken, refreshRequestDto.refreshToken)
         val memberEmail = payload["sub"] as String
         val member = memberAdapter.getByEmail(memberEmail)
-            ?: throw SoonganException(StatusCode.NOT_FOUND_MEMBER_BY_EMAIL)
+            ?: throw SoonganException(StatusCode.SOONGAN_MEMBER_NOT_FOUND_MEMBER_BY_EMAIL)
 
         val issuedTokens = jwtHandler.issueTokens(member.email)
         return LoginResponseDto(
