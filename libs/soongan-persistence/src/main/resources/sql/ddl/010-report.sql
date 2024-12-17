@@ -11,4 +11,5 @@ CREATE TABLE report
     updated_at          datetime        null
 );
 
+create index report_idx_report_member_id on report (report_member_id);
 create index report_idx_target_member_id on report (target_member_id);

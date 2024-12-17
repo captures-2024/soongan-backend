@@ -1,7 +1,6 @@
 package com.soongan.soonganbackend.soonganpersistence.storage.report
 
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
-import com.soongan.soonganbackend.soonganpersistence.storage.report.converter.ReportReasonConverter
 import com.soongan.soonganbackend.soongansupport.domain.ReportReasonEnum
 import com.soongan.soonganbackend.soongansupport.domain.ReportTargetTypeEnum
 import jakarta.persistence.*
@@ -39,7 +38,6 @@ data class ReportEntity(
     val targetType: ReportTargetTypeEnum,
 
     @Column(name = "report_type", nullable = false)
-    @Convert(converter = ReportReasonConverter::class)
     val reportType: ReportReasonEnum,
 
     @Column(name = "reason", nullable = true)
