@@ -26,7 +26,7 @@ class LoginMemberArgumentResolver(
     override fun resolveArgument(parameter: MethodParameter, mavContainer: ModelAndViewContainer?, webRequest: NativeWebRequest, binderFactory: WebDataBinderFactory?): MemberEntity? {
         val authentication = SecurityContextHolder.getContext().authentication
         val email = authentication.principal as String
-        return memberAdapter.getByEmail(email) ?: throw SoonganException(StatusCode.NOT_FOUND_MEMBER_BY_EMAIL)
+        return memberAdapter.getByEmail(email) ?: throw SoonganException(StatusCode.SOONGAN_MEMBER_NOT_FOUND_MEMBER_BY_EMAIL)
     }
 }
 
