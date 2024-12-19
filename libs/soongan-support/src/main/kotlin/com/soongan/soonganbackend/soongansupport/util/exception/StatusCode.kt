@@ -20,6 +20,7 @@ enum class StatusCode(val code: Int, val message: String) {
     // 700 ~ 799 Member Auth Status Code
     SOONGAN_MEMBER_NOT_FOUND_MEMBER_BY_EMAIL(700, "Not Found Member by email"),
     SOONGAN_MEMBER_API_FAIL_TO_LOGOUT(701, "Fail to Logout"),
+    SOONGAN_API_BANNED_MEMBER(702, "Banned Member"),
 
     // 800 ~ 899 FCM Status Code
     SOONGAN_API_ALREADY_EXIST_FCM_TOKEN(800, "Already Exist FCM Token"),
