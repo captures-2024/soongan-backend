@@ -17,7 +17,7 @@ data class GetNotificationResponseDto(
                     NotificationDto(
                         id = it.id!!,
                         title = it.title,
-                        content = it.content,
+                        body = it.body,
                         subType = it.subType,
                         isRead = it.isRead,
                         redirectUrl = it.redirectUrl,
@@ -32,7 +32,7 @@ data class GetNotificationResponseDto(
 data class NotificationDto(
     val id: Long,
     val title: String,
-    val content: String,
+    val body: String,
     val subType: NotificationSubTypeEnum,
     val isRead: Boolean,
     val redirectUrl: String? = null,

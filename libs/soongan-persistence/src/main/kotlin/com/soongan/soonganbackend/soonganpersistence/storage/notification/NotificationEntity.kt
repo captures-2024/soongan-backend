@@ -30,8 +30,8 @@ data class NotificationEntity(
     @Column(name = "title", nullable = false)
     val title: String,
 
-    @Column(name = "content", nullable = false)
-    val content: String,
+    @Column(name = "body", nullable = false)
+    val body: String,
 
     @Column(name = "redirect_url")
     val redirectUrl: String? = null,
