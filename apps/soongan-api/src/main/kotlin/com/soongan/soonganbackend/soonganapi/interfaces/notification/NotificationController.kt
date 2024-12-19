@@ -33,7 +33,7 @@ class NotificationController(
     @GetMapping
     @Operation(summary = "알림 목록 조회 Api", description = "알림 탭 별 알림 목록을 조회합니다.")
     fun getNotificationList(@LoginMember loginMember: MemberEntity, @RequestParam type: NotificationTypeEnum): GetNotificationResponseDto {
-        return notificationService.getNotification(loginMember, type)
+        return notificationService.getNotifications(loginMember, type)
     }
 
     @PostMapping
