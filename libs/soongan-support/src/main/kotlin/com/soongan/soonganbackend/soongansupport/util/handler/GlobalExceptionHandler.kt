@@ -7,7 +7,6 @@ import com.soongan.soonganbackend.soongansupport.util.exception.SoonganException
 import com.soongan.soonganbackend.soongansupport.util.exception.SoonganUnauthorizedException
 import com.soongan.soonganbackend.soongansupport.util.exception.StatusCode
 import io.github.oshai.kotlinlogging.KotlinLogging
-import jakarta.servlet.http.HttpServletResponse
 import jakarta.validation.ValidationException
 import org.slf4j.MDC
 import org.springframework.beans.TypeMismatchException
@@ -53,7 +52,6 @@ class GlobalExceptionHandler {
             "${ColorCode.GREEN}[${requestUuid}]${ColorCode.RED}[Error]${ColorCode.RESET} ${ex.statusCode.code} ${ex.statusCode.message}${ColorCode.RESET}\n${ex.stackTraceToString()}"
         }
 
-        res.status = ex.statusCode.code
         return CommonErrorResponseDto.from(ex.statusCode, ex.detailMessage)
     }
 
