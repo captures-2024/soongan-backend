@@ -18,6 +18,6 @@ class RedisMessageProducer(
         val record = StreamRecords.string(mapOf("message" to message)).withStreamKey(streamKey)
         val recordId = redisTemplate.opsForStream<String, Any>()
             .add(record)
-        logger.info("Message sent to $streamKey with recordId: $recordId")
+        logger.info { "Message sent to $streamKey with recordId: $recordId" }
     }
 }

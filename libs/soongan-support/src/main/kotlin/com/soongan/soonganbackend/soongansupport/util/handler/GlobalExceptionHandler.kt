@@ -52,7 +52,7 @@ class GlobalExceptionHandler {
         }
 
         res.status = ex.statusCode.code
-        return CommonErrorResponseDto.from(ex.statusCode)
+        return CommonErrorResponseDto.from(ex.statusCode, ex.detailMessage)
     }
 
     @ExceptionHandler(

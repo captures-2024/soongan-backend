@@ -35,9 +35,9 @@ class RedisNotiConsumer(
         try {
             redisTemplate.opsForStream<String, Any>()
                 .createGroup(NOTI_STREAM_KEY, ReadOffset.from("0"), CONSUMER_GROUP)
-            logger.info("Consumer group created: $CONSUMER_GROUP")
+            logger.info { "Consumer group created: $CONSUMER_GROUP" }
         } catch (e: Exception) {
-            logger.warn("Consumer group might already exist: $CONSUMER_GROUP")
+            logger.warn { "Consumer group might already exist: $CONSUMER_GROUP" }
         }
     }
 
@@ -57,7 +57,7 @@ class RedisNotiConsumer(
 
             records?.forEach { record ->
                 val message = record.value["message"] as String
-                logger.info("Received message: $message")
+                logger.info { "Received message: $message" }
 
                 // 메시지 처리
                 processNotiMessage(message)
@@ -67,13 +67,13 @@ class RedisNotiConsumer(
                     .acknowledge(NOTI_STREAM_KEY, CONSUMER_GROUP, record.id)
             }
         } catch (e: Exception) {
-            logger.error("Error consuming messages", e)
+            logger.error { "Error consuming messagesj: $e" }
         }
     }
 
     private fun processNotiMessage(message: String) {
         val notificationMessage = objectMapper.readValue(message, Message::class.java)
-        logger.info("Processing Noti Message: $notificationMessage")
+        logger.info { "Processing Noti Message: $notificationMessage"  }
         fcmService.pushFcmMessage(notificationMessage)
     }
 }

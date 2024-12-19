@@ -56,7 +56,10 @@ data class CommentEntity(
     val commentStatus: CommentStatusEnum = CommentStatusEnum.ACTIVE,
 
     @Column(name = "like_count")
-    val likeCount: Int = 0
+    val likeCount: Int = 0,
+
+    @Column(name = "is_blind")
+    val isBlind: Boolean = false
     ) {
 
     @CreatedDate

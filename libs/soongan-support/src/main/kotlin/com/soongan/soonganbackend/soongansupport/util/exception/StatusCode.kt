@@ -37,6 +37,7 @@ enum class StatusCode(val code: Int, val message: String) {
     SOONGAN_API_NOT_FOUND_COMMENT(1013, "Not Found Comment"),
     SOONGAN_API_NOT_OWNER_COMMENT(1014, "Not Owner Comment"),
     SOONGAN_API_NOT_FOUND_WEEKLY_CONTEST_COMMENT(1015, "Not Found Weekly Contest Comment"),
+    SOONGAN_API_BANNED_MEMBER(1016, "Banned Member"),
 
 
     // 9000 Common Status Code

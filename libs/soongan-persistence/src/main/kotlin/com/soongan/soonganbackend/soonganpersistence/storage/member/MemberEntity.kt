@@ -43,7 +43,10 @@ data class MemberEntity(
     val provider: ProviderEnum,
 
     @Column(name = "withdrawal_at")
-    val withdrawalAt: LocalDateTime? = null
+    val withdrawalAt: LocalDateTime? = null,
+
+    @Column(name = "ban_until")
+    val banUntil: LocalDateTime? = null
 ) {
     @CreatedDate
     @Column(nullable = false, updatable = false)
