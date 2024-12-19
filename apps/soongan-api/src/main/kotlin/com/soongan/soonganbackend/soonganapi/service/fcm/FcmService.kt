@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.auth.oauth2.GoogleCredentials
 import com.soongan.soonganbackend.soonganapi.interfaces.fcm.dto.request.FcmRegistRequestDto
 import com.soongan.soonganbackend.soonganapi.interfaces.fcm.dto.response.FcmTokenInfoResponseDto
-import com.soongan.soonganbackend.soonganpersistence.storage.fcm.FcmTokenAdaptor
+import com.soongan.soonganbackend.soonganpersistence.storage.fcm.FcmTokenAdapter
 import com.soongan.soonganbackend.soonganpersistence.storage.fcm.FcmTokenEntity
 import com.soongan.soonganbackend.soonganredis.producer.RedisMessageProducer
 import com.soongan.soonganbackend.soongansupport.domain.NotificationTypeEnum
@@ -24,7 +24,7 @@ import org.springframework.web.client.RestTemplate
 
 @Service
 class FcmService(
-    private val fcmTokenAdaptor: FcmTokenAdaptor,
+    private val fcmTokenAdapter: FcmTokenAdapter,
     private val redisMessageProducer: RedisMessageProducer,
     private val objectMapper: ObjectMapper,
     private val restTemplate: RestTemplate
@@ -38,13 +38,13 @@ class FcmService(
 
     @Transactional
     fun registFcmToken(userAgentEnum: UserAgentEnum, fcmRegistRequestDto: FcmRegistRequestDto): FcmTokenInfoResponseDto {
-        fcmTokenAdaptor.findByToken(token = fcmRegistRequestDto.token)?.let {
+        fcmTokenAdapter.findByToken(token = fcmRegistRequestDto.token)?.let {
             throw SoonganException(StatusCode.SOONGAN_API_ALREADY_EXIST_FCM_TOKEN)
         }
 
-        val foundFcmTokenByDeviceId = fcmTokenAdaptor.findByDeviceId(deviceId = fcmRegistRequestDto.deviceId)
+        val foundFcmTokenByDeviceId = fcmTokenAdapter.findByDeviceId(deviceId = fcmRegistRequestDto.deviceId)
         if (foundFcmTokenByDeviceId != null) {
-            val updatedFcmToken = fcmTokenAdaptor.save(
+            val updatedFcmToken = fcmTokenAdapter.save(
                 foundFcmTokenByDeviceId.copy(
                     token = fcmRegistRequestDto.token
                 )
@@ -58,7 +58,7 @@ class FcmService(
             )
         }
 
-        val savedFcmToken = fcmTokenAdaptor.save(
+        val savedFcmToken = fcmTokenAdapter.save(
             FcmTokenEntity(
                 deviceType = userAgentEnum,
                 token = fcmRegistRequestDto.token,

@@ -49,6 +49,7 @@ enum class StatusCode(val code: Int, val message: String) {
     SOONGAN_API_NOT_FOUND_WEEKLY_CONTEST_COMMENT(1303, "Not Found Weekly Contest Comment"),
 
 
+
     // 9000 Common Status Code
     SERVICE_NOT_AVAILABLE(9000, "Service Not Available"),
 }

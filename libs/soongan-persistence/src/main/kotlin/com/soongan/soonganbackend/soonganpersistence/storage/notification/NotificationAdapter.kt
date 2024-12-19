@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 
 @Component
-class NotificationAdaptor(
+class NotificationAdapter(
     private val notificationRepository: NotificationRepository
 ) {
 

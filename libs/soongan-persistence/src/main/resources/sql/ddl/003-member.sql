@@ -8,6 +8,7 @@ create table member
     profile_image_url varchar(255) null,
     provider          varchar(20)  not null,
     withdrawal_at     datetime     null,
+    ban_until         datetime     null,
     created_at        datetime     null,
     updated_at        datetime     null
 );

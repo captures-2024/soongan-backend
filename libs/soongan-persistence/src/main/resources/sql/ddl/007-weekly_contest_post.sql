@@ -7,6 +7,7 @@ create table weekly_contest_post
     ranking           int          not null,
     like_count        int default 0,
     comment_count     int default 0,
+    is_blind          boolean default false,
     created_at        datetime     null,
     updated_at        datetime     null
 );
