@@ -1,4 +1,4 @@
-name: Build Pull Request
+name: Test Pull Request
 
 on:
   pull_request:
@@ -7,7 +7,7 @@ on:
       - main
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
 
     steps:
@@ -22,9 +22,24 @@ jobs:
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
-        working-directory: ./
 
-      - name: Build with Gradle
-        run: ./gradlew clean build --debug
+      - name: Build Project
+        run: ./gradlew :soongan-api:build  # 빌드 테스트
 
+      - name: Determine Infisical Token
+        id: infisical_token
+        run: |
+          if [ "${{ github.base_ref }}" == "develop" ]; then
+            echo "token=${{ secrets.INFISICAL_TOKEN_API_DEV }}" >> $GITHUB_ENV
+          elif [ "${{ github.base_ref }}" == "main" ]; then
+            echo "token=${{ secrets.INFISICAL_TOKEN_API_PROD }}" >> $GITHUB_ENV
+          else
+            echo "Unsupported branch: ${{ github.base_ref }}"
+            exit 1
+          fi
 
+      - name: Run Build and Test with Infisical
+        env:
+          INFISICAL_TOKEN: ${{ env.token }}
+          INFISICAL_PROJECT_ID: ${{ secrets.INFISICAL_PROJECT_ID_API }}
+        run: infisical run --env=dev -- ./gradlew :soongan-api:test  # 테스트 코드 실행
