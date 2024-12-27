@@ -1,7 +1,9 @@
-package com.soongan.soonganbackend.soonganapi.service.comment
+package com.soongan.soonganbackend.soonganapi.unit.service.comment
 
 import com.soongan.soonganbackend.soonganapi.interfaces.comment.dto.request.CommentSaveRequestDto
 import com.soongan.soonganbackend.soonganapi.interfaces.comment.dto.request.CommentUpdateRequestDto
+import com.soongan.soonganbackend.soonganapi.service.comment.CommentService
+import com.soongan.soonganbackend.soonganapi.service.comment.CommentValidator
 import com.soongan.soonganbackend.soonganpersistence.storage.comment.CommentAdapter
 import com.soongan.soonganbackend.soonganpersistence.storage.comment.CommentEntity
 import com.soongan.soonganbackend.soonganpersistence.storage.comment.CommentStatusEnum

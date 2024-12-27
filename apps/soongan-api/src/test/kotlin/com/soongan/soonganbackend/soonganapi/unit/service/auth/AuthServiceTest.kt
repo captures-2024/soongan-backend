@@ -1,7 +1,8 @@
-package com.soongan.soonganbackend.soonganapi.service.auth
+package com.soongan.soonganbackend.soonganapi.unit.service.auth
 
 import com.soongan.soonganbackend.soonganapi.interfaces.auth.dto.request.LoginRequestDto
 import com.soongan.soonganbackend.soonganapi.interfaces.auth.dto.request.RefreshRequestDto
+import com.soongan.soonganbackend.soonganapi.service.auth.AuthService
 import com.soongan.soonganbackend.soonganapi.service.auth.validator.AppleOAuth2Validator
 import com.soongan.soonganbackend.soonganapi.service.auth.validator.GoogleOAuth2Validator
 import com.soongan.soonganbackend.soonganapi.service.auth.validator.KakaoOAuth2Validator
@@ -12,6 +13,7 @@ import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
 import com.soongan.soonganbackend.soongansupport.domain.ProviderEnum
 import com.soongan.soonganbackend.soongansupport.domain.UserAgentEnum
 import com.soongan.soonganbackend.soongansupport.util.exception.SoonganException
+import com.soongan.soonganbackend.soongansupport.util.exception.StatusCode
 import com.soongan.soonganbackend.soonganweb.resolver.JwtHandler
 import io.mockk.every
 import io.mockk.mockk
@@ -147,9 +149,10 @@ class AuthServiceTest {
         every { memberAdapter.getByEmail(email) } returns member
 
         // when & then
-        assertThrows<SoonganException> {
+        val exception = assertThrows<SoonganException> {
             authService.login(UserAgentEnum.ANDROID, loginDto)
         }
+        assertEquals(StatusCode.SOONGAN_API_BANNED_MEMBER, exception.statusCode)
     }
 
     @Test
@@ -172,9 +175,10 @@ class AuthServiceTest {
         every { fcmTokenAdapter.findByToken(loginDto.fcmToken) } returns null
 
         // when & then
-        assertThrows<SoonganException> {
+        val exception = assertThrows<SoonganException> {
             authService.login(UserAgentEnum.ANDROID, loginDto)
         }
+        assertEquals(StatusCode.SOONGAN_API_NOT_FOUND_FCM_TOKEN, exception.statusCode)
     }
 
     @Test
@@ -237,5 +241,75 @@ class AuthServiceTest {
         assertNotNull(result)
         assertEquals("new-access-token", result.accessToken)
         assertEquals("new-refresh-token", result.refreshToken)
+    }
+
+    @Test
+    fun `토큰 갱신 실패 - 회원 없음`() {
+        // given
+        val email = "test@example.com"
+        val refreshRequestDto = RefreshRequestDto(
+            accessToken = "old-access-token",
+            refreshToken = "old-refresh-token"
+        )
+
+        // mock
+        every { jwtHandler.validateRefreshRequest(any(), any()) } returns mapOf("sub" to email)
+        every { memberAdapter.getByEmail(email) } returns null
+
+        // when & then
+        val exception = assertThrows<SoonganException> {
+            authService.refresh(refreshRequestDto)
+        }
+        assertEquals(StatusCode.SOONGAN_MEMBER_NOT_FOUND_MEMBER_BY_EMAIL, exception.statusCode)
+    }
+
+    @Test
+    fun `토큰 갱신 실패 - 정지된 회원`() {
+        // given
+        val email = "test@example.com"
+        val refreshRequestDto = RefreshRequestDto(
+            accessToken = "old-access-token",
+            refreshToken = "old-refresh-token"
+        )
+        val member = MemberEntity(
+            email = email,
+            provider = ProviderEnum.GOOGLE,
+            banUntil = LocalDateTime.now().plusDays(1)
+        )
+
+        // mock
+        every { jwtHandler.validateRefreshRequest(any(), any()) } returns mapOf("sub" to email)
+        every { memberAdapter.getByEmail(email) } returns member
+
+        // when & then
+        val exception = assertThrows<SoonganException> {
+            authService.refresh(refreshRequestDto)
+        }
+        assertEquals(StatusCode.SOONGAN_API_BANNED_MEMBER, exception.statusCode)
+    }
+
+    @Test
+    fun `토큰 갱신 실패 - 탈퇴한 회원`() {
+        // given
+        val email = "test@example.com"
+        val refreshRequestDto = RefreshRequestDto(
+            accessToken = "old-access-token",
+            refreshToken = "old-refresh-token"
+        )
+        val member = MemberEntity(
+            email = email,
+            provider = ProviderEnum.GOOGLE,
+            withdrawalAt = LocalDateTime.now()
+        )
+
+        // mock
+        every { jwtHandler.validateRefreshRequest(any(), any()) } returns mapOf("sub" to email)
+        every { memberAdapter.getByEmail(email) } returns member
+
+        // when & then
+        val exception = assertThrows<SoonganException> {
+            authService.refresh(refreshRequestDto)
+        }
+        assertEquals(StatusCode.SOONGAN_API_WITHDRAWN_MEMBER, exception.statusCode)
     }
 }
