@@ -23,3 +23,16 @@ dependencies {
     testImplementation("io.mockk:mockk")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
+
+tasks.test {
+    useJUnitPlatform() // JUnit 5 플랫폼 사용
+
+    testLogging {
+        events("passed", "skipped", "failed")
+        exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
+        showStandardStreams = true
+        showExceptions = true
+        showCauses = true
+        showStackTraces = true
+    }
+}
