@@ -1,4 +1,4 @@
-package com.soongan.soonganbackend.soonganapi.unit.service.weeklyContestPost
+package com.soongan.soonganbackend.soonganapi.unit.service.weeklyContestPost.validator
 
 import com.soongan.soonganbackend.soonganapi.service.weeklyContestPost.WeeklyContestPostValidator
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
