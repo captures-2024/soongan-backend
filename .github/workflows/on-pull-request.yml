@@ -1,0 +1,51 @@
+name: Build And Test On Pull Request
+
+on:
+  pull_request:
+    branches:
+      - develop
+      - main
+
+jobs:
+  build-and-test:
+    if: github.repository_owner == 'captures-2024'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build Project
+        run: ./gradlew :soongan-api:build  # 빌드 테스트
+
+      - name: Install Infisical CLI
+        run: |
+          curl -fsSL https://infisical.com/install.sh | bash
+          echo 'export PATH=$PATH:$HOME/.infisical/bin' >> $GITHUB_ENV
+
+      - name: Determine Infisical Token
+        id: infisical_token
+        run: |
+          if [ "${{ github.base_ref }}" == "develop" ]; then
+            echo "token=${{ secrets.INFISICAL_TOKEN_API_DEV }}" >> $GITHUB_ENV
+          elif [ "${{ github.base_ref }}" == "main" ]; then
+            echo "token=${{ secrets.INFISICAL_TOKEN_API_PROD }}" >> $GITHUB_ENV
+          else
+            echo "Unsupported branch: ${{ github.base_ref }}"
+            exit 1
+          fi
+
+      - name: Run Build and Test with Infisical
+        env:
+          INFISICAL_TOKEN: ${{ env.token }}
+          INFISICAL_PROJECT_ID: ${{ secrets.INFISICAL_PROJECT_ID_API }}
+        run: infisical run --env=dev -- ./gradlew :soongan-api:test  # 테스트 코드 실행
