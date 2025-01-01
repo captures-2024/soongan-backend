@@ -9,21 +9,24 @@ import com.soongan.soonganbackend.soongansupport.domain.ProviderEnum
 import com.soongan.soonganbackend.soongansupport.util.exception.SoonganException
 import com.soongan.soonganbackend.soongansupport.util.exception.StatusCode
 import io.mockk.every
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
+import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.api.extension.ExtendWith
 
+@ExtendWith(MockKExtension::class)
 class CommentValidatorTest {
-    private lateinit var commentAdapter: CommentAdapter
-    private lateinit var commentValidator: CommentValidator
 
-    @BeforeEach
-    fun setUp() {
-        commentAdapter = mockk()
-        commentValidator = CommentValidator(commentAdapter)
-    }
+    @MockK
+    private lateinit var commentAdapter: CommentAdapter
+
+    @InjectMockKs
+    private lateinit var commentValidator: CommentValidator
 
     @Test
     fun `본인이 작성한 댓글인지 확인 성공`() {

@@ -1,6 +1,6 @@
 package com.soongan.soonganbackend.soonganapi.unit.service.weeklyContestPost.validator
 
-import com.soongan.soonganbackend.soonganapi.service.weeklyContestPost.WeeklyContestPostValidator
+import com.soongan.soonganbackend.soonganapi.service.weeklyContestPost.validator.WeeklyContestPostValidator
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContest.WeeklyContestEntity
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.WeeklyContestPostAdapter

@@ -11,14 +11,25 @@ import com.soongan.soonganbackend.soongansupport.domain.ProviderEnum
 import com.soongan.soonganbackend.soongansupport.util.exception.SoonganException
 import com.soongan.soonganbackend.soongansupport.util.exception.StatusCode
 import io.mockk.every
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
+import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.api.extension.ExtendWith
 
+@ExtendWith(MockKExtension::class)
 class CommentLikeServiceTest {
+
+    @MockK
     private lateinit var commentLikeAdapter: CommentLikeAdapter
+
+    @MockK
     private lateinit var commentAdapter: CommentAdapter
+
+    @InjectMockKs
     private lateinit var commentLikeService: CommentLikeService
 
     @BeforeEach

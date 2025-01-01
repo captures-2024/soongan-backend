@@ -16,41 +16,39 @@ import com.soongan.soonganbackend.soongansupport.util.exception.SoonganException
 import com.soongan.soonganbackend.soongansupport.util.exception.StatusCode
 import com.soongan.soonganbackend.soonganweb.resolver.JwtHandler
 import io.mockk.every
-import io.mockk.mockk
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
+import io.mockk.junit5.MockKExtension
 import io.mockk.verify
 import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.api.extension.ExtendWith
 import java.time.LocalDateTime
 
+@ExtendWith(MockKExtension::class)
 class AuthServiceTest {
+
+    @MockK
     private lateinit var memberAdapter: MemberAdapter
+
+    @MockK
     private lateinit var fcmTokenAdapter: FcmTokenAdapter
+
+    @MockK
     private lateinit var jwtHandler: JwtHandler
+
+    @MockK
     private lateinit var googleOAuth2Validator: GoogleOAuth2Validator
+
+    @MockK
     private lateinit var kakaoOAuth2Validator: KakaoOAuth2Validator
+
+    @MockK
     private lateinit var appleOAuth2Validator: AppleOAuth2Validator
+
+    @InjectMockKs
     private lateinit var authService: AuthService
-
-    @BeforeEach
-    fun setUp() {
-        memberAdapter = mockk()
-        fcmTokenAdapter = mockk()
-        jwtHandler = mockk()
-        googleOAuth2Validator = mockk()
-        kakaoOAuth2Validator = mockk()
-        appleOAuth2Validator = mockk()
-
-        authService = AuthService(
-            memberAdapter,
-            fcmTokenAdapter,
-            jwtHandler,
-            googleOAuth2Validator,
-            kakaoOAuth2Validator,
-            appleOAuth2Validator
-        )
-    }
 
     @Test
     fun `로그인 성공 - 신규 회원`() {

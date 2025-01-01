@@ -8,14 +8,25 @@ import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.W
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.WeeklyContestPostEntity
 import com.soongan.soonganbackend.soongansupport.domain.ProviderEnum
 import io.mockk.every
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
+import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import java.time.LocalDateTime
 
+@ExtendWith(MockKExtension::class)
 class HomeServiceTest {
+
+    @MockK
     private lateinit var weeklyContestPostAdapter: WeeklyContestPostAdapter
+
+    @MockK
     private lateinit var weeklyContestValidator: WeeklyContestValidator
+
+    @InjectMockKs
     private lateinit var homeService: HomeService
 
     @BeforeEach

@@ -15,6 +15,9 @@ import com.soongan.soonganbackend.soongansupport.domain.ContestTypeEnum
 import com.soongan.soonganbackend.soongansupport.domain.ProviderEnum
 import com.soongan.soonganbackend.soongansupport.util.exception.SoonganException
 import io.mockk.every
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
+import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
@@ -22,11 +25,21 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.data.domain.SliceImpl
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.extension.ExtendWith
 
+@ExtendWith(MockKExtension::class)
 class CommentServiceTest {
+
+    @MockK
     private lateinit var commentAdapter: CommentAdapter
+
+    @MockK
     private lateinit var weeklyContestPostAdapter: WeeklyContestPostAdapter
+
+    @MockK
     private lateinit var commentValidator: CommentValidator
+
+    @InjectMockKs
     private lateinit var commentService: CommentService
 
     @BeforeEach

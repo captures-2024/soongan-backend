@@ -10,18 +10,33 @@ import com.soongan.soonganbackend.soongansupport.domain.UserAgentEnum
 import com.soongan.soonganbackend.soongansupport.util.exception.SoonganException
 import com.soongan.soonganbackend.soongansupport.util.exception.StatusCode
 import io.mockk.every
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
+import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.web.client.RestTemplate
 
+@ExtendWith(MockKExtension::class)
 class FcmServiceTest {
+
+    @MockK
     private lateinit var fcmTokenAdapter: FcmTokenAdapter
+
+    @MockK
     private lateinit var redisMessageProducer: RedisMessageProducer
+
+    @MockK
     private lateinit var objectMapper: ObjectMapper
+
+    @MockK
     private lateinit var restTemplate: RestTemplate
+
+    @InjectMockKs
     private lateinit var fcmService: FcmService
 
     @BeforeEach

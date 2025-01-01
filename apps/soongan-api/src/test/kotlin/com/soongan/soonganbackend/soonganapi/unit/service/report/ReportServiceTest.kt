@@ -15,15 +15,28 @@ import com.soongan.soonganbackend.soongansupport.domain.ReportTargetTypeEnum
 import com.soongan.soonganbackend.soongansupport.util.exception.SoonganException
 import com.soongan.soonganbackend.soongansupport.util.exception.StatusCode
 import io.mockk.every
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
+import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.api.extension.ExtendWith
 
+@ExtendWith(MockKExtension::class)
 class ReportServiceTest {
+
+    @MockK
     private lateinit var reportAdapter: ReportAdapter
+
+    @MockK
     private lateinit var weeklyContestPostAdapter: WeeklyContestPostAdapter
+
+    @MockK
     private lateinit var commentAdapter: CommentAdapter
+
+    @InjectMockKs
     private lateinit var reportService: ReportService
 
     @BeforeEach

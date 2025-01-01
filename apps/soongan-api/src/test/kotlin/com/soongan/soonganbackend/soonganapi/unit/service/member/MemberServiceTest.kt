@@ -7,13 +7,24 @@ import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
 import com.soongan.soonganbackend.soongansupport.domain.ProviderEnum
 import com.soongan.soonganbackend.soongansupport.service.GcpStorageService
 import io.mockk.every
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
+import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 
+@ExtendWith(MockKExtension::class)
 class MemberServiceTest {
+
+    @MockK
     private lateinit var memberAdapter: MemberAdapter
+
+    @MockK
     private lateinit var gcpStorageService: GcpStorageService
+
+    @InjectMockKs
     private lateinit var memberService: MemberService
 
     @BeforeEach
