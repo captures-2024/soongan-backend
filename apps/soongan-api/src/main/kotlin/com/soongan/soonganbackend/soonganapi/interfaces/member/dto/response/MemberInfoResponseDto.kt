@@ -8,7 +8,8 @@ data class MemberInfoResponseDto(
     val email: String,
     val nickname: String?,
     val birthYear: Int?,
-    val profileImageUrl: String?
+    val profileImageUrl: String?,
+    val selfIntroduction: String?
 ) {
     companion object {
         fun from(member: MemberEntity): MemberInfoResponseDto {
@@ -16,7 +17,8 @@ data class MemberInfoResponseDto(
                 email = member.email,
                 nickname = member.nickname,
                 birthYear = member.birthYear,
-                profileImageUrl = member.profileImageUrl
+                profileImageUrl = member.profileImageUrl,
+                selfIntroduction = member.selfIntroduction
             )
         }
     }
