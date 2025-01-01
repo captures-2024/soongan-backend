@@ -19,7 +19,7 @@ data class ReportSaveResponseDto(
                 targetMemberId = reportEntity.targetMember.id!!,
                 targetId = reportEntity.targetId,
                 targetType = reportEntity.targetType.name,
-                reportType = reportEntity.reportType.name,
+                reportType = reportEntity.reportType.message,
                 reason = reportEntity.reason,
             )
         }
