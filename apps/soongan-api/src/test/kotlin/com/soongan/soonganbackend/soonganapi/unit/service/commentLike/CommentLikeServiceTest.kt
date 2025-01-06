@@ -32,13 +32,6 @@ class CommentLikeServiceTest {
     @InjectMockKs
     private lateinit var commentLikeService: CommentLikeService
 
-    @BeforeEach
-    fun setUp() {
-        commentLikeAdapter = mockk()
-        commentAdapter = mockk()
-        commentLikeService = CommentLikeService(commentLikeAdapter, commentAdapter)
-    }
-
     @Test
     fun `좋아요 성공`() {
         // given

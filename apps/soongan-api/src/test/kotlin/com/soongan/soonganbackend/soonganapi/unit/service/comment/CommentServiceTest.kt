@@ -42,18 +42,6 @@ class CommentServiceTest {
     @InjectMockKs
     private lateinit var commentService: CommentService
 
-    @BeforeEach
-    fun setUp() {
-        commentAdapter = mockk()
-        weeklyContestPostAdapter = mockk()
-        commentValidator = mockk()
-        commentService = CommentService(
-            commentAdapter,
-            weeklyContestPostAdapter,
-            commentValidator
-        )
-    }
-
     @Test
     fun `댓글 저장 성공`() {
         // given

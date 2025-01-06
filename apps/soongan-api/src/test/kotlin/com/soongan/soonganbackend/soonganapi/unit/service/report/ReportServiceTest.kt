@@ -39,14 +39,6 @@ class ReportServiceTest {
     @InjectMockKs
     private lateinit var reportService: ReportService
 
-    @BeforeEach
-    fun setUp() {
-        reportAdapter = mockk()
-        weeklyContestPostAdapter = mockk()
-        commentAdapter = mockk()
-        reportService = ReportService(reportAdapter, weeklyContestPostAdapter, commentAdapter)
-    }
-
     @Test
     fun `신고하기 성공`() {
         // given

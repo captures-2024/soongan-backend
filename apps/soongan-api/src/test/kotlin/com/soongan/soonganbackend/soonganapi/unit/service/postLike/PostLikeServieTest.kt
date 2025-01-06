@@ -34,13 +34,6 @@ class PostLikeServieTest {
     @InjectMockKs
     private lateinit var postLikeService: PostLikeService
 
-    @BeforeEach
-    fun setUp() {
-        weeklyContestPostAdapter = mockk()
-        postLikeAdapter = mockk()
-        postLikeService = PostLikeService(weeklyContestPostAdapter, postLikeAdapter)
-    }
-
     @Test
     fun `좋아요 성공`() {
         // given

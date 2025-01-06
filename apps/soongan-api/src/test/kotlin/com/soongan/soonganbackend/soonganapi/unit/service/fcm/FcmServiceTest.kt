@@ -39,15 +39,6 @@ class FcmServiceTest {
     @InjectMockKs
     private lateinit var fcmService: FcmService
 
-    @BeforeEach
-    fun setUp() {
-        fcmTokenAdapter = mockk()
-        redisMessageProducer = mockk()
-        objectMapper = mockk()
-        restTemplate = mockk()
-        fcmService = FcmService(fcmTokenAdapter, redisMessageProducer, objectMapper, restTemplate)
-    }
-
     @Test
     fun `fcm 토큰 등록 성공 - 같은 device id로 등록된 토큰이 없는 경우`() {
         // given

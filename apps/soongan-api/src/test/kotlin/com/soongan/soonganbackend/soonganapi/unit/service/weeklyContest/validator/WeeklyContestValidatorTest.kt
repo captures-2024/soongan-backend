@@ -25,12 +25,6 @@ class WeeklyContestValidatorTest {
     @InjectMockKs
     private lateinit var weeklyContestValidator: WeeklyContestValidator
 
-    @BeforeEach
-    fun setUp() {
-        weeklyContestAdapter = mockk()
-        weeklyContestValidator = WeeklyContestValidator(weeklyContestAdapter)
-    }
-
     @Test
     fun `라운드로 콘테스트 조회 성공`() {
         // given

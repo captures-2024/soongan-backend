@@ -29,13 +29,6 @@ class HomeServiceTest {
     @InjectMockKs
     private lateinit var homeService: HomeService
 
-    @BeforeEach
-    fun setUp() {
-        weeklyContestPostAdapter = mockk()
-        weeklyContestValidator = mockk()
-        homeService = HomeService(weeklyContestPostAdapter, weeklyContestValidator)
-    }
-
     @Test
     fun `홈 화면 정보 조회 성공`() {
         // given

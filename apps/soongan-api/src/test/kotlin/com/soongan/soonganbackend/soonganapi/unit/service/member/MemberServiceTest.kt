@@ -27,13 +27,6 @@ class MemberServiceTest {
     @InjectMockKs
     private lateinit var memberService: MemberService
 
-    @BeforeEach
-    fun setUp() {
-        memberAdapter = mockk()
-        gcpStorageService = mockk()
-        memberService = MemberService(memberAdapter, gcpStorageService)
-    }
-
     @Test
     fun `회원 정보 조회`() {
         // given
