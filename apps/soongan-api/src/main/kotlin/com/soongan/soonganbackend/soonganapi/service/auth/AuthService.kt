@@ -81,7 +81,7 @@ class AuthService(
         val memberEmail = payload["sub"] as String
         val member = memberAdapter.getByEmail(memberEmail)
             ?: throw SoonganException(StatusCode.SOONGAN_MEMBER_NOT_FOUND_MEMBER_BY_EMAIL)
-        this.checkMember(member)
+        checkMember(member)
 
         val issuedTokens = jwtHandler.issueTokens(member.email)
         return LoginResponseDto(
@@ -90,7 +90,7 @@ class AuthService(
         )
     }
 
-    fun checkMember(member: MemberEntity) {
+    private fun checkMember(member: MemberEntity) {
         member.banUntil?.let { banUntil ->
             if (banUntil > LocalDateTime.now()) {
                 val formattedBanUntil = banUntil.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분"))
