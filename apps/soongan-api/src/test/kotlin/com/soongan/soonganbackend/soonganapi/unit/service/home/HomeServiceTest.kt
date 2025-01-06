@@ -6,13 +6,11 @@ import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContest.WeeklyContestEntity
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.WeeklyContestPostAdapter
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.WeeklyContestPostEntity
-import com.soongan.soonganbackend.soongansupport.domain.ProviderEnum
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
-import io.mockk.mockk
-import org.junit.jupiter.api.BeforeEach
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import java.time.LocalDateTime
@@ -62,9 +60,9 @@ class HomeServiceTest {
         val homeResponseDto = homeService.getHome(loginMember)
 
         // then
-        assert(homeResponseDto.contestInfo.subject == weeklyContest.subject)
-        assert(homeResponseDto.contestInfo.startAt == weeklyContest.startAt)
-        assert(homeResponseDto.contestInfo.endAt == weeklyContest.endAt)
         assert(homeResponseDto.postInfo.size == homeWeeklyContestPostList.size)
+        assertThat(homeResponseDto)
+            .extracting("contestInfo.subject", "contestInfo.startAt", "contestInfo.endAt")
+            .containsExactly(weeklyContest.subject, weeklyContest.startAt, weeklyContest.endAt)
     }
 }

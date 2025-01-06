@@ -20,9 +20,10 @@ import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.verify
+import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import java.time.LocalDateTime
 
@@ -82,11 +83,12 @@ class AuthServiceTest {
         val result = authService.login(UserAgentEnum.ANDROID, loginDto)
 
         // then
-        assertNotNull(result)
-        assertEquals("access-token", result.accessToken)
-        assertEquals("refresh-token", result.refreshToken)
         verify { memberAdapter.save(any()) }
         verify { fcmTokenAdapter.save(any()) }
+        assertThat(result)
+            .isNotNull()
+            .extracting("accessToken", "refreshToken")
+            .containsExactly("access-token", "refresh-token")
     }
 
     @Test
@@ -120,11 +122,12 @@ class AuthServiceTest {
         val result = authService.login(UserAgentEnum.ANDROID, loginDto)
 
         // then
-        assertNotNull(result)
-        assertEquals("access-token", result.accessToken)
-        assertEquals("refresh-token", result.refreshToken)
         verify(exactly = 0) { memberAdapter.save(any()) }
         verify { fcmTokenAdapter.save(any()) }
+        assertThat(result)
+            .isNotNull()
+            .extracting("accessToken", "refreshToken")
+            .containsExactly("access-token", "refresh-token")
     }
 
     @Test
@@ -147,10 +150,9 @@ class AuthServiceTest {
         every { memberAdapter.getByEmail(email) } returns member
 
         // when & then
-        val exception = assertThrows<SoonganException> {
-            authService.login(UserAgentEnum.ANDROID, loginDto)
-        }
-        assertEquals(StatusCode.SOONGAN_API_BANNED_MEMBER, exception.statusCode)
+        assertThatThrownBy { authService.login(UserAgentEnum.ANDROID, loginDto) }
+            .extracting(SoonganException::statusCode.name)
+            .isEqualTo(StatusCode.SOONGAN_API_BANNED_MEMBER)
     }
 
     @Test
@@ -173,10 +175,9 @@ class AuthServiceTest {
         every { fcmTokenAdapter.findByToken(loginDto.fcmToken) } returns null
 
         // when & then
-        val exception = assertThrows<SoonganException> {
-            authService.login(UserAgentEnum.ANDROID, loginDto)
-        }
-        assertEquals(StatusCode.SOONGAN_API_NOT_FOUND_FCM_TOKEN, exception.statusCode)
+        assertThatThrownBy { authService.login(UserAgentEnum.ANDROID, loginDto) }
+            .extracting(SoonganException::statusCode.name)
+            .isEqualTo(StatusCode.SOONGAN_API_NOT_FOUND_FCM_TOKEN)
     }
 
     @Test
@@ -232,6 +233,10 @@ class AuthServiceTest {
         assertNotNull(result)
         assertEquals("new-access-token", result.accessToken)
         assertEquals("new-refresh-token", result.refreshToken)
+        assertThat(result)
+            .isNotNull()
+            .extracting("accessToken", "refreshToken")
+            .containsExactly("new-access-token", "new-refresh-token")
     }
 
     @Test
@@ -248,10 +253,9 @@ class AuthServiceTest {
         every { memberAdapter.getByEmail(email) } returns null
 
         // when & then
-        val exception = assertThrows<SoonganException> {
-            authService.refresh(refreshRequestDto)
-        }
-        assertEquals(StatusCode.SOONGAN_MEMBER_NOT_FOUND_MEMBER_BY_EMAIL, exception.statusCode)
+        assertThatThrownBy { authService.refresh(refreshRequestDto) }
+            .extracting(SoonganException::statusCode.name)
+            .isEqualTo(StatusCode.SOONGAN_MEMBER_NOT_FOUND_MEMBER_BY_EMAIL)
     }
 
     @Test
@@ -272,10 +276,9 @@ class AuthServiceTest {
         every { memberAdapter.getByEmail(email) } returns member
 
         // when & then
-        val exception = assertThrows<SoonganException> {
-            authService.refresh(refreshRequestDto)
-        }
-        assertEquals(StatusCode.SOONGAN_API_BANNED_MEMBER, exception.statusCode)
+        assertThatThrownBy { authService.refresh(refreshRequestDto) }
+            .extracting(SoonganException::statusCode.name)
+            .isEqualTo(StatusCode.SOONGAN_API_BANNED_MEMBER)
     }
 
     @Test
@@ -296,9 +299,8 @@ class AuthServiceTest {
         every { memberAdapter.getByEmail(email) } returns member
 
         // when & then
-        val exception = assertThrows<SoonganException> {
-            authService.refresh(refreshRequestDto)
-        }
-        assertEquals(StatusCode.SOONGAN_API_WITHDRAWN_MEMBER, exception.statusCode)
+        assertThatThrownBy { authService.refresh(refreshRequestDto) }
+            .extracting(SoonganException::statusCode.name)
+            .isEqualTo(StatusCode.SOONGAN_API_WITHDRAWN_MEMBER)
     }
 }

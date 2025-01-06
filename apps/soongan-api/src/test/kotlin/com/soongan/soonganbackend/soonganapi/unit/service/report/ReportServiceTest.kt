@@ -9,7 +9,6 @@ import com.soongan.soonganbackend.soonganpersistence.storage.report.ReportEntity
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContest.WeeklyContestEntity
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.WeeklyContestPostAdapter
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.WeeklyContestPostEntity
-import com.soongan.soonganbackend.soongansupport.domain.ProviderEnum
 import com.soongan.soonganbackend.soongansupport.domain.ReportTypeEnum
 import com.soongan.soonganbackend.soongansupport.domain.ReportTargetTypeEnum
 import com.soongan.soonganbackend.soongansupport.util.exception.SoonganException
@@ -18,8 +17,7 @@ import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
-import io.mockk.mockk
-import org.junit.jupiter.api.BeforeEach
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
@@ -73,13 +71,25 @@ class ReportServiceTest {
         val result = reportService.report(loginMember, request)
 
         // then
-        assert(result.id == report.id)
-        assert(result.reportMemberId == loginMember.id)
-        assert(result.targetMemberId == targetMember.id)
-        assert(result.targetId == post.id)
-        assert(result.targetType == ReportTargetTypeEnum.WEEKLY_POST.name)
-        assert(result.reportType == ReportTypeEnum.SPAM.message)
-        assert(result.reason == request.reason)
+        assertThat(result)
+            .extracting(
+                "id",
+                "reportMemberId",
+                "targetMemberId",
+                "targetId",
+                "targetType",
+                "reportType",
+                "reason"
+            )
+            .containsExactly(
+                report.id,
+                loginMember.id,
+                targetMember.id,
+                post.id,
+                ReportTargetTypeEnum.WEEKLY_POST.name,
+                ReportTypeEnum.SPAM.message,
+                request.reason
+            );
     }
 
     @Test
@@ -100,6 +110,6 @@ class ReportServiceTest {
         val exception = assertThrows<SoonganException> {
             reportService.report(loginMember, request)
         }
-        assert(exception.statusCode == StatusCode.SOONGAN_API_NOT_FOUND_WEEKLY_CONTEST_POST)
+        assertThat(exception.statusCode).isEqualTo(StatusCode.SOONGAN_API_NOT_FOUND_WEEKLY_CONTEST_POST)
     }
 }

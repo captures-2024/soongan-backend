@@ -14,17 +14,16 @@ import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.W
 import com.soongan.soonganbackend.soongansupport.domain.ContestTypeEnum
 import com.soongan.soonganbackend.soongansupport.domain.ProviderEnum
 import com.soongan.soonganbackend.soongansupport.util.exception.SoonganException
+import com.soongan.soonganbackend.soongansupport.util.exception.StatusCode
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
-import io.mockk.mockk
 import io.mockk.verify
-import org.junit.jupiter.api.BeforeEach
+import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import org.springframework.data.domain.SliceImpl
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.extension.ExtendWith
 
 @ExtendWith(MockKExtension::class)
@@ -158,8 +157,8 @@ class CommentServiceTest {
         val result = commentService.getPostComments(postId, contestType, page, size)
 
         // then
-        assertEquals(comments.size, result.comments.size)
-        assertEquals(comments[0].commentText, result.comments[0].commentText)
+        assertThat(comments.size).isEqualTo(result.comments.size)
+        assertThat(comments[0].commentText).isEqualTo(result.comments[0].commentText)
     }
 
     @Test
@@ -228,9 +227,10 @@ class CommentServiceTest {
         every { weeklyContestPostAdapter.getByIdOrNull(request.postId) } returns null
 
         // when & then
-        assertThrows<SoonganException> {
-            commentService.saveComment(loginMember, request)
-        }
+        assertThatThrownBy { commentService.saveComment(loginMember, request) }
+            .isInstanceOf(SoonganException::class.java)
+            .extracting(SoonganException::statusCode.name)
+            .isEqualTo(StatusCode.SOONGAN_API_NOT_FOUND_WEEKLY_CONTEST_POST)
     }
 
     @Test
@@ -268,7 +268,7 @@ class CommentServiceTest {
         val result = commentService.getMyPostComments(loginMember, contestType, page, size)
 
         // then
-        assertEquals(myComments.size, result.comments.size)
-        assertTrue(result.comments.all { it.commentText.startsWith("my comment") })
+        assertThat(myComments.size).isEqualTo(result.comments.size)
+        assertThat(result.comments.all { it.commentText.startsWith("my comment")}).isTrue()
     }
 }

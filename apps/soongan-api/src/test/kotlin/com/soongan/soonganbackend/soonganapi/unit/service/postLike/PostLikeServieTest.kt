@@ -9,15 +9,13 @@ import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContest.Weekl
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.WeeklyContestPostAdapter
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.WeeklyContestPostEntity
 import com.soongan.soonganbackend.soongansupport.domain.ContestTypeEnum
-import com.soongan.soonganbackend.soongansupport.domain.ProviderEnum
 import com.soongan.soonganbackend.soongansupport.util.exception.SoonganException
 import com.soongan.soonganbackend.soongansupport.util.exception.StatusCode
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
-import io.mockk.mockk
-import org.junit.jupiter.api.BeforeEach
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
@@ -68,8 +66,9 @@ class PostLikeServieTest {
         val result = postLikeService.addLike(loginMember, request)
 
         // then
-        assert(result.postId == post.id)
-        assert(result.likeCount == post.likeCount + 1)
+        assertThat(result)
+            .extracting("postId", "likeCount")
+            .containsExactly(post.id, post.likeCount + 1)
     }
 
     @Test
@@ -89,7 +88,7 @@ class PostLikeServieTest {
         val exception = assertThrows<SoonganException> {
             postLikeService.addLike(loginMember, request)
         }
-        assert(exception.statusCode == StatusCode.SOONGAN_API_NOT_FOUND_WEEKLY_CONTEST_POST)
+        assertThat(exception.statusCode).isEqualTo(StatusCode.SOONGAN_API_NOT_FOUND_WEEKLY_CONTEST_POST)
     }
 
     @Test
@@ -119,7 +118,7 @@ class PostLikeServieTest {
         val exception = assertThrows<SoonganException> {
             postLikeService.addLike(loginMember, request)
         }
-        assert(exception.statusCode == StatusCode.SOONGAN_API_DUPLICATED_LIKE)
+        assertThat(exception.statusCode).isEqualTo(StatusCode.SOONGAN_API_DUPLICATED_LIKE)
     }
 
     @Test
@@ -150,8 +149,9 @@ class PostLikeServieTest {
         val result = postLikeService.cancelLike(loginMember, request)
 
         // then
-        assert(result.postId == post.id)
-        assert(result.likeCount == post.likeCount - 1)
+        assertThat(result)
+            .extracting("postId", "likeCount")
+            .containsExactly(post.id, post.likeCount - 1)
     }
 
     @Test
@@ -171,6 +171,6 @@ class PostLikeServieTest {
         val exception = assertThrows<SoonganException> {
             postLikeService.cancelLike(loginMember, request)
         }
-        assert(exception.statusCode == StatusCode.SOONGAN_API_NOT_FOUND_WEEKLY_CONTEST_POST)
+        assertThat(exception.statusCode).isEqualTo(StatusCode.SOONGAN_API_NOT_FOUND_WEEKLY_CONTEST_POST)
     }
 }

@@ -7,7 +7,6 @@ import com.soongan.soonganbackend.soonganpersistence.storage.comment.CommentEnti
 import com.soongan.soonganbackend.soonganpersistence.storage.commentLike.CommentLikeAdapter
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
 import com.soongan.soonganbackend.soongansupport.domain.ContestTypeEnum
-import com.soongan.soonganbackend.soongansupport.domain.ProviderEnum
 import com.soongan.soonganbackend.soongansupport.util.exception.SoonganException
 import com.soongan.soonganbackend.soongansupport.util.exception.StatusCode
 import io.mockk.every
@@ -15,7 +14,8 @@ import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
-import org.junit.jupiter.api.BeforeEach
+import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
@@ -60,8 +60,9 @@ class CommentLikeServiceTest {
         val result = commentLikeService.addLike(loginMember, request)
 
         // then
-        assert(result.commentId == comment.id)
-        assert(result.likeCount == comment.likeCount + 1)
+        assertThat(result)
+            .extracting("commentId", "likeCount")
+            .containsExactly(comment.id, comment.likeCount + 1)
     }
 
     @Test
@@ -79,7 +80,7 @@ class CommentLikeServiceTest {
         val exception = assertThrows<SoonganException> {
             commentLikeService.addLike(mockk(), request)
         }
-        assert(exception.statusCode == StatusCode.SOONGAN_API_NOT_FOUND_WEEKLY_CONTEST_COMMENT)
+        assertThat(exception.statusCode).isEqualTo(StatusCode.SOONGAN_API_NOT_FOUND_WEEKLY_CONTEST_COMMENT)
     }
 
     @Test
@@ -111,10 +112,10 @@ class CommentLikeServiceTest {
         } returns true
 
         // when, then
-        val exception = assertThrows<SoonganException> {
-            commentLikeService.addLike(loginMember, request)
-        }
-        assert(exception.statusCode == StatusCode.SOONGAN_API_DUPLICATED_LIKE)
+        assertThatThrownBy { commentLikeService.addLike(loginMember, request) }
+            .isInstanceOf(SoonganException::class.java)
+            .extracting(SoonganException::statusCode.name)
+            .isEqualTo(StatusCode.SOONGAN_API_DUPLICATED_LIKE)
     }
 
     @Test
@@ -146,6 +147,9 @@ class CommentLikeServiceTest {
         // then
         assert(result.commentId == comment.id)
         assert(result.likeCount == comment.likeCount - 1)
+        assertThat(result)
+            .extracting("commentId", "likeCount")
+            .containsExactly(comment.id, comment.likeCount - 1)
     }
 
     @Test
@@ -160,9 +164,9 @@ class CommentLikeServiceTest {
         every { commentAdapter.getByIdOrNull(request.commentId) } returns null
 
         // when, then
-        val exception = assertThrows<SoonganException> {
-            commentLikeService.cancelLike(mockk(), request)
-        }
-        assert(exception.statusCode == StatusCode.SOONGAN_API_NOT_FOUND_WEEKLY_CONTEST_COMMENT)
+        assertThatThrownBy { commentLikeService.cancelLike(mockk(), request) }
+            .isInstanceOf(SoonganException::class.java)
+            .extracting(SoonganException::statusCode.name)
+            .isEqualTo(StatusCode.SOONGAN_API_NOT_FOUND_WEEKLY_CONTEST_COMMENT)
     }
 }

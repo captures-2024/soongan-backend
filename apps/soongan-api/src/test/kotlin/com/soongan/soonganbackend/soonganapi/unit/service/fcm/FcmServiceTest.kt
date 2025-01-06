@@ -13,9 +13,7 @@ import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
-import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
@@ -62,10 +60,9 @@ class FcmServiceTest {
         val result = fcmService.registFcmToken(userAgentEnum, request)
 
         // then
-        assertThat(result.id).isNotNull()
-        assertThat(result.token).isEqualTo(request.token)
-        assertThat(result.deviceId).isEqualTo(request.deviceId)
-        assertThat(result.deviceType).isEqualTo(userAgentEnum)
+        assertThat(result)
+            .extracting("id", "token", "deviceId", "deviceType")
+            .containsExactly(1L, request.token, request.deviceId, userAgentEnum)
     }
 
     @Test
@@ -92,10 +89,9 @@ class FcmServiceTest {
         val result = fcmService.registFcmToken(userAgentEnum, request)
 
         // then
-        assertThat(result.id).isNotNull()
-        assertThat(result.token).isEqualTo(request.token)
-        assertThat(result.deviceId).isEqualTo(request.deviceId)
-        assertThat(result.deviceType).isEqualTo(userAgentEnum)
+        assertThat(result)
+            .extracting("id", "token", "deviceId", "deviceType")
+            .containsExactly(1L, request.token, request.deviceId, userAgentEnum)
     }
 
     @Test

@@ -9,12 +9,10 @@ import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
-import io.mockk.mockk
-import org.junit.jupiter.api.BeforeEach
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.Mock
 
 @ExtendWith(MockKExtension::class)
 class WeeklyContestValidatorTest {
@@ -40,7 +38,7 @@ class WeeklyContestValidatorTest {
         val result = weeklyContestValidator.getWeeklyContestIfValidRound(round)
 
         // then
-        assert(result.round == round)
+        assertThat(result.round).isEqualTo(round)
     }
 
     @Test
@@ -55,7 +53,7 @@ class WeeklyContestValidatorTest {
         val exception = assertThrows<SoonganException> {
             weeklyContestValidator.getWeeklyContestIfValidRound(round)
         }
-        assert(exception.statusCode == StatusCode.SOONGAN_API_NOT_FOUND_WEEKLY_CONTEST)
+        assertThat(exception.statusCode).isEqualTo(StatusCode.SOONGAN_API_NOT_FOUND_WEEKLY_CONTEST)
     }
 
     @Test
@@ -72,7 +70,7 @@ class WeeklyContestValidatorTest {
         val result = weeklyContestValidator.getWeeklyContestIfValidRound(null)
 
         // then
-        assert(result.round == 1)
+        assertThat(result.round).isEqualTo(1)
     }
 
     @Test
@@ -90,6 +88,6 @@ class WeeklyContestValidatorTest {
         val result = weeklyContestValidator.getWeeklyContestIfValidRound(null)
 
         // then
-        assert(result.round == 1)
+        assertThat(result.round).isEqualTo(1)
     }
 }

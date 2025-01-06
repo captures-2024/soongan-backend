@@ -10,8 +10,7 @@ import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
-import io.mockk.mockk
-import org.junit.jupiter.api.BeforeEach
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
@@ -44,11 +43,15 @@ class MemberServiceTest {
         val result = memberService.getMemberInfo(loginMember)
 
         // then
-        assert(result.email == loginMember.email)
-        assert(result.nickname == loginMember.nickname)
-        assert(result.birthYear == loginMember.birthYear)
-        assert(result.profileImageUrl == loginMember.profileImageUrl)
-        assert(result.selfIntroduction == loginMember.selfIntroduction)
+        assertThat(result)
+            .extracting("email", "nickname", "birthYear", "profileImageUrl", "selfIntroduction")
+            .containsExactly(
+                loginMember.email,
+                loginMember.nickname,
+                loginMember.birthYear,
+                loginMember.profileImageUrl,
+                loginMember.selfIntroduction
+            )
     }
 
     @Test
@@ -71,8 +74,8 @@ class MemberServiceTest {
         val result2 = memberService.checkNickname(nickname2)
 
         // then
-        assert(result1)
-        assert(!result2)
+        assertThat(result1).isTrue
+        assertThat(result2).isFalse
     }
 
     @Test
@@ -88,7 +91,7 @@ class MemberServiceTest {
         val result = memberService.updateBirthYear(loginMember, birthYear)
 
         // then
-        assert(result.birthYear == birthYear)
+        assertThat(result.birthYear).isEqualTo(birthYear)
     }
 
     @Test
@@ -115,9 +118,9 @@ class MemberServiceTest {
         val result = memberService.updateProfile(loginMember, request)
 
         // then
-        assert(result.nickname == request.nickname)
-        assert(result.selfIntroduction == request.selfIntroduction)
-        assert(result.profileImageUrl == null)
+        assertThat(result)
+            .extracting("nickname", "selfIntroduction", "profileImageUrl")
+            .containsExactly(request.nickname, request.selfIntroduction, null)
     }
 
 //    // TODO: 프로필 사진 수정 O 테스트 코드 작성

@@ -12,11 +12,10 @@ import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
-import io.mockk.mockk
 import io.mockk.verify
-import org.junit.jupiter.api.BeforeEach
+import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 
 @ExtendWith(MockKExtension::class)
@@ -50,7 +49,7 @@ class CommentValidatorTest {
         val result = commentValidator.checkMyComment(loginMember, 1)
 
         // then
-        assert(result == comment)
+        assertThat(result).isEqualTo(comment)
         verify { commentAdapter.getByIdOrNull(any()) }
     }
 
@@ -66,10 +65,10 @@ class CommentValidatorTest {
         every { commentAdapter.getByIdOrNull(any()) } returns null
 
         // when, then
-        val exception = assertThrows<SoonganException> {
-            commentValidator.checkMyComment(loginMember, 1)
-        }
-        assert(exception.statusCode == StatusCode.SOONGAN_API_NOT_FOUND_COMMENT)
+        assertThatThrownBy { commentValidator.checkMyComment(loginMember, 1) }
+            .isInstanceOf(SoonganException::class.java)
+            .extracting(SoonganException::statusCode.name)
+            .isEqualTo(StatusCode.SOONGAN_API_NOT_FOUND_COMMENT)
     }
 
     @Test
@@ -96,9 +95,9 @@ class CommentValidatorTest {
         every { commentAdapter.getByIdOrNull(any()) } returns comment
 
         // when, then
-        val exception = assertThrows<SoonganException> {
-            commentValidator.checkMyComment(loginMember, 1)
-        }
-        assert(exception.statusCode == StatusCode.SOONGAN_API_NOT_OWNER_COMMENT)
+        assertThatThrownBy { commentValidator.checkMyComment(loginMember, 1) }
+            .isInstanceOf(SoonganException::class.java)
+            .extracting(SoonganException::statusCode.name)
+            .isEqualTo(StatusCode.SOONGAN_API_NOT_OWNER_COMMENT)
     }
 }
