@@ -45,10 +45,7 @@ class CommentServiceTest {
     @Test
     fun `댓글 저장 성공`() {
         // given
-        val loginMember = MemberEntity(
-            email = "test@example.com",
-            provider = ProviderEnum.GOOGLE
-        )
+        val loginMember = MemberEntity()
         val request = CommentSaveRequestDto(
             postId = 1L,
             contestType = ContestTypeEnum.WEEKLY,
@@ -83,10 +80,7 @@ class CommentServiceTest {
     @Test
     fun `대댓글 저장 성공`() {
         // given
-        val loginMember = MemberEntity(
-            email = "test@example.com",
-            provider = ProviderEnum.GOOGLE
-        )
+        val loginMember = MemberEntity()
         val parentComment = CommentEntity(
             id = 1L,
             member = loginMember,
@@ -171,10 +165,7 @@ class CommentServiceTest {
     @Test
     fun `댓글 수정 성공`() {
         // given
-        val loginMember = MemberEntity(
-            email = "test@example.com",
-            provider = ProviderEnum.GOOGLE
-        )
+        val loginMember = MemberEntity()
         val comment = CommentEntity(
             id = 1L,
             postId = 1L,
@@ -203,10 +194,7 @@ class CommentServiceTest {
     @Test
     fun `댓글 삭제 성공`() {
         // given
-        val loginMember = MemberEntity(
-            email = "test@example.com",
-            provider = ProviderEnum.GOOGLE
-        )
+        val loginMember = MemberEntity()
         val comment = CommentEntity(
             id = 1L,
             postId = 1L,
@@ -229,10 +217,7 @@ class CommentServiceTest {
     @Test
     fun `존재하지 않는 게시물에 댓글 작성 실패`() {
         // given
-        val loginMember = MemberEntity(
-            email = "test@example.com",
-            provider = ProviderEnum.GOOGLE
-        )
+        val loginMember = MemberEntity()
         val request = CommentSaveRequestDto(
             postId = 999L,
             contestType = ContestTypeEnum.WEEKLY,
@@ -251,10 +236,7 @@ class CommentServiceTest {
     @Test
     fun `내 댓글 조회 성공`() {
         // given
-        val loginMember = MemberEntity(
-            email = "test@example.com",
-            provider = ProviderEnum.GOOGLE
-        )
+        val loginMember = MemberEntity()
         val contestType = ContestTypeEnum.WEEKLY
         val page = 0
         val size = 10

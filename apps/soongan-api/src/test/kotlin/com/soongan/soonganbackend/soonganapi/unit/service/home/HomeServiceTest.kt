@@ -32,11 +32,7 @@ class HomeServiceTest {
     @Test
     fun `홈 화면 정보 조회 성공`() {
         // given
-        val loginMember = MemberEntity(
-            id = 1,
-            email = "test@example.com",
-            provider = ProviderEnum.GOOGLE
-        )
+        val loginMember = MemberEntity()
         val weeklyContest = WeeklyContestEntity(
             id = 1,
             round = 1,

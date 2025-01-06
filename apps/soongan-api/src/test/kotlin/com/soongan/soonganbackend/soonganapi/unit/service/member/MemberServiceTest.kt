@@ -78,11 +78,7 @@ class MemberServiceTest {
     @Test
     fun `생년월일 수정 성공`() {
         // given
-        val loginMember = MemberEntity(
-            id = 1,
-            email = "test@example.com",
-            provider = ProviderEnum.GOOGLE,
-        )
+        val loginMember = MemberEntity(id = 1)
         val birthYear = 1997
 
         // mock
@@ -100,8 +96,6 @@ class MemberServiceTest {
         // given
         val loginMember = MemberEntity(
             id = 1,
-            email = "test@example.com",
-            provider = ProviderEnum.GOOGLE,
             nickname = "test-nickname",
             birthYear = 1997,
             profileImageUrl = "test-profile-image-url"

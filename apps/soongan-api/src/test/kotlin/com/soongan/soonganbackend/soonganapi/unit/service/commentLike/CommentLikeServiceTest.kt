@@ -35,11 +35,7 @@ class CommentLikeServiceTest {
     @Test
     fun `좋아요 성공`() {
         // given
-        val loginMember = MemberEntity(
-            id = 1,
-            email = "test@example.com",
-            provider = ProviderEnum.GOOGLE
-        )
+        val loginMember = MemberEntity(id = 1)
         val request = CommentLikeRequestDto(
             commentId = 1,
             contestTypeEnum = ContestTypeEnum.WEEKLY
@@ -89,11 +85,7 @@ class CommentLikeServiceTest {
     @Test
     fun `좋아요 실패 - 중복 좋아요`() {
         // given
-        val loginMember = MemberEntity(
-            id = 1,
-            email = "test@example.com",
-            provider = ProviderEnum.GOOGLE
-        )
+        val loginMember = MemberEntity(id = 1)
         val request = CommentLikeRequestDto(
             commentId = 1,
             contestTypeEnum = ContestTypeEnum.WEEKLY
@@ -128,11 +120,7 @@ class CommentLikeServiceTest {
     @Test
     fun `좋아요 취소 성공`() {
         // given
-        val loginMember = MemberEntity(
-            id = 1,
-            email = "test@example.com",
-            provider = ProviderEnum.GOOGLE
-        )
+        val loginMember = MemberEntity(id = 1)
         val request = CommentLikeRequestDto(
             commentId = 1,
             contestTypeEnum = ContestTypeEnum.WEEKLY

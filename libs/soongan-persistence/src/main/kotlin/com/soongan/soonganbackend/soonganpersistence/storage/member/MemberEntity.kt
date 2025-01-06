@@ -24,7 +24,7 @@ data class MemberEntity(
     val id: Long? = null,
 
     @Column(name = "email", unique = true, nullable = false)
-    val email: String,
+    val email: String = "",
 
     @Column(name = "nickname")
     val nickname: String? = null,
@@ -40,7 +40,7 @@ data class MemberEntity(
 
     @Column
     @Enumerated(EnumType.STRING)
-    val provider: ProviderEnum,
+    val provider: ProviderEnum = ProviderEnum.GOOGLE,
 
     @Column(name = "withdrawal_at")
     val withdrawalAt: LocalDateTime? = null,

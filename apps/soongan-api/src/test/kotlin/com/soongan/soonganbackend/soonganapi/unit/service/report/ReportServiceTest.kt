@@ -42,22 +42,14 @@ class ReportServiceTest {
     @Test
     fun `신고하기 성공`() {
         // given
-        val loginMember = MemberEntity(
-            id = 1,
-            email = "test@example.com",
-            provider = ProviderEnum.GOOGLE,
-        )
+        val loginMember = MemberEntity(id = 1)
         val request = ReportSaveRequestDto(
             targetId = 1,
             targetType = ReportTargetTypeEnum.WEEKLY_POST,
             reportType = ReportTypeEnum.SPAM,
             reason = "스팸입니다."
         )
-        val targetMember = MemberEntity(
-            id = 2,
-            email = "test@example.com",
-            provider = ProviderEnum.GOOGLE,
-        )
+        val targetMember = MemberEntity(id = 2)
         val post = WeeklyContestPostEntity(
             id = 1,
             weeklyContest = WeeklyContestEntity(),
@@ -93,11 +85,7 @@ class ReportServiceTest {
     @Test
     fun `신고하기 실패 - 존재하지 않는 신고 대상`() {
         // given
-        val loginMember = MemberEntity(
-            id = 1,
-            email = "test@example.com",
-            provider = ProviderEnum.GOOGLE,
-        )
+        val loginMember = MemberEntity(id = 1)
         val request = ReportSaveRequestDto(
             targetId = 1,
             targetType = ReportTargetTypeEnum.WEEKLY_POST,

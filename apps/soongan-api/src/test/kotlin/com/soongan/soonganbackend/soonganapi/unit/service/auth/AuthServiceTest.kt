@@ -197,11 +197,7 @@ class AuthServiceTest {
     @Test
     fun `회원탈퇴 성공`() {
         // given
-        val member = MemberEntity(
-            email = "test@example.com",
-            provider = ProviderEnum.GOOGLE
-        )
-
+        val member = MemberEntity()
         // mock
         every { memberAdapter.save(any()) } returns member.copy(withdrawalAt = LocalDateTime.now())
         every { jwtHandler.deleteToken(member.email) } returns Unit
@@ -222,10 +218,7 @@ class AuthServiceTest {
             accessToken = "old-access-token",
             refreshToken = "old-refresh-token"
         )
-        val member = MemberEntity(
-            email = email,
-            provider = ProviderEnum.GOOGLE
-        )
+        val member = MemberEntity(email = email)
 
         // mock
         every { jwtHandler.validateRefreshRequest(any(), any()) } returns mapOf("sub" to email)
@@ -271,7 +264,6 @@ class AuthServiceTest {
         )
         val member = MemberEntity(
             email = email,
-            provider = ProviderEnum.GOOGLE,
             banUntil = LocalDateTime.now().plusDays(1)
         )
 
@@ -296,7 +288,6 @@ class AuthServiceTest {
         )
         val member = MemberEntity(
             email = email,
-            provider = ProviderEnum.GOOGLE,
             withdrawalAt = LocalDateTime.now()
         )
 

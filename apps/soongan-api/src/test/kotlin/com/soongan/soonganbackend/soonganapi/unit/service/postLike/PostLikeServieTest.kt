@@ -38,11 +38,7 @@ class PostLikeServieTest {
     fun `좋아요 성공`() {
         // given
         val contestType = ContestTypeEnum.WEEKLY
-        val loginMember = MemberEntity(
-            id = 1,
-            email = "test@example.com",
-            provider = ProviderEnum.GOOGLE,
-        )
+        val loginMember = MemberEntity(id = 1)
         val request = PostLikeRequestDto(
             postId = 1,
             contestType = contestType
@@ -80,11 +76,7 @@ class PostLikeServieTest {
     fun `좋아요 실패 - 존재하지 않는 게시글`() {
         // given
         val contestType = ContestTypeEnum.WEEKLY
-        val loginMember = MemberEntity(
-            id = 1,
-            email = "test@example.com",
-            provider = ProviderEnum.GOOGLE,
-        )
+        val loginMember = MemberEntity(id = 1)
         val request = PostLikeRequestDto(
             postId = 1,
             contestType = contestType
@@ -104,11 +96,7 @@ class PostLikeServieTest {
     fun `좋아요 실패 - 중복 좋아요`() {
         // given
         val contestType = ContestTypeEnum.WEEKLY
-        val loginMember = MemberEntity(
-            id = 1,
-            email = "test@example.com",
-            provider = ProviderEnum.GOOGLE,
-        )
+        val loginMember = MemberEntity(id = 1)
         val request = PostLikeRequestDto(
             postId = 1,
             contestType = contestType
@@ -138,11 +126,7 @@ class PostLikeServieTest {
     fun `좋아요 취소 성공`() {
         // given
         val contestType = ContestTypeEnum.WEEKLY
-        val loginMember = MemberEntity(
-            id = 1,
-            email = "test@example.com",
-            provider = ProviderEnum.GOOGLE,
-        )
+        val loginMember = MemberEntity(id = 1)
         val request = PostLikeRequestDto(
             postId = 1,
             contestType = contestType
@@ -174,11 +158,7 @@ class PostLikeServieTest {
     fun `좋아요 취소 실패 - 존재하지 않는 게시글`() {
         // given
         val contestType = ContestTypeEnum.WEEKLY
-        val loginMember = MemberEntity(
-            id = 1,
-            email = "test@example.com",
-            provider = ProviderEnum.GOOGLE,
-        )
+        val loginMember = MemberEntity(id = 1)
         val request = PostLikeRequestDto(
             postId = 1,
             contestType = contestType
