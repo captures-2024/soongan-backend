@@ -6,6 +6,7 @@ import com.soongan.soonganbackend.soonganapi.interfaces.fcm.dto.request.FcmRegis
 import com.soongan.soonganbackend.soonganapi.interfaces.fcm.dto.response.FcmTokenInfoResponseDto
 import com.soongan.soonganbackend.soonganpersistence.storage.fcm.FcmTokenAdapter
 import com.soongan.soonganbackend.soonganpersistence.storage.fcm.FcmTokenEntity
+import com.soongan.soonganbackend.soonganredis.constant.RedisStreamKey
 import com.soongan.soonganbackend.soonganredis.producer.RedisMessageProducer
 import com.soongan.soonganbackend.soongansupport.domain.NotificationTypeEnum
 import com.soongan.soonganbackend.soongansupport.domain.UserAgentEnum
@@ -118,6 +119,6 @@ class FcmService(
                 notificationType = NotificationTypeEnum.ACTIVITY
             )
         )
-        redisMessageProducer.sendMessage("soongan-noti", objectMapper.writeValueAsString(message))
+        redisMessageProducer.sendMessage(RedisStreamKey.SOONGAN_NOTI, objectMapper.writeValueAsString(message))
     }
 }
