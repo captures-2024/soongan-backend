@@ -73,7 +73,7 @@ class WeeklyContestService(
         request: WeeklyContestPostRegisterRequestDto
     ): WeeklyContestPostRegisterResponseDto {
         val weeklyContest: WeeklyContestEntity =
-            weeklyContestValidator.getWeeklyContestIfValidRound(request.weeklyContestRound)
+            weeklyContestValidator.getWeeklyContestIfValidRound()
 
         weeklyContestPostValidator.validateMaxRegisterPost(weeklyContest, loginMember)
 
@@ -81,7 +81,7 @@ class WeeklyContestService(
             request.imageFile,
             loginMember.id!!,
             ContestTypeEnum.WEEKLY,
-            request.weeklyContestRound
+            weeklyContest.round
         )
 
         val savedPost = weeklyContestPostAdapter.save(
