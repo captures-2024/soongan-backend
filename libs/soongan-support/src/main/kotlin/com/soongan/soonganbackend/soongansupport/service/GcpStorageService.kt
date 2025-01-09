@@ -19,19 +19,23 @@ class GcpStorageService(
     private val bucket = env.getProperty("spring.cloud.gcp.storage.bucket")
 
     fun uploadProfileImage(file: MultipartFile, memberId: Long): String {
-        val blobId = BlobId.of(bucket, "${memberId}/profile-image/${file.originalFilename}-${System.currentTimeMillis()}")
-        return uploadFile(blobId, file)
+        val fileName = file.originalFilename?.substringBeforeLast(".")
+        val fileType = file.originalFilename?.substringAfterLast(".")
+        val blobId = BlobId.of(bucket, "${memberId}/profile-image/${fileName}-${System.currentTimeMillis()}.${fileType}")
+        return uploadImage(blobId, file)
     }
 
     fun uploadContestImage(file: MultipartFile, memberId: Long, contestType: ContestTypeEnum, round: Int): String {
-        val blobId = BlobId.of(bucket, "${memberId}/${contestType.type}/${round}/${file.originalFilename}-${System.currentTimeMillis()}")
-        return uploadFile(blobId, file)
+        val fileName = file.originalFilename?.substringBeforeLast(".")
+        val fileType = file.originalFilename?.substringAfterLast(".")
+        val blobId = BlobId.of(bucket, "${memberId}/${contestType.type}/${round}/${fileName}-${System.currentTimeMillis()}.${fileType}")
+        return uploadImage(blobId, file)
     }
 
-    private fun uploadFile(blobId: BlobId, file: MultipartFile): String {
+    private fun uploadImage(blobId: BlobId, file: MultipartFile): String {
         val blobInfo = BlobInfo.newBuilder(blobId).setContentType(file.contentType).build()
-        val blob = gcpStorage.create(blobInfo, file.inputStream.readBytes())
-        return "https://storage.cloud.google.com/${blob.bucket}/${blob.name}"
+        gcpStorage.create(blobInfo, file.inputStream.readBytes())
+        return "https://storage.cloud.google.com/${blobId.bucket}/${blobId.name}"
     }
 
     fun deleteFile(fileUrl: String) {
