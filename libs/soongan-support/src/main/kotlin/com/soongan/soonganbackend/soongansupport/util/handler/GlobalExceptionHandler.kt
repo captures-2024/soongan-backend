@@ -52,7 +52,7 @@ class GlobalExceptionHandler {
             "${ColorCode.GREEN}[${requestUuid}]${ColorCode.RED}[Error]${ColorCode.RESET} ${ex.statusCode.code} ${ex.statusCode.message}${ColorCode.RESET}\n${ex.stackTraceToString()}"
         }
 
-        return CommonErrorResponseDto.from(ex.statusCode, ex.detailMessage)
+        return CommonErrorResponseDto.from(ex.statusCode, ex.statusCode.message, ex.detailMessage)
     }
 
     @ExceptionHandler(SoonganUnauthorizedException::class)
