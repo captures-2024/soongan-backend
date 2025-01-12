@@ -1,6 +1,7 @@
 package com.soongan.soonganbackend.soongansupport.util.constant
 
 object Uri {
+    const val HEALTH = "/_health"
     const val V3 = "/v3"
     const val API = "/api"
     const val API_DOCS = "/api-docs"
@@ -40,23 +41,24 @@ object Uri {
     const val APPLE_LOGIN = "/apple_login"
     const val SUCCESS = "/success"
 
-    val passUris = listOf(
+    val passGetUris = listOf(
         "/_health",
         API_DOCS,
         SWAGGER_UI + "/**",
         SWAGGER_RESOURCES + "/**",
         V3 + API_DOCS + "/**",
 
-        AUTH + LOGIN,
-        AUTH + REFRESH,
-
         WEEKLY + CONTESTS + POSTS,
-
-        FCM,
-        FCM + "/test",
 
         CALLBACK + APPLE_LOGIN,
         CALLBACK + APPLE_LOGIN + SUCCESS
+    )
+    val passPostUris = listOf(
+        AUTH + LOGIN,
+        AUTH + REFRESH,
+
+        FCM,
+        FCM + "/test"
     )
 
     val notWrapUris = listOf(
