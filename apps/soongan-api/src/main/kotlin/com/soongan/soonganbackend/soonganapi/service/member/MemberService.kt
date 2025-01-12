@@ -5,6 +5,8 @@ import com.soongan.soonganbackend.soonganapi.interfaces.member.dto.response.*
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberAdapter
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
 import com.soongan.soonganbackend.soongansupport.service.GcpStorageService
+import com.soongan.soonganbackend.soongansupport.util.exception.SoonganException
+import com.soongan.soonganbackend.soongansupport.util.exception.StatusCode
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -35,6 +37,10 @@ class MemberService(
 
     @Transactional
     fun updateProfile(loginMember: MemberEntity, request: UpdateProfileRequestDto): UpdateProfileResponseDto {
+        if (request.nickname != null && request.nickname != loginMember.nickname && this.checkNickname(request.nickname).not()) {
+            throw SoonganException(StatusCode.SOONGAN_API_DUPLICATED_NICKNAME, "닉네임이 중복됩니다.")
+        }
+
         val oldProfileImageUrl = loginMember.profileImageUrl
         val updateProfileImageUrl = request.profileImage?.let {
             gcpStorageService.uploadProfileImage(it, loginMember.id!!)
