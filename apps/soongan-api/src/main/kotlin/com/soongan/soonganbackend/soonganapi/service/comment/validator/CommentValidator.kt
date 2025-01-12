@@ -1,4 +1,4 @@
-package com.soongan.soonganbackend.soonganapi.service.comment
+package com.soongan.soonganbackend.soonganapi.service.comment.validator
 
 import com.soongan.soonganbackend.soonganpersistence.storage.comment.CommentAdapter
 import com.soongan.soonganbackend.soonganpersistence.storage.comment.CommentEntity

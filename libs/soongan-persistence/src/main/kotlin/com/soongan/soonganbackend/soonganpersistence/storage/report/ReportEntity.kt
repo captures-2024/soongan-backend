@@ -1,7 +1,7 @@
 package com.soongan.soonganbackend.soonganpersistence.storage.report
 
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
-import com.soongan.soonganbackend.soongansupport.domain.ReportReasonEnum
+import com.soongan.soonganbackend.soongansupport.domain.ReportTypeEnum
 import com.soongan.soonganbackend.soongansupport.domain.ReportTargetTypeEnum
 import jakarta.persistence.*
 import org.springframework.data.annotation.CreatedDate
@@ -38,7 +38,7 @@ data class ReportEntity(
     val targetType: ReportTargetTypeEnum,
 
     @Column(name = "report_type", nullable = false)
-    val reportType: ReportReasonEnum,
+    val reportType: ReportTypeEnum,
 
     @Column(name = "reason", nullable = true)
     val reason: String? = null  // reportType이 도용이거나 기타인 경우에만 필수

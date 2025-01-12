@@ -1,6 +1,6 @@
 package com.soongan.soonganbackend.soonganapi.interfaces.report.dto.request
 
-import com.soongan.soonganbackend.soongansupport.domain.ReportReasonEnum
+import com.soongan.soonganbackend.soongansupport.domain.ReportTypeEnum
 import com.soongan.soonganbackend.soongansupport.domain.ReportTargetTypeEnum
 import jakarta.validation.constraints.NotNull
 
@@ -12,7 +12,7 @@ data class ReportSaveRequestDto(
     val targetType: ReportTargetTypeEnum,
 
     @field:NotNull
-    val reportType: ReportReasonEnum,
+    val reportType: ReportTypeEnum,
 
     val reason: String? = null
 )

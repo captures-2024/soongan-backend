@@ -1,6 +1,6 @@
 package com.soongan.soonganbackend.soongansupport.domain
 
-enum class ReportReasonEnum(
+enum class ReportTypeEnum(
     val message: String
 ) {
     INAPPROPRIATE_PHOTO_OR_BEHAVIOR("부적절한 사진 게시 및 언행"),

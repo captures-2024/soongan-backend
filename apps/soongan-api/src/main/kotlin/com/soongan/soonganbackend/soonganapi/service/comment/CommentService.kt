@@ -5,6 +5,7 @@ import com.soongan.soonganbackend.soonganapi.interfaces.comment.dto.request.Comm
 import com.soongan.soonganbackend.soonganapi.interfaces.comment.dto.response.GetCommentResponseDto
 import com.soongan.soonganbackend.soonganapi.interfaces.comment.dto.response.GetMyCommentResponseDto
 import com.soongan.soonganbackend.soonganapi.interfaces.comment.dto.response.GetCommentReplyResponseDto
+import com.soongan.soonganbackend.soonganapi.service.comment.validator.CommentValidator
 import com.soongan.soonganbackend.soonganpersistence.storage.comment.CommentAdapter
 import com.soongan.soonganbackend.soonganpersistence.storage.comment.CommentEntity
 import com.soongan.soonganbackend.soonganpersistence.storage.comment.CommentStatusEnum

@@ -1,10 +1,10 @@
-package com.soongan.soonganbackend.soonganapi.service.weeklyContestPost
+package com.soongan.soonganbackend.soonganapi.unit.service.weeklyContestPost.validator
 
+import com.soongan.soonganbackend.soonganapi.service.weeklyContestPost.validator.WeeklyContestPostValidator
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContest.WeeklyContestEntity
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.WeeklyContestPostAdapter
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.WeeklyContestPostEntity
-import com.soongan.soonganbackend.soongansupport.domain.ProviderEnum
 import com.soongan.soonganbackend.soongansupport.util.exception.SoonganException
 import com.soongan.soonganbackend.soongansupport.util.exception.StatusCode
 import io.mockk.every
@@ -31,16 +31,11 @@ class WeeklyContestPostValidatorTest {
     @DisplayName("최대 게시물 등록 개수 제한 검증 성공/실패")
     fun validateMaxRegisterPost() {
         // given
-        val member = MemberEntity(
-            email = "email",
-            provider = ProviderEnum.APPLE
-        )
-
+        val member = MemberEntity()
         val weeklyContest = WeeklyContestEntity(
             round = 1,
             maxPostAllowed = 3
         )
-
         val registeredPostCountByMember = 2
 
         every { weeklyContestPostAdapter.countRegisteredPostByMember(weeklyContest, member) } returns registeredPostCountByMember
@@ -56,22 +51,12 @@ class WeeklyContestPostValidatorTest {
     @DisplayName("게시물 작성자 검증 성공/실패")
     fun validatePostOwner() {
         // given
-        val member = MemberEntity(
-            email = "email1",
-            provider = ProviderEnum.APPLE
-        )
-
-        val wrongMember = MemberEntity(
-            email = "email2",
-            provider = ProviderEnum.GOOGLE
-        )
-
+        val member = MemberEntity(id = 1)
+        val wrongMember = MemberEntity(id = 2)
         val weeklyContest = WeeklyContestEntity(
             round = 1,
         )
-
         val postId = 1L
-
         val post = WeeklyContestPostEntity(
             member = member,
             weeklyContest = weeklyContest

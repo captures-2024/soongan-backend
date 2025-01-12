@@ -9,9 +9,11 @@ import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContest.Weekl
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.WeeklyContestPostAdapter
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.WeeklyContestPostEntity
 import com.soongan.soonganbackend.soongansupport.service.GcpStorageService
-import com.soongan.soonganbackend.soonganapi.service.weeklyContest.WeeklyContestValidator
-import com.soongan.soonganbackend.soonganapi.service.weeklyContestPost.WeeklyContestPostOrderCriteriaEnum.*
+import com.soongan.soonganbackend.soonganapi.service.weeklyContest.validator.WeeklyContestValidator
+import com.soongan.soonganbackend.soongansupport.domain.WeeklyContestPostOrderCriteriaEnum.*
+import com.soongan.soonganbackend.soonganapi.service.weeklyContestPost.validator.WeeklyContestPostValidator
 import com.soongan.soonganbackend.soongansupport.domain.ContestTypeEnum
+import com.soongan.soonganbackend.soongansupport.domain.WeeklyContestPostOrderCriteriaEnum
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Slice
 import org.springframework.stereotype.Service

@@ -24,11 +24,11 @@ class ReportService(
             ReportTargetTypeEnum.WEEKLY_POST -> {
                 weeklyContestPostAdapter.getByIdOrNull(reportSaveRequestDto.targetId)?.member ?: throw SoonganException(StatusCode.SOONGAN_API_NOT_FOUND_WEEKLY_CONTEST_POST)
             }
-            ReportTargetTypeEnum.COMMENT -> {
-                commentAdapter.getByIdOrNull(reportSaveRequestDto.targetId)?.member ?: throw SoonganException(StatusCode.SOONGAN_API_NOT_FOUND_COMMENT)
-            }
             ReportTargetTypeEnum.DAILY_POST -> {
                 throw SoonganException(StatusCode.SOONGAN_API_INVALID_REQUEST, "일간 콘테스트 게시글은 아직 지원하지 않습니다.")
+            }
+            ReportTargetTypeEnum.COMMENT -> {
+                commentAdapter.getByIdOrNull(reportSaveRequestDto.targetId)?.member ?: throw SoonganException(StatusCode.SOONGAN_API_NOT_FOUND_COMMENT)
             }
         }
 

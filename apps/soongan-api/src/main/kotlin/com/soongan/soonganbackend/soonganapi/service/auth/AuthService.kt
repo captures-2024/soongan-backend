@@ -33,13 +33,11 @@ class AuthService(
     fun login(userAgent: UserAgentEnum, loginDto: LoginRequestDto): LoginResponseDto {
         val provider = loginDto.provider
         val idToken = loginDto.idToken
-
         val memberEmail = when (provider) {
             ProviderEnum.GOOGLE -> googleOAuth2Validator.validateTokenAndGetEmail(idToken, userAgent)
             ProviderEnum.KAKAO -> kakaoOAuth2Validator.validateTokenAndGetEmail(idToken)
             ProviderEnum.APPLE -> appleOAuth2Validator.validateTokenAndGetEmail(idToken)
         }
-
         val member = memberAdapter.getByEmail(memberEmail)
             ?: memberAdapter.save(
                 MemberEntity(
@@ -47,13 +45,7 @@ class AuthService(
                     provider = provider,
                 )
             )
-
-        member.banUntil?.let { banUntil ->
-            if (banUntil > LocalDateTime.now()) {
-                val formattedBanUntil = banUntil.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분"))
-                throw SoonganException(StatusCode.SOONGAN_API_BANNED_MEMBER, "해당 회원은 ${formattedBanUntil}까지 이용이 제한된 상태입니다.")
-            }
-        }
+        this.checkMember(member)
 
         fcmTokenAdapter.findByToken(loginDto.fcmToken)?.let { foundFcmToken ->
             if (foundFcmToken.member == null || foundFcmToken.member!!.id != member.id) {
@@ -89,11 +81,26 @@ class AuthService(
         val memberEmail = payload["sub"] as String
         val member = memberAdapter.getByEmail(memberEmail)
             ?: throw SoonganException(StatusCode.SOONGAN_MEMBER_NOT_FOUND_MEMBER_BY_EMAIL)
+        checkMember(member)
 
         val issuedTokens = jwtHandler.issueTokens(member.email)
         return LoginResponseDto(
             accessToken = issuedTokens.first,
             refreshToken = issuedTokens.second
         )
+    }
+
+    private fun checkMember(member: MemberEntity) {
+        member.banUntil?.let { banUntil ->
+            if (banUntil > LocalDateTime.now()) {
+                val formattedBanUntil = banUntil.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분"))
+                throw SoonganException(StatusCode.SOONGAN_API_BANNED_MEMBER, "해당 회원은 ${formattedBanUntil}까지 이용이 제한된 상태입니다.")
+            }
+        }
+
+        member.withdrawalAt?.let { withdrawalAt ->
+            val formattedWithdrawalAt = withdrawalAt.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분"))
+            throw SoonganException(StatusCode.SOONGAN_API_WITHDRAWN_MEMBER, "해당 회원은 ${formattedWithdrawalAt}에 탈퇴한 회원입니다.")
+        }
     }
 }
