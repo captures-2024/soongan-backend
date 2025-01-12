@@ -6,11 +6,14 @@ import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberAdapte
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
 import com.soongan.soonganbackend.soongansupport.domain.ProviderEnum
 import com.soongan.soonganbackend.soongansupport.service.GcpStorageService
+import com.soongan.soonganbackend.soongansupport.util.exception.SoonganException
+import com.soongan.soonganbackend.soongansupport.util.exception.StatusCode
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
@@ -109,6 +112,7 @@ class MemberServiceTest {
         )
 
         // mock
+        every { memberAdapter.getByNickname(request.nickname!!) } returns null
         every { memberAdapter.save(any()) } returns loginMember.copy(
             nickname = request.nickname,
             selfIntroduction = request.selfIntroduction
@@ -127,4 +131,22 @@ class MemberServiceTest {
 //    @Test
 //    fun `프로필 정보 수정 성공 - 프로필 사진 수정 O`() {
 //    }
+
+    @Test
+    fun `프로필 정보 수정 실패 - 중복 닉네임`() {
+        // given
+        val loginMember = MemberEntity(id = 1)
+        val request = UpdateProfileRequestDto(
+            nickname = "test-nickname"
+        )
+
+        // mock
+        every { memberAdapter.getByNickname(request.nickname!!) } returns MemberEntity(id = 2)
+
+        // when, then
+        assertThatThrownBy { memberService.updateProfile(loginMember, request) }
+            .isInstanceOf(SoonganException::class.java)
+            .extracting(SoonganException::statusCode.name)
+            .isEqualTo(StatusCode.SOONGAN_API_DUPLICATED_NICKNAME)
+    }
 }
