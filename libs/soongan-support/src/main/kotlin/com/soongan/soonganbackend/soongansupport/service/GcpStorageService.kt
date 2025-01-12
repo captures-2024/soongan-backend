@@ -33,12 +33,22 @@ class GcpStorageService(
     }
 
     private fun uploadImage(blobId: BlobId, file: MultipartFile): String {
+        val contentType = file.contentType ?: when (file.originalFilename?.substringAfterLast(".")?.lowercase()) {
+            "jpg", "jpeg" -> "image/jpeg"
+            "png" -> "image/png"
+            "gif" -> "image/gif"
+            "bmp" -> "image/bmp"
+            "webp" -> "image/webp"
+            "svg" -> "image/svg+xml"
+            else -> "application/octet-stream"
+        }
+
         val blobInfo = BlobInfo.newBuilder(blobId)
-            .setContentType(file.contentType)
+            .setContentType(contentType)
             .setContentDisposition("inline")
             .build()
         gcpStorage.create(blobInfo, file.inputStream.readBytes())
-        return "https://storage.cloud.google.com/${blobId.bucket}/${blobId.name}"
+        return "https://storage.googleapis.com/${blobId.bucket}/${blobId.name}"
     }
 
     fun deleteFile(fileUrl: String) {
