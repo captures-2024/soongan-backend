@@ -25,12 +25,21 @@ class JwtFilter(
 
     override fun shouldNotFilter(request: HttpServletRequest): Boolean {
         val requestUri = request.requestURI
+        val requestMethod = request.method
 
-        return Uri.passUris.any { passUri ->
+        return when (requestMethod) {
+            "GET" -> isPass(requestUri, Uri.passGetUris)
+            "POST" -> isPass(requestUri, Uri.passPostUris)
+            else -> false
+        }
+    }
+
+    fun isPass(uri: String, passUris: List<String>): Boolean {
+        return passUris.any { passUri ->
             if (passUri.endsWith("/**")) {
-                requestUri.startsWith(passUri.removeSuffix("/**"))
+                uri.startsWith(passUri.removeSuffix("/**"))
             } else {
-                requestUri == passUri
+                uri == passUri
             }
         }
     }

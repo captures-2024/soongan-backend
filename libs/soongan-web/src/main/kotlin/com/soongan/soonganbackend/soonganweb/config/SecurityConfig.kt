@@ -1,6 +1,5 @@
 package com.soongan.soonganbackend.soonganweb.config
 
-import com.soongan.soonganbackend.soongansupport.util.constant.Uri
 import com.soongan.soonganbackend.soonganweb.filter.JwtFilter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -28,10 +27,6 @@ class SecurityConfig(
             }
             .sessionManagement {
                 it.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            }
-            .authorizeHttpRequests {
-                it.requestMatchers(*Uri.passUris.toTypedArray()).permitAll()
-                    .anyRequest().authenticated()
             }
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter::class.java)
             .build()
