@@ -1,6 +1,5 @@
 package com.soongan.soonganbackend.soonganapi.service.fcm
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.auth.oauth2.GoogleCredentials
 import com.soongan.soonganbackend.soonganapi.interfaces.fcm.dto.request.FcmRegistRequestDto
 import com.soongan.soonganbackend.soonganapi.interfaces.fcm.dto.response.FcmTokenInfoResponseDto
@@ -27,7 +26,6 @@ import org.springframework.web.client.RestTemplate
 class FcmService(
     private val fcmTokenAdapter: FcmTokenAdapter,
     private val redisMessageProducer: RedisMessageProducer,
-    private val objectMapper: ObjectMapper,
     private val restTemplate: RestTemplate
 ) {
 
@@ -119,6 +117,6 @@ class FcmService(
                 notificationType = NotificationTypeEnum.ACTIVITY
             )
         )
-        redisMessageProducer.sendMessage(RedisStreamKey.SOONGAN_NOTI, objectMapper.writeValueAsString(message))
+        redisMessageProducer.sendMessage(RedisStreamKey.SOONGAN_NOTI, message)
     }
 }
