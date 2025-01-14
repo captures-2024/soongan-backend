@@ -14,6 +14,11 @@ class FcmTokenAdapter(
     }
 
     @Transactional(readOnly = true)
+    fun findByMemberId(memberId: Long): List<FcmTokenEntity> {
+        return fcmTokenRepository.findByMember_Id(memberId)
+    }
+
+    @Transactional(readOnly = true)
     fun findByToken(token: String): FcmTokenEntity? {
         return fcmTokenRepository.findByToken(token)
     }
