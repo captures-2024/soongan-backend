@@ -57,12 +57,11 @@ class CommentService(
         )
 
         val fcmTokens = fcmTokenAdapter.findByMemberId(weeklyContestPost.member.id!!)
-        fcmTokens.forEach { fcmToken ->
-            val message = Message.createCommentMessage(
-                token = fcmToken.token,
-                postId = request.postId
-            )
-            redisMessageProducer.sendMessage(RedisStreamKey.SOONGAN_NOTI, message)
+        fcmTokens.map { it.token }.let { tokens ->
+            if (tokens.isNotEmpty()) {
+                val message = Message.createCommentMessage(tokens, request.postId)
+                redisMessageProducer.sendMessage(RedisStreamKey.SOONGAN_NOTI, message)
+            }
         }
     }
 
