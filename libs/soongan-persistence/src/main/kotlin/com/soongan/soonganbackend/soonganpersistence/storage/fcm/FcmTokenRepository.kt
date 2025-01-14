@@ -6,4 +6,5 @@ interface FcmTokenRepository: JpaRepository<FcmTokenEntity, Long> {
 
     fun findByToken(token: String): FcmTokenEntity?
     fun findByDeviceId(deviceId: String): FcmTokenEntity?
+    fun findByMember_Id(memberId: Long): MutableList<FcmTokenEntity>
 }
