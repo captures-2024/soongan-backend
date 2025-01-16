@@ -36,7 +36,7 @@ class WeeklyContestPostValidatorTest {
             round = 1,
             maxPostAllowed = 3
         )
-        val registeredPostCountByMember = 2
+        val registeredPostCountByMember = 3
 
         every { weeklyContestPostAdapter.countRegisteredPostByMember(weeklyContest, member) } returns registeredPostCountByMember
 

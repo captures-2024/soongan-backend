@@ -19,7 +19,7 @@ class WeeklyContestPostValidator(
     ) {
         val registeredPostCount = weeklyContestPostAdapter.countRegisteredPostByMember(weeklyContest, member)
 
-        if (weeklyContest.maxPostAllowed <= registeredPostCount + 1) {
+        if (weeklyContest.maxPostAllowed <= registeredPostCount) {
             throw (SoonganException(StatusCode.SOONGAN_API_WEEKLY_CONTEST_POST_REGISTER_LIMIT_EXCEEDED))
         }
     }
