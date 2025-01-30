@@ -3,6 +3,7 @@ package com.soongan.soonganbackend.soonganapi.interfaces.weeklyContestPost
 import com.soongan.soonganbackend.soonganapi.interfaces.weeklyContestPost.dto.response.MyWeeklyContestPostResponseDto
 import com.soongan.soonganbackend.soonganapi.interfaces.weeklyContestPost.dto.request.WeeklyContestPostRegisterRequestDto
 import com.soongan.soonganbackend.soonganapi.interfaces.weeklyContestPost.dto.response.WeeklyContestPostRegisterResponseDto
+import com.soongan.soonganbackend.soonganapi.interfaces.weeklyContestPost.dto.response.WeeklyContestPostListResponseDto
 import com.soongan.soonganbackend.soonganapi.interfaces.weeklyContestPost.dto.response.WeeklyContestPostResponseDto
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
 import com.soongan.soonganbackend.soongansupport.domain.WeeklyContestPostOrderCriteriaEnum
@@ -28,15 +29,23 @@ class WeeklyContestPostController (
     private val weeklyContestService: WeeklyContestService
 ){
 
+    @GetMapping
+    @Operation(summary = "주간 콘테스트 게시글 단일 조회 Api", description = "주간 콘테스트 게시글을 단일 조회합니다.")
+    fun getWeeklyContestPost(
+        @LoginMember loginMember: MemberEntity, //TODO: GUEST 사용자도 단일 조회가 가능했던가?
+        @RequestParam postId: Long
+    ): WeeklyContestPostResponseDto {
+        return weeklyContestService.getWeeklyContestPost(postId)
+    }
 
     @GetMapping
     @Operation(summary = "주간 콘테스트 게시글 조회 Api", description = "주간 콘테스트 게시글을 조회합니다. 라운드와 정렬 기준을 이용하여 조회할 수 있습니다.")
-    fun getWeeklyContestPost(
+    fun getWeeklyContestPosts(
         @RequestParam(required = false) round: Int? = null,
         @RequestParam orderCriteria: WeeklyContestPostOrderCriteriaEnum,
         @RequestParam(required = false, defaultValue = "0") page: Int,
         @RequestParam(required = false, defaultValue = "50") pageSize: Int
-    ): WeeklyContestPostResponseDto {
+    ): WeeklyContestPostListResponseDto {
         return weeklyContestService.getWeeklyContestPostList(round, orderCriteria, page, pageSize)
     }
 
