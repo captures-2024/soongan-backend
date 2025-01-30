@@ -13,4 +13,5 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-validation")
 
     implementation("io.github.oshai:kotlin-logging-jvm:5.1.0")
+    implementation("com.fasterxml.jackson.core:jackson-databind")
 }

@@ -9,10 +9,28 @@ data class FcmMessageDto(
 )
 
 data class Message(
-    val token: String,
+    val tokens: List<String>,
     val notification: Notification,
     val data: MessageData
-)
+) {
+
+    companion object {
+        fun createCommentMessage(tokens: List<String>, postId: Long): Message {
+            return Message(
+                tokens = tokens,
+                notification = Notification(
+                    title = "회원님의 작품에 누군가 댓글을 남겼어요~",
+                    body = "지금 바로 확인해 보세요!"
+                ),
+                data = MessageData(
+                    link = "/weekly-contest/${postId}",  // TODO: 앱 딥링크 논의
+                    notificationType = NotificationTypeEnum.ACTIVITY,
+                    postId = postId
+                )
+            )
+        }
+    }
+}
 
 data class Notification(
     val title: String,

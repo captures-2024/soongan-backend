@@ -1,11 +1,11 @@
 package com.soongan.soonganbackend.soonganapi.service.fcm
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.auth.oauth2.GoogleCredentials
 import com.soongan.soonganbackend.soonganapi.interfaces.fcm.dto.request.FcmRegistRequestDto
 import com.soongan.soonganbackend.soonganapi.interfaces.fcm.dto.response.FcmTokenInfoResponseDto
 import com.soongan.soonganbackend.soonganpersistence.storage.fcm.FcmTokenAdapter
 import com.soongan.soonganbackend.soonganpersistence.storage.fcm.FcmTokenEntity
+import com.soongan.soonganbackend.soonganredis.constant.RedisStreamKey
 import com.soongan.soonganbackend.soonganredis.producer.RedisMessageProducer
 import com.soongan.soonganbackend.soongansupport.domain.NotificationTypeEnum
 import com.soongan.soonganbackend.soongansupport.domain.UserAgentEnum
@@ -26,7 +26,6 @@ import org.springframework.web.client.RestTemplate
 class FcmService(
     private val fcmTokenAdapter: FcmTokenAdapter,
     private val redisMessageProducer: RedisMessageProducer,
-    private val objectMapper: ObjectMapper,
     private val restTemplate: RestTemplate
 ) {
 
@@ -108,7 +107,7 @@ class FcmService(
 
     fun testFcmPush(fcmToken: String) {
         val message = Message(
-            token = fcmToken,
+            tokens = listOf(fcmToken),
             notification = Notification(
                 title = "테스트 알림",
                 body = "테스트 알림입니다."
@@ -118,6 +117,6 @@ class FcmService(
                 notificationType = NotificationTypeEnum.ACTIVITY
             )
         )
-        redisMessageProducer.sendMessage("soongan-noti", objectMapper.writeValueAsString(message))
+        redisMessageProducer.sendMessage(RedisStreamKey.SOONGAN_NOTI, message)
     }
 }

@@ -9,9 +9,13 @@ import com.soongan.soonganbackend.soonganapi.service.comment.validator.CommentVa
 import com.soongan.soonganbackend.soonganpersistence.storage.comment.CommentAdapter
 import com.soongan.soonganbackend.soonganpersistence.storage.comment.CommentEntity
 import com.soongan.soonganbackend.soonganpersistence.storage.comment.CommentStatusEnum
+import com.soongan.soonganbackend.soonganpersistence.storage.fcm.FcmTokenAdapter
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.WeeklyContestPostAdapter
+import com.soongan.soonganbackend.soonganredis.constant.RedisStreamKey
+import com.soongan.soonganbackend.soonganredis.producer.RedisMessageProducer
 import com.soongan.soonganbackend.soongansupport.domain.ContestTypeEnum
+import com.soongan.soonganbackend.soongansupport.util.dto.Message
 import com.soongan.soonganbackend.soongansupport.util.exception.SoonganException
 import com.soongan.soonganbackend.soongansupport.util.exception.StatusCode
 import org.springframework.data.domain.Slice
@@ -21,8 +25,10 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class CommentService(
     private val commentAdapter: CommentAdapter,
+    private val fcmTokenAdapter: FcmTokenAdapter,
     private val weeklyContestPostAdapter: WeeklyContestPostAdapter,
-    private val commentValidator: CommentValidator
+    private val commentValidator: CommentValidator,
+    private val redisMessageProducer: RedisMessageProducer
 ) {
 
     @Transactional
@@ -49,6 +55,14 @@ class CommentService(
             commentCount = weeklyContestPost.commentCount + 1
             )
         )
+
+        val fcmTokens = fcmTokenAdapter.findAllByMemberId(weeklyContestPost.member.id!!)
+        fcmTokens.map { it.token }.let { tokens ->
+            if (tokens.isNotEmpty()) {
+                val message = Message.createCommentMessage(tokens, request.postId)
+                redisMessageProducer.sendMessage(RedisStreamKey.SOONGAN_NOTI, message)
+            }
+        }
     }
 
     @Transactional(readOnly = true)

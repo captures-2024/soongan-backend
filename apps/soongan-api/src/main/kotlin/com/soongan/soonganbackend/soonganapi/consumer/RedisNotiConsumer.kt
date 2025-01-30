@@ -2,6 +2,9 @@ package com.soongan.soonganbackend.soonganapi.consumer
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.soongan.soonganbackend.soonganapi.service.fcm.FcmService
+import com.soongan.soonganbackend.soonganredis.constant.RedisMessageConsumer
+import com.soongan.soonganbackend.soonganredis.constant.RedisMessageConsumerGroup
+import com.soongan.soonganbackend.soonganredis.constant.RedisStreamKey
 import com.soongan.soonganbackend.soongansupport.util.dto.Message
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.data.redis.connection.stream.Consumer
@@ -21,9 +24,6 @@ class RedisNotiConsumer(
 ) {
 
     companion object {
-        private const val NOTI_STREAM_KEY = "soongan-noti"
-        private const val CONSUMER_GROUP = "soongan-consumer-group"
-        private const val CONSUMER_NAME = "soongan-consumer"
         private val logger = KotlinLogging.logger { }
     }
 
@@ -34,10 +34,10 @@ class RedisNotiConsumer(
     private fun createConsumerGroup() {
         try {
             redisTemplate.opsForStream<String, Any>()
-                .createGroup(NOTI_STREAM_KEY, ReadOffset.from("0"), CONSUMER_GROUP)
-            logger.info { "Consumer group created: $CONSUMER_GROUP" }
+                .createGroup(RedisStreamKey.SOONGAN_NOTI, ReadOffset.from("0"), RedisMessageConsumerGroup.SOONGAN_CONSUMER_GROUP)
+            logger.info { "Consumer group created: ${RedisMessageConsumerGroup.SOONGAN_CONSUMER_GROUP}" }
         } catch (e: Exception) {
-            logger.warn { "Consumer group might already exist: $CONSUMER_GROUP" }
+            logger.warn { "Consumer group might already exist: ${RedisMessageConsumerGroup.SOONGAN_CONSUMER_GROUP}" }
         }
     }
 
@@ -50,9 +50,9 @@ class RedisNotiConsumer(
 
             val records = redisTemplate.opsForStream<String, Any>()
                 .read(
-                    Consumer.from(CONSUMER_GROUP, CONSUMER_NAME),
+                    Consumer.from(RedisMessageConsumerGroup.SOONGAN_CONSUMER_GROUP, RedisMessageConsumer.SOONGAN_CONSUMER),
                     readOptions,
-                    StreamOffset.create(NOTI_STREAM_KEY, ReadOffset.lastConsumed())
+                    StreamOffset.create(RedisStreamKey.SOONGAN_NOTI, ReadOffset.lastConsumed())
                 )
 
             records?.forEach { record ->
@@ -64,7 +64,7 @@ class RedisNotiConsumer(
 
                 // Redis Streams 메시지에 처리 완료 표시(Ack 상태로 변경)
                 redisTemplate.opsForStream<String, Any>()
-                    .acknowledge(NOTI_STREAM_KEY, CONSUMER_GROUP, record.id)
+                    .acknowledge(RedisStreamKey.SOONGAN_NOTI, RedisMessageConsumerGroup.SOONGAN_CONSUMER_GROUP, record.id)
             }
         } catch (e: Exception) {
             logger.error { "Error consuming messagesj: $e" }

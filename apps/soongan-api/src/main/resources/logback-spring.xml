@@ -13,14 +13,21 @@
     </appender>
 
     <!-- 조건부 로그 설정 -->
-    <springProfile name="!local">
+    <springProfile name="prod">
         <root level="INFO">
             <appender-ref ref="CONSOLE" />
             <appender-ref ref="CLOUD" />
         </root>
     </springProfile>
 
-    <springProfile name="local">
+    <springProfile name="dev">
+        <root level="INFO">
+            <appender-ref ref="CONSOLE" />
+            <appender-ref ref="CLOUD" />
+        </root>
+    </springProfile>
+
+    <springProfile name="!prod &amp; !dev">
         <root level="INFO">
             <appender-ref ref="CONSOLE" />
         </root>

@@ -7,12 +7,17 @@ import com.soongan.soonganbackend.soonganapi.service.comment.validator.CommentVa
 import com.soongan.soonganbackend.soonganpersistence.storage.comment.CommentAdapter
 import com.soongan.soonganbackend.soonganpersistence.storage.comment.CommentEntity
 import com.soongan.soonganbackend.soonganpersistence.storage.comment.CommentStatusEnum
+import com.soongan.soonganbackend.soonganpersistence.storage.fcm.FcmTokenAdapter
+import com.soongan.soonganbackend.soonganpersistence.storage.fcm.FcmTokenEntity
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContest.WeeklyContestEntity
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.WeeklyContestPostAdapter
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.WeeklyContestPostEntity
+import com.soongan.soonganbackend.soonganredis.producer.RedisMessageProducer
 import com.soongan.soonganbackend.soongansupport.domain.ContestTypeEnum
 import com.soongan.soonganbackend.soongansupport.domain.ProviderEnum
+import com.soongan.soonganbackend.soongansupport.domain.UserAgentEnum
+import com.soongan.soonganbackend.soongansupport.util.dto.Message
 import com.soongan.soonganbackend.soongansupport.util.exception.SoonganException
 import com.soongan.soonganbackend.soongansupport.util.exception.StatusCode
 import io.mockk.every
@@ -33,10 +38,16 @@ class CommentServiceTest {
     private lateinit var commentAdapter: CommentAdapter
 
     @MockK
+    private lateinit var fcmTokenAdapter: FcmTokenAdapter
+
+    @MockK
     private lateinit var weeklyContestPostAdapter: WeeklyContestPostAdapter
 
     @MockK
     private lateinit var commentValidator: CommentValidator
+
+    @MockK
+    private lateinit var redisMessageProducer: RedisMessageProducer
 
     @InjectMockKs
     private lateinit var commentService: CommentService
@@ -44,7 +55,7 @@ class CommentServiceTest {
     @Test
     fun `댓글 저장 성공`() {
         // given
-        val loginMember = MemberEntity()
+        val loginMember = MemberEntity(id = 1)
         val request = CommentSaveRequestDto(
             postId = 1L,
             contestType = ContestTypeEnum.WEEKLY,
@@ -62,11 +73,18 @@ class CommentServiceTest {
             commentText = request.commentText,
             parentComment = null
         )
+        val fcmTokens = listOf(FcmTokenEntity(
+            token = "token",
+            deviceId = "deviceId",
+            deviceType = UserAgentEnum.ANDROID
+        ))
 
         // mock
         every { weeklyContestPostAdapter.getByIdOrNull(request.postId) } returns post
         every { commentAdapter.save(any()) } returns savedComment
         every { weeklyContestPostAdapter.save(any()) } returns post.copy(commentCount = 1)
+        every { fcmTokenAdapter.findAllByMemberId(any()) } returns fcmTokens
+        every { redisMessageProducer.sendMessage(any(), any<Message>()) } returns Unit
 
         // when
         commentService.saveComment(loginMember, request)
@@ -74,12 +92,14 @@ class CommentServiceTest {
         // then
         verify { commentAdapter.save(any()) }
         verify { weeklyContestPostAdapter.save(match { it.commentCount == 1 }) }
+        verify { fcmTokenAdapter.findAllByMemberId(any()) }
+        verify { redisMessageProducer.sendMessage(any(), any<Message>()) }
     }
 
     @Test
     fun `대댓글 저장 성공`() {
         // given
-        val loginMember = MemberEntity()
+        val loginMember = MemberEntity(id = 1)
         val parentComment = CommentEntity(
             id = 1L,
             member = loginMember,
@@ -98,12 +118,19 @@ class CommentServiceTest {
             weeklyContest = WeeklyContestEntity(),
             member = loginMember
         )
+        val fcmTokens = listOf(FcmTokenEntity(
+            token = "token",
+            deviceId = "deviceId",
+            deviceType = UserAgentEnum.ANDROID
+        ))
 
         // mock
         every { weeklyContestPostAdapter.getByIdOrNull(request.postId) } returns post
         every { commentAdapter.getByIdOrNull(request.parentCommentId!!) } returns parentComment
         every { commentAdapter.save(any()) } returns parentComment
         every { weeklyContestPostAdapter.save(any()) } returns post.copy(commentCount = 2)
+        every { fcmTokenAdapter.findAllByMemberId(any()) } returns fcmTokens
+        every { redisMessageProducer.sendMessage(any(), any<Message>()) } returns Unit
 
         // when
         commentService.saveComment(loginMember, request)
@@ -113,6 +140,8 @@ class CommentServiceTest {
             it.parentComment?.id == parentComment.id &&
                     it.commentText == request.commentText
         }) }
+        verify { fcmTokenAdapter.findAllByMemberId(any()) }
+        verify { redisMessageProducer.sendMessage(any(), any<Message>()) }
     }
 
     @Test
