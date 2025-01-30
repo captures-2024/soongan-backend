@@ -5,11 +5,6 @@ on:
     branches:
       - develop
       - main
-    paths:
-      - 'apps/soongan-api/**'
-      - 'libs/**'
-      - 'Dockerfile-api-dev'
-      - '.github/workflows/on-pull-request-api.yml'
 
 jobs:
   build-and-test:
