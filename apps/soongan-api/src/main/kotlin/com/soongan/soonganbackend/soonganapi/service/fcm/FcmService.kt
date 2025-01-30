@@ -107,7 +107,7 @@ class FcmService(
 
     fun testFcmPush(fcmToken: String) {
         val message = Message(
-            token = fcmToken,
+            tokens = listOf(fcmToken),
             notification = Notification(
                 title = "테스트 알림",
                 body = "테스트 알림입니다."

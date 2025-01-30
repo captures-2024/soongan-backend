@@ -14,7 +14,7 @@ class FcmTokenAdapter(
     }
 
     @Transactional(readOnly = true)
-    fun findByMemberId(memberId: Long): List<FcmTokenEntity> {
+    fun findAllByMemberId(memberId: Long): List<FcmTokenEntity> {
         return fcmTokenRepository.findByMember_Id(memberId)
     }
 

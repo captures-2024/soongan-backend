@@ -56,7 +56,7 @@ class CommentService(
             )
         )
 
-        val fcmTokens = fcmTokenAdapter.findByMemberId(weeklyContestPost.member.id!!)
+        val fcmTokens = fcmTokenAdapter.findAllByMemberId(weeklyContestPost.member.id!!)
         fcmTokens.map { it.token }.let { tokens ->
             if (tokens.isNotEmpty()) {
                 val message = Message.createCommentMessage(tokens, request.postId)
