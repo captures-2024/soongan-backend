@@ -40,6 +40,9 @@ data class WeeklyContestPostEntity(
     @JoinColumn(name = "member_id")
     val member: MemberEntity,
 
+    @Column(name = "title", nullable = false)
+    val title: String = "",
+
     @Column(name = "image_url", nullable = false)
     val imageUrl: String = "",
 

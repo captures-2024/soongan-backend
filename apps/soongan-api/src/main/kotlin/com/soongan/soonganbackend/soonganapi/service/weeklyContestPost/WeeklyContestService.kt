@@ -3,6 +3,7 @@ package com.soongan.soonganbackend.soonganapi.service.weeklyContestPost
 import com.soongan.soonganbackend.soonganapi.interfaces.weeklyContestPost.dto.response.MyWeeklyContestPostResponseDto
 import com.soongan.soonganbackend.soonganapi.interfaces.weeklyContestPost.dto.request.WeeklyContestPostRegisterRequestDto
 import com.soongan.soonganbackend.soonganapi.interfaces.weeklyContestPost.dto.response.WeeklyContestPostRegisterResponseDto
+import com.soongan.soonganbackend.soonganapi.interfaces.weeklyContestPost.dto.response.WeeklyContestPostListResponseDto
 import com.soongan.soonganbackend.soonganapi.interfaces.weeklyContestPost.dto.response.WeeklyContestPostResponseDto
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContest.WeeklyContestEntity
@@ -12,8 +13,11 @@ import com.soongan.soonganbackend.soongansupport.service.GcpStorageService
 import com.soongan.soonganbackend.soonganapi.service.weeklyContest.validator.WeeklyContestValidator
 import com.soongan.soonganbackend.soongansupport.domain.WeeklyContestPostOrderCriteriaEnum.*
 import com.soongan.soonganbackend.soonganapi.service.weeklyContestPost.validator.WeeklyContestPostValidator
+import com.soongan.soonganbackend.soonganpersistence.storage.postLike.PostLikeAdapter
 import com.soongan.soonganbackend.soongansupport.domain.ContestTypeEnum
 import com.soongan.soonganbackend.soongansupport.domain.WeeklyContestPostOrderCriteriaEnum
+import com.soongan.soonganbackend.soongansupport.util.exception.SoonganException
+import com.soongan.soonganbackend.soongansupport.util.exception.StatusCode
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Slice
 import org.springframework.stereotype.Service
@@ -24,8 +28,20 @@ class WeeklyContestService(
     private val weeklyContestPostAdapter: WeeklyContestPostAdapter,
     private val gcpStorageService: GcpStorageService,
     private val weeklyContestPostValidator: WeeklyContestPostValidator,
-    private val weeklyContestValidator: WeeklyContestValidator
+    private val weeklyContestValidator: WeeklyContestValidator,
+    private val likeAdapter: PostLikeAdapter
 ) {
+
+    @Transactional(readOnly = true)
+    fun getWeeklyContestPost(postId: Long, loginMember: MemberEntity): WeeklyContestPostResponseDto {
+        val weeklyContestPost: WeeklyContestPostEntity = weeklyContestPostAdapter.getByIdOrNull(postId)
+            ?: throw SoonganException(StatusCode.SOONGAN_API_NOT_FOUND_WEEKLY_CONTEST_POST)
+
+        val isLiked: Boolean =
+            likeAdapter.existsByPostIdAndContestTypeAndMember(postId, ContestTypeEnum.WEEKLY, loginMember)
+
+        return WeeklyContestPostResponseDto.from(weeklyContestPost, isLiked)
+    }
 
     @Transactional(readOnly = true)
     fun getWeeklyContestPostList(
@@ -33,7 +49,7 @@ class WeeklyContestService(
         orderCriteria: WeeklyContestPostOrderCriteriaEnum,
         page: Int,
         pageSize: Int
-    ): WeeklyContestPostResponseDto {
+    ): WeeklyContestPostListResponseDto {
         val weeklyContest = weeklyContestValidator.getWeeklyContestIfValidRound(round)
 
         val weeklyContestPostSlice: Slice<WeeklyContestPostEntity> = when (orderCriteria) {
@@ -50,7 +66,7 @@ class WeeklyContestService(
             }
         }
 
-        return WeeklyContestPostResponseDto.from(
+        return WeeklyContestPostListResponseDto.from(
             weeklyContest, weeklyContestPostSlice
         )
     }
