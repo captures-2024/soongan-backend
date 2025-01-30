@@ -6,7 +6,7 @@ import org.springframework.web.multipart.MultipartFile
 
 data class WeeklyContestPostRegisterRequestDto(
     @field:NotBlank
-    val subject: String,
+    val title: String,
     @field:NotNull
     val imageFile: MultipartFile
 )

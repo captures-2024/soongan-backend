@@ -105,6 +105,7 @@ class WeeklyContestService(
         val savedPost = weeklyContestPostAdapter.save(
             WeeklyContestPostEntity(
                 member = loginMember,
+                title = request.title,
                 weeklyContest = weeklyContest,
                 imageUrl = imageUrl
             )
@@ -112,7 +113,7 @@ class WeeklyContestService(
 
         return WeeklyContestPostRegisterResponseDto(
             postId = savedPost.id!!,
-            subject = weeklyContest.subject,
+            title = savedPost.title,
             imageUrl = savedPost.imageUrl,
             registerNickname = loginMember.nickname!!
         )
