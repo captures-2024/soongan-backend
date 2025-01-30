@@ -40,7 +40,7 @@ class WeeklyContestPostService(
         val isLiked: Boolean =
             likeAdapter.existsByPostIdAndContestTypeAndMember(postId, ContestTypeEnum.WEEKLY, loginMember)
 
-        return WeeklyContestPostResponseDto.from(weeklyContestPost, isLiked)
+        return WeeklyContestPostResponseDto.from(loginMember.id!!, weeklyContestPost, isLiked)
     }
 
     @Transactional(readOnly = true)
