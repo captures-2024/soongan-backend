@@ -5,6 +5,8 @@ on:
     branches:
       - develop
       - main
+    paths-ignore:
+      - ".github/**"  # .github 디렉터리만 수정된 경우 실행 안 함
 
 jobs:
   build-and-test:
@@ -25,7 +27,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build Project
-        run: ./gradlew :soongan-api:build  # 빌드 테스트
+        run: ./gradlew :soongan-api:build
 
       - name: Install Infisical CLI
         run: |
@@ -44,8 +46,23 @@ jobs:
             exit 1
           fi
 
+      - name: Debug Infisical Configuration
+        env:
+          INFISICAL_TOKEN: ${{ env.token }}
+          INFISICAL_PROJECT_ID: ${{ secrets.INFISICAL_PROJECT_ID_API }}
+        run: |
+          echo "Starting Infisical debug..."
+          infisical export --env=local > env_vars.txt
+          echo "Content of exported variables (sanitized):"
+          cat env_vars.txt | sed 's/=.*/=***/'  # 보안을 위해 값은 가림
+          echo "Current environment variables:"
+          env | sort
+
       - name: Run Build and Test with Infisical
         env:
           INFISICAL_TOKEN: ${{ env.token }}
           INFISICAL_PROJECT_ID: ${{ secrets.INFISICAL_PROJECT_ID_API }}
-        run: infisical run --env=dev -- ./gradlew :soongan-api:test  # 테스트 코드 실행
+          SPRING_PROFILES_ACTIVE: local
+        run: |
+          source <(infisical export --env=local)  # eval 대신 source 사용
+          ./gradlew :soongan-api:test --info  # 더 자세한 로그를 위해 --info 추가
