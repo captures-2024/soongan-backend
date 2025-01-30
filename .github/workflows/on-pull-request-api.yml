@@ -32,18 +32,18 @@ jobs:
           echo "$HOME/.infisical/bin" >> $GITHUB_PATH  # 즉시 적용
           export PATH="$HOME/.infisical/bin:$PATH"  # 명령어 즉시 적용
           infisical --version  # Infisical이 정상적으로 설치되었는지 확인
-
+      
       - name: Determine Infisical Token
         id: infisical_token
         run: |
-          if [ "${{ github.base_ref }}" == "develop" ]; then
-            echo "token=${{ secrets.INFISICAL_TOKEN_API_DEV }}" >> $GITHUB_ENV
-#          elif [ "${{ github.base_ref }}" == "main" ]; then
-#            echo "token=${{ secrets.INFISICAL_TOKEN_API_PROD }}" >> $GITHUB_ENV
-          else
-            echo "Unsupported branch: ${{ github.base_ref }}"
-            exit 1
-          fi
+               if [ "${{ github.base_ref }}" == "develop" ]; then
+               echo "token=${{ secrets.INFISICAL_TOKEN_API_DEV }}" >> $GITHUB_ENV
+          #          elif [ "${{ github.base_ref }}" == "main" ]; then
+          #            echo "token=${{ secrets.INFISICAL_TOKEN_API_PROD }}" >> $GITHUB_ENV
+               else
+               echo "Unsupported branch: ${{ github.base_ref }}"
+               exit 1
+               fi
 
       - name: Debug Infisical Configuration
         env:
@@ -56,7 +56,7 @@ jobs:
           cat env_vars.txt | sed 's/=.*/=***/'  # 보안을 위해 값은 가림
           echo "Current environment variables:"
           env | sort
-
+      
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
