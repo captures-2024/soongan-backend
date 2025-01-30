@@ -3,10 +3,11 @@ package com.soongan.soonganbackend.soonganapi.interfaces.weeklyContestPost
 import com.soongan.soonganbackend.soonganapi.interfaces.weeklyContestPost.dto.response.MyWeeklyContestPostResponseDto
 import com.soongan.soonganbackend.soonganapi.interfaces.weeklyContestPost.dto.request.WeeklyContestPostRegisterRequestDto
 import com.soongan.soonganbackend.soonganapi.interfaces.weeklyContestPost.dto.response.WeeklyContestPostRegisterResponseDto
+import com.soongan.soonganbackend.soonganapi.interfaces.weeklyContestPost.dto.response.WeeklyContestPostListResponseDto
 import com.soongan.soonganbackend.soonganapi.interfaces.weeklyContestPost.dto.response.WeeklyContestPostResponseDto
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
 import com.soongan.soonganbackend.soongansupport.domain.WeeklyContestPostOrderCriteriaEnum
-import com.soongan.soonganbackend.soonganapi.service.weeklyContestPost.WeeklyContestService
+import com.soongan.soonganbackend.soonganapi.service.weeklyContestPost.WeeklyContestPostService
 import com.soongan.soonganbackend.soongansupport.util.constant.Uri
 import com.soongan.soonganbackend.soonganweb.resolver.LoginMember
 import io.swagger.v3.oas.annotations.Operation
@@ -25,19 +26,27 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping(Uri.WEEKLY + Uri.CONTESTS + Uri.POSTS)
 @Tag(name = "Weekly Contest Apis", description = "주간 콘테스트 관련 API")
 class WeeklyContestPostController (
-    private val weeklyContestService: WeeklyContestService
+    private val weeklyContestPostService: WeeklyContestPostService
 ){
 
+    @GetMapping
+    @Operation(summary = "주간 콘테스트 게시글 단일 조회 Api", description = "주간 콘테스트 게시글을 단일 조회합니다.")
+    fun getWeeklyContestPost(
+        @LoginMember loginMember: MemberEntity, //TODO: GUEST 사용자도 단일 조회가 가능했던가?
+        @RequestParam postId: Long
+    ): WeeklyContestPostResponseDto {
+        return weeklyContestPostService.getWeeklyContestPost(postId, loginMember)
+    }
 
     @GetMapping
     @Operation(summary = "주간 콘테스트 게시글 조회 Api", description = "주간 콘테스트 게시글을 조회합니다. 라운드와 정렬 기준을 이용하여 조회할 수 있습니다.")
-    fun getWeeklyContestPost(
+    fun getWeeklyContestPosts(
         @RequestParam(required = false) round: Int? = null,
         @RequestParam orderCriteria: WeeklyContestPostOrderCriteriaEnum,
         @RequestParam(required = false, defaultValue = "0") page: Int,
         @RequestParam(required = false, defaultValue = "50") pageSize: Int
-    ): WeeklyContestPostResponseDto {
-        return weeklyContestService.getWeeklyContestPostList(round, orderCriteria, page, pageSize)
+    ): WeeklyContestPostListResponseDto {
+        return weeklyContestPostService.getWeeklyContestPostList(round, orderCriteria, page, pageSize)
     }
 
     @GetMapping(Uri.MY_HISTORY)
@@ -47,7 +56,7 @@ class WeeklyContestPostController (
         @RequestParam(required = false, defaultValue = "0") page: Int,
         @RequestParam(required = false, defaultValue = "50") pageSize: Int
     ): MyWeeklyContestPostResponseDto {
-        return weeklyContestService.getMyWeeklyContestPostList(loginMember, page, pageSize)
+        return weeklyContestPostService.getMyWeeklyContestPostList(loginMember, page, pageSize)
     }
 
     @PostMapping
@@ -56,7 +65,7 @@ class WeeklyContestPostController (
         @LoginMember loginMember: MemberEntity,
         @ModelAttribute @Valid weeklyContestPostRegisterRequest: WeeklyContestPostRegisterRequestDto
     ): WeeklyContestPostRegisterResponseDto {
-        return weeklyContestService.registerWeeklyContestPost(loginMember, weeklyContestPostRegisterRequest)
+        return weeklyContestPostService.registerWeeklyContestPost(loginMember, weeklyContestPostRegisterRequest)
     }
 
     @DeleteMapping(Uri.POSTS)
@@ -65,6 +74,6 @@ class WeeklyContestPostController (
         @LoginMember loginMember: MemberEntity,
         @RequestBody postId: Long
     ) {
-        weeklyContestService.deleteMyWeeklyContestPost(loginMember, postId)
+        weeklyContestPostService.deleteMyWeeklyContestPost(loginMember, postId)
     }
 }
