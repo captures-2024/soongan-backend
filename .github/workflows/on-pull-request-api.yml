@@ -1,0 +1,70 @@
+name: Build And Test On Pull Request
+
+on:
+  pull_request:
+    branches:
+      - develop
+      - main
+    paths:
+      - 'apps/soongan-api/**'
+      - 'libs/**'
+      - 'Dockerfile-api-dev'
+      - '.github/workflows/on-pull-request-api.yml'
+
+jobs:
+  build-and-test:
+    if: github.repository_owner == 'captures-2024'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Install Infisical CLI
+        run: |
+          curl -fsSL https://infisical.com/install.sh | bash
+          echo "$HOME/.infisical/bin" >> $GITHUB_PATH  # 즉시 적용
+          export PATH="$HOME/.infisical/bin:$PATH"  # 명령어 즉시 적용
+          infisical --version  # Infisical이 정상적으로 설치되었는지 확인
+
+      - name: Determine Infisical Token
+        id: infisical_token
+        run: |
+          if [ "${{ github.base_ref }}" == "develop" ]; then
+            echo "token=${{ secrets.INFISICAL_TOKEN_API_DEV }}" >> $GITHUB_ENV
+#          elif [ "${{ github.base_ref }}" == "main" ]; then
+#            echo "token=${{ secrets.INFISICAL_TOKEN_API_PROD }}" >> $GITHUB_ENV
+          else
+            echo "Unsupported branch: ${{ github.base_ref }}"
+            exit 1
+          fi
+
+      - name: Debug Infisical Configuration
+        env:
+          INFISICAL_TOKEN: ${{ env.token }}
+          INFISICAL_PROJECT_ID: ${{ secrets.INFISICAL_PROJECT_ID_API }}
+        run: |
+          echo "Starting Infisical debug..."
+          infisical export --env=local > env_vars.txt
+          echo "Content of exported variables (sanitized):"
+          cat env_vars.txt | sed 's/=.*/=***/'  # 보안을 위해 값은 가림
+          echo "Current environment variables:"
+          env | sort
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Run Build and Test with Infisical
+        env:
+          INFISICAL_TOKEN: ${{ env.token }}
+          INFISICAL_PROJECT_ID: ${{ secrets.INFISICAL_PROJECT_ID_API }}
+          SPRING_PROFILES_ACTIVE: local
+        run: |
+          source <(infisical export --env=local)  # eval 대신 source 사용
+          ./gradlew :soongan-api:build
