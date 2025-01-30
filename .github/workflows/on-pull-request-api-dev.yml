@@ -25,13 +25,8 @@ jobs:
           | sudo -E bash
           sudo apt-get update && sudo apt-get install -y infisical
 
-      - name: Set up Infisical environment variables
-        run: |
-          echo "INFISICAL_TOKEN=${{ secrets.INFISICAL_TOKEN_API_DEV }}" >> $GITHUB_ENV
-          echo "INFISICAL_PROJECT_ID=${{ secrets.INFISICAL_PROJECT_ID_API }}" >> $GITHUB_ENV
-
       - name: Build with Gradle and Infisical
         env:
-          INFISICAL_TOKEN: ${{ env.INFISICAL_TOKEN }}  # 수정됨
-          INFISICAL_PROJECT_ID: ${{ env.INFISICAL_PROJECT_ID }}  # 수정됨
+          INFISICAL_TOKEN: ${{ secrets.INFISICAL_TOKEN_API_DEV }}
+          INFISICAL_PROJECT_ID: ${{ secrets.INFISICAL_PROJECT_ID_API }}
         run: infisical run --env=dev -- ./gradlew :soongan-api:build
