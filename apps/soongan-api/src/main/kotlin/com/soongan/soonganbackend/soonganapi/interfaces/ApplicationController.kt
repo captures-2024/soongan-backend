@@ -18,7 +18,7 @@ class ApplicationController(
 
     @GetMapping("/_health")
     fun healthCheck(): String {
-        logger.info { "Health check" }
+        logger.info { "Soongan Api Health check" }
         return "Soongan-Api-${env.getProperty("EXECUTION_ENV")}"
     }
 }
