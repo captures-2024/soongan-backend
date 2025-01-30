@@ -24,7 +24,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
-class WeeklyContestService(
+class WeeklyContestPostService(
     private val weeklyContestPostAdapter: WeeklyContestPostAdapter,
     private val gcpStorageService: GcpStorageService,
     private val weeklyContestPostValidator: WeeklyContestPostValidator,
