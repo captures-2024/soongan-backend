@@ -14,5 +14,7 @@ data class UpdateProfileRequestDto(
     val selfIntroduction: String? = null,
 
     @field:NotNull(message = "프로필 이미지는 null일 수 없습니다. 프로필 이미지를 수정하지 않는다면 요청 필드 자체에서 제외해주세요.")
-    val profileImage: MultipartFile? = null
+    val profileImage: MultipartFile? = null,
+
+    val isDefaultProfileImage: Boolean = false
 )

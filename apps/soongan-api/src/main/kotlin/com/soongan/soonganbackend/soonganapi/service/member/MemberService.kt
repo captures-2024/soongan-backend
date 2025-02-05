@@ -20,7 +20,7 @@ class MemberService(
     }
 
     @Transactional(readOnly = true)
-    fun checkNickname(nickname: String): Boolean {
+    fun checkEnableNickname(nickname: String): Boolean {
         return memberAdapter.getByNickname(nickname) == null
     }
 
@@ -37,34 +37,36 @@ class MemberService(
 
     @Transactional
     fun updateProfile(loginMember: MemberEntity, request: UpdateProfileRequestDto): UpdateProfileResponseDto {
-        if (request.nickname != null && request.nickname != loginMember.nickname && this.checkNickname(request.nickname).not()) {
+        if (request.nickname != null && request.nickname != loginMember.nickname && checkEnableNickname(request.nickname).not()) {
             throw SoonganException(StatusCode.SOONGAN_API_DUPLICATED_NICKNAME, "닉네임이 중복됩니다.")
         }
 
+        if (request.isDefaultProfileImage && request.profileImage != null) {
+            throw SoonganException(StatusCode.BAD_REQUEST, "기본 프로필 이미지를 사용할 경우 프로필 이미지를 업로드할 수 없습니다.")
+        }
+
         val oldProfileImageUrl = loginMember.profileImageUrl
-        val updateProfileImageUrl = request.profileImage?.let {
+        val updatedProfileImageUrl = request.profileImage?.let {
             gcpStorageService.uploadProfileImage(it, loginMember.id!!)
         }
 
         val updatedMember = loginMember.copy(
             nickname = request.nickname ?: loginMember.nickname,
             selfIntroduction = request.selfIntroduction ?: loginMember.selfIntroduction,
-            profileImageUrl = updateProfileImageUrl ?: oldProfileImageUrl
+            profileImageUrl = if (request.isDefaultProfileImage) null else updatedProfileImageUrl ?: oldProfileImageUrl
         )
         memberAdapter.save(updatedMember)
 
-        if (updateProfileImageUrl != null) {
-            oldProfileImageUrl?.let {
-                if (oldProfileImageUrl != updateProfileImageUrl) {
-                    gcpStorageService.deleteFile(oldProfileImageUrl)
-                }
+        if (oldProfileImageUrl != null && (request.isDefaultProfileImage || updatedProfileImageUrl != null)) {
+            if (oldProfileImageUrl != updatedProfileImageUrl) {
+                gcpStorageService.deleteFile(oldProfileImageUrl)
             }
         }
 
         return UpdateProfileResponseDto(
             nickname = request.nickname,
             selfIntroduction = request.selfIntroduction,
-            profileImageUrl = updateProfileImageUrl
+            profileImageUrl = updatedProfileImageUrl
         )
     }
 }

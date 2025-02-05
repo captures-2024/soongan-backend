@@ -31,7 +31,7 @@ class MemberController(
     @Operation(summary = "닉네임 중복 확인 Api", description = "닉네임이 중복되는지 확인합니다. true면 사용 가능, false면 중복.")
     @GetMapping(Uri.CHECK_NICKNAME)
     fun checkNickname(@RequestParam nickname: String): Boolean {
-        return memberService.checkNickname(nickname)
+        return memberService.checkEnableNickname(nickname)
     }
 
     @Operation(summary = "출생 연도 변경 Api", description = "출생 연도를 변경합니다.")
