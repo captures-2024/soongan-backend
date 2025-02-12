@@ -7,7 +7,7 @@ import com.soongan.soonganbackend.soonganapi.interfaces.weeklyContestPost.dto.re
 import com.soongan.soonganbackend.soonganapi.interfaces.weeklyContestPost.dto.response.WeeklyContestPostResponseDto
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
 import com.soongan.soonganbackend.soongansupport.domain.WeeklyContestPostOrderCriteriaEnum
-import com.soongan.soonganbackend.soonganapi.service.weeklyContestPost.WeeklyContestPostService
+import com.soongan.soonganbackend.soonganapi.service.weeklyContestPost.WeeklyContestService
 import com.soongan.soonganbackend.soongansupport.util.constant.Uri
 import com.soongan.soonganbackend.soonganweb.resolver.LoginMember
 import io.swagger.v3.oas.annotations.Operation
@@ -25,8 +25,8 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping(Uri.WEEKLY + Uri.CONTESTS + Uri.POSTS)
 @Tag(name = "Weekly Contest Apis", description = "주간 콘테스트 관련 API")
-class WeeklyContestPostController (
-    private val weeklyContestPostService: WeeklyContestPostService
+class WeeklyContestController (
+    private val weeklyContestService: WeeklyContestService
 ){
 
     @GetMapping
@@ -35,7 +35,7 @@ class WeeklyContestPostController (
         @LoginMember loginMember: MemberEntity, //TODO: GUEST 사용자도 단일 조회가 가능했던가?
         @RequestParam postId: Long
     ): WeeklyContestPostResponseDto {
-        return weeklyContestPostService.getWeeklyContestPost(postId, loginMember)
+        return weeklyContestService.getWeeklyContestPost(postId, loginMember)
     }
 
     @GetMapping
@@ -46,7 +46,7 @@ class WeeklyContestPostController (
         @RequestParam(required = false, defaultValue = "0") page: Int,
         @RequestParam(required = false, defaultValue = "50") pageSize: Int
     ): WeeklyContestPostListResponseDto {
-        return weeklyContestPostService.getWeeklyContestPostList(round, orderCriteria, page, pageSize)
+        return weeklyContestService.getWeeklyContestPostList(round, orderCriteria, page, pageSize)
     }
 
     @GetMapping(Uri.MY_HISTORY)
@@ -56,7 +56,7 @@ class WeeklyContestPostController (
         @RequestParam(required = false, defaultValue = "0") page: Int,
         @RequestParam(required = false, defaultValue = "50") pageSize: Int
     ): MyWeeklyContestPostResponseDto {
-        return weeklyContestPostService.getMyWeeklyContestPostList(loginMember, page, pageSize)
+        return weeklyContestService.getMyWeeklyContestPostList(loginMember, page, pageSize)
     }
 
     @PostMapping
@@ -65,7 +65,7 @@ class WeeklyContestPostController (
         @LoginMember loginMember: MemberEntity,
         @ModelAttribute @Valid weeklyContestPostRegisterRequest: WeeklyContestPostRegisterRequestDto
     ): WeeklyContestPostRegisterResponseDto {
-        return weeklyContestPostService.registerWeeklyContestPost(loginMember, weeklyContestPostRegisterRequest)
+        return weeklyContestService.registerWeeklyContestPost(loginMember, weeklyContestPostRegisterRequest)
     }
 
     @DeleteMapping(Uri.POSTS)
@@ -74,6 +74,6 @@ class WeeklyContestPostController (
         @LoginMember loginMember: MemberEntity,
         @RequestBody postId: Long
     ) {
-        weeklyContestPostService.deleteMyWeeklyContestPost(loginMember, postId)
+        weeklyContestService.deleteMyWeeklyContestPost(loginMember, postId)
     }
 }

@@ -21,7 +21,6 @@ data class WeeklyContestPostListResponseDto(
     )
 
     companion object {
-        private const val DEFAULT_NICKNAME = "nickname"
         private const val DEFAULT_PROFILE_IMAGE_URL = "profile_image_url"
         fun from(
             weeklyContest: WeeklyContestEntity,
@@ -32,7 +31,7 @@ data class WeeklyContestPostListResponseDto(
                 subject = weeklyContest.subject,
                 posts = postSlice.content.map {
                     WeeklyContestPostDto(
-                        nickname = it.member.nickname ?: DEFAULT_NICKNAME,
+                        nickname = it.member.nickname!!,
                         profileImageUrl = it.member.profileImageUrl ?: DEFAULT_PROFILE_IMAGE_URL,
                         postId = it.id!!,
                         imageUrl = it.imageUrl,
