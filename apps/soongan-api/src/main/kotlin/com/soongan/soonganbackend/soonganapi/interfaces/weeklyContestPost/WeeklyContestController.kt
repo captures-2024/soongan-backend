@@ -16,6 +16,7 @@ import jakarta.validation.Valid
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ModelAttribute
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -29,11 +30,11 @@ class WeeklyContestController (
     private val weeklyContestService: WeeklyContestService
 ){
 
-    @GetMapping
+    @GetMapping("/{postId}")
     @Operation(summary = "주간 콘테스트 게시글 단일 조회 Api", description = "주간 콘테스트 게시글을 단일 조회합니다.")
     fun getWeeklyContestPost(
         @LoginMember loginMember: MemberEntity, //TODO: GUEST 사용자도 단일 조회가 가능했던가?
-        @RequestParam postId: Long
+        @PathVariable postId: Long
     ): WeeklyContestPostResponseDto {
         return weeklyContestService.getWeeklyContestPost(postId, loginMember)
     }
