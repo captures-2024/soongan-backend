@@ -15,6 +15,9 @@ RUN ./gradlew dependencies --no-daemon
 COPY . .
 RUN ./gradlew :soongan-api:build --no-daemon -x test
 
+# 빌드된 파일 목록 확인
+RUN ls -l /app/apps/soongan-api/build/libs/
+
 # jre17 image 사용하여 실행
 FROM eclipse-temurin:17-jre-jammy
 
@@ -30,7 +33,7 @@ RUN apt-get update && apt-get install -y curl \
 WORKDIR /app
 
 # 빌드된 jar 파일을 복사
-COPY --from=build /app/apps/soongan-api/build/libs/*.jar app.jar
+COPY --from=build /app/apps/soongan-api/build/libs/soongan-api-0.1.0.jar app.jar
 
 # infisical-cli를 사용하여 실행하는 스크립트 작성
 RUN echo '#!/bin/sh\n\
