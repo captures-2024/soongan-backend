@@ -2,7 +2,7 @@ package com.soongan.soonganbackend.soonganweb.resolver
 
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberAdapter
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
-import com.soongan.soonganbackend.soongansupport.util.exception.SoonganException
+import com.soongan.soonganbackend.soongansupport.util.exception.SoonganUnauthorizedException
 import com.soongan.soonganbackend.soongansupport.util.exception.StatusCode
 import io.swagger.v3.oas.annotations.media.Schema
 import org.springframework.core.MethodParameter
@@ -25,12 +25,22 @@ class LoginMemberArgumentResolver(
 
     override fun resolveArgument(parameter: MethodParameter, mavContainer: ModelAndViewContainer?, webRequest: NativeWebRequest, binderFactory: WebDataBinderFactory?): MemberEntity? {
         val authentication = SecurityContextHolder.getContext().authentication
+        val annotation: LoginMember = parameter.getParameterAnnotation(LoginMember::class.java)!!
+
         val email = authentication.principal as String
-        return memberAdapter.getByEmail(email) ?: throw SoonganException(StatusCode.SOONGAN_MEMBER_NOT_FOUND_MEMBER_BY_EMAIL)
+        val loginMember: MemberEntity? = memberAdapter.getByEmail(email)
+
+        if (annotation.throwIfUnauthorized && loginMember == null) {
+            throw SoonganUnauthorizedException(StatusCode.UNAUTHORIZED)
+        }
+
+        return loginMember
     }
 }
 
 @Target(AnnotationTarget.VALUE_PARAMETER)
 @Retention(AnnotationRetention.RUNTIME)
 @Schema(hidden = true)
-annotation class LoginMember
+annotation class LoginMember(
+    val throwIfUnauthorized: Boolean = true
+)

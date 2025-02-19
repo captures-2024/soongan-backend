@@ -3,7 +3,7 @@ package com.soongan.soonganbackend.soonganapi.interfaces.weeklyContestPost.dto.r
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.WeeklyContestPostEntity
 
 data class WeeklyContestPostResponseDto(
-    val memberId: Long,
+    val memberId: Long?,
     val postId: Long,
     val title: String,
     val imageUrl: String,
@@ -14,7 +14,7 @@ data class WeeklyContestPostResponseDto(
 ) {
 
     companion object {
-        fun from(memberId: Long, weeklyContestPost: WeeklyContestPostEntity, isLiked: Boolean): WeeklyContestPostResponseDto {
+        fun from(memberId: Long? = null, weeklyContestPost: WeeklyContestPostEntity, isLiked: Boolean = false): WeeklyContestPostResponseDto {
             return WeeklyContestPostResponseDto(
                 memberId = memberId,
                 postId = weeklyContestPost.id!!,

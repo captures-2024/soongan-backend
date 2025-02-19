@@ -33,7 +33,7 @@ class WeeklyContestController (
     @GetMapping("/{postId}")
     @Operation(summary = "주간 콘테스트 게시글 단일 조회 Api", description = "주간 콘테스트 게시글을 단일 조회합니다.")
     fun getWeeklyContestPost(
-        @LoginMember loginMember: MemberEntity, //TODO: GUEST 사용자도 단일 조회가 가능했던가?
+        @LoginMember(throwIfUnauthorized = false) loginMember: MemberEntity?,
         @PathVariable postId: Long
     ): WeeklyContestPostResponseDto {
         return weeklyContestService.getWeeklyContestPost(postId, loginMember)

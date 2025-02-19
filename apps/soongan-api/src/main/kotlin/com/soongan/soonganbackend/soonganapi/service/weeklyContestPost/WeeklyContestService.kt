@@ -33,14 +33,16 @@ class WeeklyContestService(
 ) {
 
     @Transactional(readOnly = true)
-    fun getWeeklyContestPost(postId: Long, loginMember: MemberEntity): WeeklyContestPostResponseDto {
+    fun getWeeklyContestPost(postId: Long, loginMember: MemberEntity?): WeeklyContestPostResponseDto {
         val weeklyContestPost: WeeklyContestPostEntity = weeklyContestPostAdapter.getByIdOrNull(postId)
             ?: throw SoonganException(StatusCode.SOONGAN_API_NOT_FOUND_WEEKLY_CONTEST_POST)
 
-        val isLiked: Boolean =
-            likeAdapter.existsByPostIdAndContestTypeAndMember(postId, ContestTypeEnum.WEEKLY, loginMember)
+        loginMember?.let {
+            val isLiked: Boolean = likeAdapter.existsByPostIdAndContestTypeAndMember(postId, ContestTypeEnum.WEEKLY, loginMember)
+            return WeeklyContestPostResponseDto.from(loginMember.id!!, weeklyContestPost, isLiked)
+        }
 
-        return WeeklyContestPostResponseDto.from(loginMember.id!!, weeklyContestPost, isLiked)
+        return WeeklyContestPostResponseDto.from(weeklyContestPost =  weeklyContestPost)
     }
 
     @Transactional(readOnly = true)
