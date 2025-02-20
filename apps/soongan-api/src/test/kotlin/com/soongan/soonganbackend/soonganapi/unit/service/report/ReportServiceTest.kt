@@ -87,7 +87,7 @@ class ReportServiceTest {
                 targetMember.id,
                 post.id,
                 ReportTargetTypeEnum.WEEKLY_POST.name,
-                ReportTypeEnum.SPAM.message,
+                ReportTypeEnum.SPAM,
                 request.reason
             );
     }
