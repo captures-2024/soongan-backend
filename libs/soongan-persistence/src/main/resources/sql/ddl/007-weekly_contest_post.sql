@@ -3,7 +3,7 @@ create table weekly_contest_post
     id                bigint primary key auto_increment,
     weekly_contest_id bigint       not null,
     member_id         bigint       not null,
-    image_url         varchar(255) not null,
+    image_url         varchar(1024) not null,
     title             varchar(30) not null,
     ranking           int          not null,
     like_count        int default 0,
