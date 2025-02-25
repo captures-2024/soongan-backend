@@ -1,10 +1,8 @@
 package com.soongan.soonganbackend.soonganapi.service.weeklyContestPost
 
-import com.soongan.soonganbackend.soonganapi.interfaces.weeklyContestPost.dto.response.MyWeeklyContestPostResponseDto
-import com.soongan.soonganbackend.soonganapi.interfaces.weeklyContestPost.dto.request.WeeklyContestPostRegisterRequestDto
-import com.soongan.soonganbackend.soonganapi.interfaces.weeklyContestPost.dto.response.WeeklyContestPostRegisterResponseDto
-import com.soongan.soonganbackend.soonganapi.interfaces.weeklyContestPost.dto.response.WeeklyContestPostListResponseDto
-import com.soongan.soonganbackend.soonganapi.interfaces.weeklyContestPost.dto.response.WeeklyContestPostResponseDto
+import com.soongan.soonganbackend.soonganapi.interfaces.weeklyContest.dto.request.WeeklyContestPostUpdateRequestDto
+import com.soongan.soonganbackend.soonganapi.interfaces.weeklyContest.dto.request.WeeklyContestPostRegisterRequestDto
+import com.soongan.soonganbackend.soonganapi.interfaces.weeklyContest.dto.response.*
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContest.WeeklyContestEntity
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.WeeklyContestPostAdapter
@@ -22,6 +20,7 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Slice
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.time.LocalDateTime
 
 @Service
 class WeeklyContestService(
@@ -119,6 +118,22 @@ class WeeklyContestService(
             imageUrl = savedPost.imageUrl,
             registerNickname = loginMember.nickname!!
         )
+    }
+
+    @Transactional
+    fun updateWeeklyContestPost(loginMember: MemberEntity, postId: Long, weeklyContestPostRegisterRequest: WeeklyContestPostUpdateRequestDto): WeeklyContestPatchUpdateResponseDto {
+        val weeklyContest = weeklyContestValidator.getWeeklyContestIfValidRound()
+
+        val now = LocalDateTime.now()
+        if (weeklyContest.voteStartAt.isBefore(now)) {
+            throw SoonganException(StatusCode.SOONGAN_API_CANNOT_UPDATE_POST_AFTER_STARTING_VOTE)
+        }
+
+        val validatedPost = weeklyContestPostValidator.validatePostOwner(loginMember, postId)
+        val updatedPost = weeklyContestPostAdapter.save(validatedPost.copy(
+            title = weeklyContestPostRegisterRequest.title,
+        ))
+        return WeeklyContestPatchUpdateResponseDto(title = updatedPost.title)
     }
 
     @Transactional
