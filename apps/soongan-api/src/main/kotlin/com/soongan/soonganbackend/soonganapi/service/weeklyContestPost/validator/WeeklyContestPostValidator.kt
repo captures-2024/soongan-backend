@@ -3,6 +3,7 @@ package com.soongan.soonganbackend.soonganapi.service.weeklyContestPost.validato
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContest.WeeklyContestEntity
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.WeeklyContestPostAdapter
+import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.WeeklyContestPostEntity
 import com.soongan.soonganbackend.soongansupport.util.exception.SoonganException
 import com.soongan.soonganbackend.soongansupport.util.exception.StatusCode
 import org.springframework.stereotype.Component
@@ -28,12 +29,14 @@ class WeeklyContestPostValidator(
     fun validatePostOwner(
         member: MemberEntity,
         postId: Long
-    ) {
+    ): WeeklyContestPostEntity {
         val post = weeklyContestPostAdapter.getByIdOrNull(postId)
             ?: throw SoonganException(StatusCode.SOONGAN_API_NOT_FOUND_WEEKLY_CONTEST_POST)
 
         if (post.member != member) {
             throw SoonganException(StatusCode.SOONGAN_API_NOT_OWNER_WEEKLY_CONTEST_POST)
         }
+
+        return post
     }
 }

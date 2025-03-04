@@ -1,4 +1,4 @@
-package com.soongan.soonganbackend.soonganapi.interfaces.weeklyContestPost.dto.request
+package com.soongan.soonganbackend.soonganapi.interfaces.weeklyContest.dto.request
 
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull
