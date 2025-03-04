@@ -49,21 +49,23 @@ class JwtFilter(
         response: HttpServletResponse,
         filterChain: FilterChain
     ) {
-        try {
-            val accessToken = request.getHeader("Authorization")?.substringAfter("Bearer ")
-                ?: throw SoonganUnauthorizedException(StatusCode.MISSING_JWT)
+        val accessToken = request.getHeader("Authorization")?.substringAfter("Bearer ")
 
-            val payload = jwtHandler.getPayload(accessToken, JwtTypeEnum.ACCESS)
-            val email = payload["sub"] as String
-
-            val auth = UsernamePasswordAuthenticationToken(email, null, listOf())
-            SecurityContextHolder.getContext().authentication = auth
-            filterChain.doFilter(request, response)
-        } catch (sue: SoonganUnauthorizedException) {
-            kLogger.error { "${sue.statusCode} \n ${sue.stackTraceToString()}" }
-            val errorResponse = CommonErrorResponseDto.from(StatusCode.UNAUTHORIZED)    // client 추상화된 에러 제공
-            HttpMvcResponseJsonConverter.writeJsonResponse(response, errorResponse)
+        if (!accessToken.isNullOrBlank()) {  // accessToken이 있는데 유효하지 않으면 에러
+            try {
+                val payload = jwtHandler.getPayload(accessToken, JwtTypeEnum.ACCESS)
+                val email = payload["sub"] as String
+                val auth = UsernamePasswordAuthenticationToken(email, null, listOf())
+                SecurityContextHolder.getContext().authentication = auth
+            } catch (sue: SoonganUnauthorizedException) {
+                kLogger.error { "${sue.statusCode} \n ${sue.stackTraceToString()}" }
+                val errorResponse = CommonErrorResponseDto.from(StatusCode.UNAUTHORIZED)
+                HttpMvcResponseJsonConverter.writeJsonResponse(response, errorResponse)
+                return
+            }
         }
 
+        // accessToken이 없는 경우는 그냥 계속 필터 체인을 진행하도록 허용 (나중에 @LoginMember에서 throwIfUnauthorized가 true인 경우에 처리)
+        filterChain.doFilter(request, response)
     }
 }
