@@ -1,5 +1,5 @@
 package com.soongan.soonganbackend.soonganapi.interfaces.weeklyContest.dto.response
 
-data class WeeklyContestPatchUpdateResponseDto(
+data class WeeklyContestPostUpdateResponseDto(
     val title: String
 )

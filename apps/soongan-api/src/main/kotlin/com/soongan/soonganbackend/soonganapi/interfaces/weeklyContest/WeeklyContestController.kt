@@ -74,7 +74,7 @@ class WeeklyContestController (
         @LoginMember loginMember: MemberEntity,
         @PathVariable postId: Long,
         @RequestBody @Valid weeklyContestPostRegisterRequest: WeeklyContestPostUpdateRequestDto
-    ): WeeklyContestPatchUpdateResponseDto {
+    ): WeeklyContestPostUpdateResponseDto {
         return weeklyContestService.updateWeeklyContestPost(loginMember, postId, weeklyContestPostRegisterRequest)
     }
 

@@ -121,7 +121,7 @@ class WeeklyContestService(
     }
 
     @Transactional
-    fun updateWeeklyContestPost(loginMember: MemberEntity, postId: Long, weeklyContestPostRegisterRequest: WeeklyContestPostUpdateRequestDto): WeeklyContestPatchUpdateResponseDto {
+    fun updateWeeklyContestPost(loginMember: MemberEntity, postId: Long, weeklyContestPostRegisterRequest: WeeklyContestPostUpdateRequestDto): WeeklyContestPostUpdateResponseDto {
         val weeklyContest = weeklyContestValidator.getWeeklyContestIfValidRound()
 
         val now = LocalDateTime.now()
@@ -133,7 +133,7 @@ class WeeklyContestService(
         val updatedPost = weeklyContestPostAdapter.save(validatedPost.copy(
             title = weeklyContestPostRegisterRequest.title,
         ))
-        return WeeklyContestPatchUpdateResponseDto(title = updatedPost.title)
+        return WeeklyContestPostUpdateResponseDto(title = updatedPost.title)
     }
 
     @Transactional
