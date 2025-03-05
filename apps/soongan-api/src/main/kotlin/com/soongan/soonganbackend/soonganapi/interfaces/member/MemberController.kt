@@ -8,6 +8,7 @@ import com.soongan.soonganbackend.soongansupport.util.constant.Uri
 import com.soongan.soonganbackend.soonganweb.resolver.LoginMember
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
+import jakarta.validation.Valid
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PatchMapping
@@ -45,7 +46,7 @@ class MemberController(
 
     @Operation(summary = "프로필 변경 Api", description = "프로필 사진, 닉네임, 자기소개 등 프로필 정보를 변경합니다.")
     @PatchMapping(Uri.PROFILE)
-    fun updateProfile(@LoginMember loginMember: MemberEntity, @ModelAttribute request: UpdateProfileRequestDto): UpdateProfileResponseDto {
+    fun updateProfile(@LoginMember loginMember: MemberEntity, @ModelAttribute @Valid request: UpdateProfileRequestDto): UpdateProfileResponseDto {
         return memberService.updateProfile(loginMember, request)
     }
 }

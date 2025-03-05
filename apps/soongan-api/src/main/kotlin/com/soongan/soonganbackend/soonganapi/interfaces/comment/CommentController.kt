@@ -12,6 +12,7 @@ import com.soongan.soonganbackend.soongansupport.util.constant.Uri
 import com.soongan.soonganbackend.soonganweb.resolver.LoginMember
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
+import jakarta.validation.Valid
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
@@ -32,7 +33,7 @@ class CommentController(
     @Operation(summary = "콘테스트 게시글 댓글 작성 api", description = "콘테스트 게시글의 댓글을 작성합니다.")
     fun saveComment(
         @LoginMember loginMember: MemberEntity,
-        @RequestBody request: CommentSaveRequestDto
+        @RequestBody @Valid request: CommentSaveRequestDto
     ) {
         commentService.saveComment(loginMember, request)
     }
@@ -72,7 +73,7 @@ class CommentController(
 
     @PutMapping
     @Operation(summary = "콘테스트 게시글 댓글 수정 api", description = "콘테스트 게시글의 댓글을 수정합니다.")
-    fun updateComment(@LoginMember loginMember: MemberEntity, @RequestBody request: CommentUpdateRequestDto) {
+    fun updateComment(@LoginMember loginMember: MemberEntity, @RequestBody @Valid request: CommentUpdateRequestDto) {
         commentService.updateComment(loginMember, request)
     }
 

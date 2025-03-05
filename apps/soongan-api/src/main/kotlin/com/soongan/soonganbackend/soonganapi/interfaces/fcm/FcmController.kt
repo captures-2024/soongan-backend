@@ -6,6 +6,7 @@ import com.soongan.soonganbackend.soonganapi.service.fcm.FcmService
 import com.soongan.soonganbackend.soongansupport.domain.UserAgentEnum
 import com.soongan.soonganbackend.soongansupport.util.constant.Uri
 import io.swagger.v3.oas.annotations.Operation
+import jakarta.validation.Valid
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -18,7 +19,7 @@ class FcmController(
     @PostMapping
     fun registFcmToken(
         @RequestHeader(value = "User-Agent") userAgentEnum: UserAgentEnum,
-        @RequestBody fcmRegistRequestDto: FcmRegistRequestDto
+        @RequestBody @Valid fcmRegistRequestDto: FcmRegistRequestDto
     ): FcmTokenInfoResponseDto {
         return fcmService.registFcmToken(userAgentEnum, fcmRegistRequestDto)
     }
