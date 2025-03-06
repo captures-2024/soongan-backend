@@ -7,6 +7,7 @@ import com.soongan.soonganbackend.soonganapi.service.member.MemberService
 import com.soongan.soonganbackend.soongansupport.util.constant.Uri
 import com.soongan.soonganbackend.soonganweb.resolver.LoginMember
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import org.springframework.web.bind.annotation.GetMapping
@@ -23,19 +24,31 @@ class MemberController(
     private val memberService: MemberService
 ) {
 
-    @Operation(summary = "회원 정보 조회 Api", description = "JWT를 읽어 로그인한 회원의 정보를 조회합니다.")
+    @Operation(
+        summary = "회원 정보 조회 Api",
+        description = "JWT를 읽어 로그인한 회원의 정보를 조회합니다.",
+        security = [SecurityRequirement(name = "JWT")]
+    )
     @GetMapping
     fun getUserinfo(@LoginMember loginMember: MemberEntity): MemberInfoResponseDto {
         return memberService.getMemberInfo(loginMember)
     }
 
-    @Operation(summary = "닉네임 중복 확인 Api", description = "닉네임이 중복되는지 확인합니다. true면 사용 가능, false면 중복.")
+    @Operation(
+        summary = "닉네임 중복 확인 Api",
+        description = "닉네임이 중복되는지 확인합니다. true면 사용 가능, false면 중복.",
+        security = [SecurityRequirement(name = "JWT")]
+    )
     @GetMapping(Uri.CHECK_NICKNAME)
     fun checkNickname(@RequestParam nickname: String): Boolean {
         return memberService.checkEnableNickname(nickname)
     }
 
-    @Operation(summary = "출생 연도 변경 Api", description = "출생 연도를 변경합니다.")
+    @Operation(
+        summary = "출생 연도 변경 Api",
+        description = "출생 연도를 변경합니다.",
+        security = [SecurityRequirement(name = "JWT")]
+    )
     @PatchMapping(Uri.BIRTH_YEAR)
     fun updateBirthYear(
         @LoginMember loginMember: MemberEntity,
@@ -44,7 +57,11 @@ class MemberController(
         return memberService.updateBirthYear(loginMember, birthYear)
     }
 
-    @Operation(summary = "프로필 변경 Api", description = "프로필 사진, 닉네임, 자기소개 등 프로필 정보를 변경합니다.")
+    @Operation(
+        summary = "프로필 변경 Api",
+        description = "프로필 사진, 닉네임, 자기소개 등 프로필 정보를 변경합니다.",
+        security = [SecurityRequirement(name = "JWT")]
+    )
     @PatchMapping(Uri.PROFILE)
     fun updateProfile(@LoginMember loginMember: MemberEntity, @ModelAttribute @Valid request: UpdateProfileRequestDto): UpdateProfileResponseDto {
         return memberService.updateProfile(loginMember, request)

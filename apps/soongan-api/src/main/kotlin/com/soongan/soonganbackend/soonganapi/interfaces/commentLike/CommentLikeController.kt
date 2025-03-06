@@ -7,6 +7,7 @@ import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
 import com.soongan.soonganbackend.soongansupport.util.constant.Uri
 import com.soongan.soonganbackend.soonganweb.resolver.LoginMember
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -23,7 +24,11 @@ class CommentLikeController(
 ) {
 
     @PutMapping
-    @Operation(summary = "댓글 좋아요 Api", description = "댓글에 좋아요를 추가합니다.")
+    @Operation(
+        summary = "댓글 좋아요 Api",
+        description = "댓글에 좋아요를 추가합니다.",
+        security = [SecurityRequirement(name = "JWT")]
+    )
     fun addLikeComment(
         @LoginMember loginMember: MemberEntity,
         @RequestBody @Valid request: CommentLikeRequestDto
@@ -32,7 +37,11 @@ class CommentLikeController(
     }
 
     @DeleteMapping
-    @Operation(summary = "댓글 좋아요 취소 Api", description = "댓글에 좋아요를 취소합니다.")
+    @Operation(
+        summary = "댓글 좋아요 취소 Api",
+        description = "댓글에 좋아요를 취소합니다.",
+        security = [SecurityRequirement(name = "JWT")]
+    )
     fun cancleLikeComment(
         @LoginMember loginMember: MemberEntity,
         @RequestBody @Valid request: CommentLikeRequestDto

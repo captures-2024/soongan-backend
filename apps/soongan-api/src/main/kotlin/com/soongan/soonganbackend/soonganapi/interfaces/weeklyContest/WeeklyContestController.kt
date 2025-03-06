@@ -9,6 +9,7 @@ import com.soongan.soonganbackend.soonganapi.service.weeklyContestPost.WeeklyCon
 import com.soongan.soonganbackend.soongansupport.util.constant.Uri
 import com.soongan.soonganbackend.soonganweb.resolver.LoginMember
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -29,8 +30,12 @@ class WeeklyContestController (
     private val weeklyContestService: WeeklyContestService
 ){
 
+    @Operation(
+        summary = "주간 콘테스트 게시글 단일 조회 Api",
+        description = "주간 콘테스트 게시글을 단일 조회합니다.",
+        security = [SecurityRequirement(name = "JWT")]
+    )
     @GetMapping(Uri.POSTS + "/{postId}")
-    @Operation(summary = "주간 콘테스트 게시글 단일 조회 Api", description = "주간 콘테스트 게시글을 단일 조회합니다.")
     fun getWeeklyContestPost(
         @LoginMember(throwIfUnauthorized = false) loginMember: MemberEntity?,
         @PathVariable postId: Long
@@ -38,8 +43,11 @@ class WeeklyContestController (
         return weeklyContestService.getWeeklyContestPost(postId, loginMember)
     }
 
+    @Operation(
+        summary = "주간 콘테스트 게시글 조회 Api",
+        description = "주간 콘테스트 게시글을 조회합니다. 라운드와 정렬 기준을 이용하여 조회할 수 있습니다."
+    )
     @GetMapping(Uri.POSTS)
-    @Operation(summary = "주간 콘테스트 게시글 조회 Api", description = "주간 콘테스트 게시글을 조회합니다. 라운드와 정렬 기준을 이용하여 조회할 수 있습니다.")
     fun getWeeklyContestPosts(
         @RequestParam(required = false) round: Int? = null,
         @RequestParam orderCriteria: WeeklyContestPostOrderCriteriaEnum,
@@ -49,8 +57,12 @@ class WeeklyContestController (
         return weeklyContestService.getWeeklyContestPostList(round, orderCriteria, page, pageSize)
     }
 
+    @Operation(
+        summary = "내 주간 콘테스트 게시글 조회 Api",
+        description = "내가 작성한 주간 콘테스트 게시글을 조회합니다.",
+        security = [SecurityRequirement(name = "JWT")]
+    )
     @GetMapping(Uri.POSTS + Uri.MY_HISTORY)
-    @Operation(summary = "내 주간 콘테스트 게시글 조회 Api", description = "내가 작성한 주간 콘테스트 게시글을 조회합니다.")
     fun getMyWeeklyContestPost(
         @LoginMember loginMember: MemberEntity,
         @RequestParam(required = false, defaultValue = "0") page: Int,
@@ -59,8 +71,12 @@ class WeeklyContestController (
         return weeklyContestService.getMyWeeklyContestPostList(loginMember, page, pageSize)
     }
 
+    @Operation(
+        summary = "주간 콘테스트 게시글 등록 Api",
+        description = "주간 콘테스트 게시글을 등록합니다.",
+        security = [SecurityRequirement(name = "JWT")]
+    )
     @PostMapping(Uri.POSTS)
-    @Operation(summary = "주간 콘테스트 게시글 등록 Api", description = "주간 콘테스트 게시글을 등록합니다.")
     fun registerWeeklyContestPost(
         @LoginMember loginMember: MemberEntity,
         @ModelAttribute @Valid weeklyContestPostRegisterRequest: WeeklyContestPostRegisterRequestDto
@@ -68,8 +84,12 @@ class WeeklyContestController (
         return weeklyContestService.registerWeeklyContestPost(loginMember, weeklyContestPostRegisterRequest)
     }
 
+    @Operation(
+        summary = "주간 콘테스트 게시글 수정 Api",
+        description = "주간 콘테스트 게시글을 수정합니다.",
+        security = [SecurityRequirement(name = "JWT")]
+    )
     @PatchMapping(Uri.POSTS + "/{postId}")
-    @Operation(summary = "주간 콘테스트 게시글 수정 Api", description = "주간 콘테스트 게시글을 수정합니다.")
     fun updateWeeklyContestPost(
         @LoginMember loginMember: MemberEntity,
         @PathVariable postId: Long,
@@ -78,8 +98,12 @@ class WeeklyContestController (
         return weeklyContestService.updateWeeklyContestPost(loginMember, postId, weeklyContestPostRegisterRequest)
     }
 
+    @Operation(
+        summary = "내 주간 콘테스트 게시글 삭제 Api",
+        description = "내가 작성한 주간 콘테스트 게시글을 삭제합니다.",
+        security = [SecurityRequirement(name = "JWT")]
+    )
     @DeleteMapping(Uri.POSTS + "/{postId}")
-    @Operation(summary = "내 주간 콘테스트 게시글 삭제 Api", description = "내가 작성한 주간 콘테스트 게시글을 삭제합니다.")
     fun deleteMyWeeklyContestPost(
         @LoginMember loginMember: MemberEntity,
         @PathVariable postId: Long

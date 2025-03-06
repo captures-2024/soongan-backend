@@ -9,6 +9,7 @@ import com.soongan.soonganbackend.soongansupport.domain.UserAgentEnum
 import com.soongan.soonganbackend.soongansupport.util.constant.Uri
 import com.soongan.soonganbackend.soonganweb.resolver.LoginMember
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -21,25 +22,39 @@ class AuthController(
     private val authService: AuthService
 ) {
 
-    @Operation(summary = "로그인 Api", description = "idToken을 이용하여 로그인을 수행하고, JWT를 발급합니다.")
+    @Operation(
+        summary = "로그인 Api",
+        description = "idToken을 이용하여 로그인을 수행하고, JWT를 발급합니다."
+    )
     @PostMapping(Uri.LOGIN)
     fun login(@RequestHeader(value = "User-Agent") userAgent: UserAgentEnum, @RequestBody @Valid loginDto: LoginRequestDto): LoginResponseDto {
         return authService.login(userAgent, loginDto)
     }
 
-    @Operation(summary = "로그아웃 Api", description = "로그인시 발급한 JWT를 말소합니다.")
+    @Operation(
+        summary = "로그아웃 Api",
+        description = "로그인시 발급한 JWT를 말소합니다.",
+        security = [SecurityRequirement(name = "JWT")]
+    )
     @PostMapping(Uri.LOGOUT)
     fun logout(@AuthenticationPrincipal loginMemberEmail: String) {
         authService.logout(loginMemberEmail)
     }
 
-    @Operation(summary = "회원 탈퇴 Api", description = "회원을 탈퇴합니다.")
+    @Operation(
+        summary = "회원 탈퇴 Api",
+        description = "회원을 탈퇴합니다.",
+        security = [SecurityRequirement(name = "JWT")]
+    )
     @PostMapping(Uri.WITHDRAW)
     fun withdraw(@LoginMember loginMember: MemberEntity) {
         authService.withdraw(loginMember)
     }
 
-    @Operation(summary = "JWT 갱신 Api", description = "Refresh Token을 이용하여 JWT를 갱신합니다.")
+    @Operation(
+        summary = "JWT 갱신 Api",
+        description = "Refresh Token을 이용하여 JWT를 갱신합니다."
+    )
     @PatchMapping(Uri.REFRESH)
     fun refresh(@RequestBody @Valid refreshRequestDto: RefreshRequestDto): LoginResponseDto {
         return authService.refresh(refreshRequestDto)
