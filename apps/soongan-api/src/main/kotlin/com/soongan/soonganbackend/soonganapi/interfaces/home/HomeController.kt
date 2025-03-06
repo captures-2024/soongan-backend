@@ -6,6 +6,7 @@ import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
 import com.soongan.soonganbackend.soongansupport.util.constant.Uri
 import com.soongan.soonganbackend.soonganweb.resolver.LoginMember
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -18,9 +19,14 @@ class HomeController (
     private val homeService: HomeService
 ){
 
-    @Operation(summary = "Home 화면 API", description = "현재 진행 중인 Weekly Contest 정보와 출품한 게시글을 조회합니다.")
+    @Operation(
+        summary = "Home 화면 API",
+        description = "현재 진행 중인 Weekly Contest 정보와 출품한 게시글을 조회합니다.",
+        security = [SecurityRequirement(name = "JWT")]
+    )
     @GetMapping
-    fun getHome(@LoginMember loginMember: MemberEntity): HomeResponseDto {
+    fun getHome(@LoginMember(throwIfUnauthorized = false) loginMember: MemberEntity?): HomeResponseDto {
+        // TODO: 인증 있는 경우 없는 경우 구분하여 처리
         return homeService.getHome(loginMember)
     }
 }

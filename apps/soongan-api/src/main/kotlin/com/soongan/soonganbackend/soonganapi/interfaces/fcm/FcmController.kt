@@ -15,7 +15,10 @@ class FcmController(
     private val fcmService: FcmService
 ) {
 
-    @Operation(summary = "FCM 토큰 정보 등록 Api", description = "FCM 토큰과 디바이스 정보로 FCM 토큰을 등록합니다.")
+    @Operation(
+        summary = "FCM 토큰 정보 등록 Api",
+        description = "FCM 토큰과 디바이스 정보로 FCM 토큰을 등록합니다."
+    )
     @PostMapping
     fun registFcmToken(
         @RequestHeader(value = "User-Agent") userAgentEnum: UserAgentEnum,
@@ -24,7 +27,10 @@ class FcmController(
         return fcmService.registFcmToken(userAgentEnum, fcmRegistRequestDto)
     }
 
-    @Operation(summary = "FCM 알림 푸시 테스트 Api", description = "FCM 알림 푸시 테스트를 위한 Api 입니다.")
+    @Operation(
+        summary = "FCM 알림 푸시 테스트 Api",
+        description = "FCM 알림 푸시 테스트를 위한 Api 입니다."
+    )
     @GetMapping("/test")
     fun testFcmPush(@RequestParam("fcmToken") fcmToken: String) {
         return fcmService.testFcmPush(fcmToken)

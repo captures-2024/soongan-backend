@@ -11,6 +11,7 @@ import com.soongan.soonganbackend.soongansupport.domain.ContestTypeEnum
 import com.soongan.soonganbackend.soongansupport.util.constant.Uri
 import com.soongan.soonganbackend.soonganweb.resolver.LoginMember
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -30,7 +31,11 @@ class CommentController(
 ) {
 
     @PostMapping
-    @Operation(summary = "콘테스트 게시글 댓글 작성 api", description = "콘테스트 게시글의 댓글을 작성합니다.")
+    @Operation(
+        summary = "콘테스트 게시글 댓글 작성 api",
+        description = "콘테스트 게시글의 댓글을 작성합니다.",
+        security = [SecurityRequirement(name = "JWT")]
+    )
     fun saveComment(
         @LoginMember loginMember: MemberEntity,
         @RequestBody @Valid request: CommentSaveRequestDto
@@ -39,8 +44,13 @@ class CommentController(
     }
 
     @GetMapping
-    @Operation(summary = "콘테스트 게시글 댓글 조회 api", description = "한 콘테스트 게시글의 댓글을 조회합니다.")
+    @Operation(
+        summary = "콘테스트 게시글 댓글 조회 api",
+        description = "한 콘테스트 게시글의 댓글을 조회합니다.",
+        security = [SecurityRequirement(name = "JWT")]
+    )
     fun getPostComments(
+        @LoginMember(throwIfUnauthorized = false) loginMember: MemberEntity?,  // TODO: 인증 있는 경우 없는 경우 구분하여 처리
         @RequestParam contestType: ContestTypeEnum,
         @RequestParam postId: Long,
         @RequestParam(required = false, defaultValue = "0") page: Int,
@@ -50,8 +60,13 @@ class CommentController(
     }
 
     @GetMapping(Uri.REPLIES)
-    @Operation(summary = "콘테스트 게시글 대댓글 조회 api", description = "한 콘테스트 게시글의 대댓글을 조회합니다.")
+    @Operation(
+        summary = "콘테스트 게시글 대댓글 조회 api",
+        description = "한 콘테스트 게시글의 대댓글을 조회합니다.",
+        security = [SecurityRequirement(name = "JWT")]
+    )
     fun getCommentsReplies(
+        @LoginMember(throwIfUnauthorized = false) loginMember: MemberEntity?,  // TODO: 인증 있는 경우 없는 경우 구분하여 처리
         @RequestParam contestType: ContestTypeEnum,
         @RequestParam parentCommentId: Long,
         @RequestParam(required = false, defaultValue = "0") page: Int,
@@ -61,7 +76,11 @@ class CommentController(
     }
 
     @GetMapping(Uri.MY_HISTORY)
-    @Operation(summary = "내가 작성한 콘테스트 게시글 댓글 조회 api", description = "내가 작성한 콘테스트 게시글의 댓글들을 조회합니다.")
+    @Operation(
+        summary = "내가 작성한 콘테스트 게시글 댓글 조회 api",
+        description = "내가 작성한 콘테스트 게시글의 댓글들을 조회합니다.",
+        security = [SecurityRequirement(name = "JWT")]
+    )
     fun getMyComments(
         @LoginMember loginMember: MemberEntity,
         @RequestParam contestType: ContestTypeEnum,
@@ -72,13 +91,21 @@ class CommentController(
     }
 
     @PutMapping
-    @Operation(summary = "콘테스트 게시글 댓글 수정 api", description = "콘테스트 게시글의 댓글을 수정합니다.")
+    @Operation(
+        summary = "콘테스트 게시글 댓글 수정 api",
+        description = "콘테스트 게시글의 댓글을 수정합니다.",
+        security = [SecurityRequirement(name = "JWT")]
+    )
     fun updateComment(@LoginMember loginMember: MemberEntity, @RequestBody @Valid request: CommentUpdateRequestDto) {
         commentService.updateComment(loginMember, request)
     }
 
     @DeleteMapping
-    @Operation(summary = "콘테스트 게시글 댓글 삭제 api", description = "콘테스트 게시글의 댓글을 삭제합니다.")
+    @Operation(
+        summary = "콘테스트 게시글 댓글 삭제 api",
+        description = "콘테스트 게시글의 댓글을 삭제합니다.",
+        security = [SecurityRequirement(name = "JWT")]
+    )
     fun deleteComment(@LoginMember loginMember: MemberEntity, @RequestBody commentId: Long) {
         commentService.deleteComment(loginMember, commentId)
     }
