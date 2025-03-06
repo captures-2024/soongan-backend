@@ -14,8 +14,12 @@ class HomeService(
     private val weeklyContestValidator: WeeklyContestValidator
 ) {
 
-    fun getHome(loginMember: MemberEntity): HomeResponseDto {
+    fun getHome(loginMember: MemberEntity?): HomeResponseDto {
         val weeklyContest: WeeklyContestEntity = weeklyContestValidator.getWeeklyContestIfValidRound()
+
+        if (loginMember == null) {
+            return HomeResponseDto.fromWeeklyContest(weeklyContest, emptyList())
+        }
 
         val homeWeeklyContestPostList: List<WeeklyContestPostEntity> =
             weeklyContestPostAdapter.getAllWeeklyContestPostByMemberAndWeeklyContest(
