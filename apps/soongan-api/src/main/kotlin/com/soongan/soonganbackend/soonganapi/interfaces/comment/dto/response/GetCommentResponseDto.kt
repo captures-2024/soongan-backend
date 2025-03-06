@@ -3,11 +3,18 @@ package com.soongan.soonganbackend.soonganapi.interfaces.comment.dto.response
 import com.soongan.soonganbackend.soonganpersistence.storage.comment.CommentEntity
 import com.soongan.soonganbackend.soonganpersistence.storage.comment.CommentStatusEnum
 import com.soongan.soonganbackend.soongansupport.util.dto.PageDto
+import io.swagger.v3.oas.annotations.media.Schema
 import org.springframework.data.domain.Slice
 
+@Schema(description = "댓글 조회 응답 DTO")
 data class GetCommentResponseDto(
+    @Schema(description = "게시글 ID", required = true)
     val postId: Long,
+
+    @Schema(description = "게시글 댓글 목록", required = true)
     val comments: List<CommentDto>,
+
+    @Schema(description = "페이지네이션 정보", required = true)
     val pageInfo: PageDto
 ) {
     companion object {

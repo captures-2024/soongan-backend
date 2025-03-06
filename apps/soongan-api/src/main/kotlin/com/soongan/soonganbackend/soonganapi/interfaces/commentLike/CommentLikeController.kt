@@ -8,6 +8,7 @@ import com.soongan.soonganbackend.soongansupport.util.constant.Uri
 import com.soongan.soonganbackend.soonganweb.resolver.LoginMember
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
+import jakarta.validation.Valid
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -25,7 +26,7 @@ class CommentLikeController(
     @Operation(summary = "댓글 좋아요 Api", description = "댓글에 좋아요를 추가합니다.")
     fun addLikeComment(
         @LoginMember loginMember: MemberEntity,
-        @RequestBody request: CommentLikeRequestDto
+        @RequestBody @Valid request: CommentLikeRequestDto
     ): CommentLikeResponseDto {
         return commentLikeService.addLike(loginMember, request)
     }
@@ -34,7 +35,7 @@ class CommentLikeController(
     @Operation(summary = "댓글 좋아요 취소 Api", description = "댓글에 좋아요를 취소합니다.")
     fun cancleLikeComment(
         @LoginMember loginMember: MemberEntity,
-        @RequestBody request: CommentLikeRequestDto
+        @RequestBody @Valid request: CommentLikeRequestDto
     ): CommentLikeResponseDto {
         return commentLikeService.cancelLike(loginMember, request)
     }

@@ -2,10 +2,15 @@ package com.soongan.soonganbackend.soonganapi.interfaces.weeklyContest.dto.respo
 
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.WeeklyContestPostEntity
 import com.soongan.soonganbackend.soongansupport.util.dto.PageDto
+import io.swagger.v3.oas.annotations.media.Schema
 import org.springframework.data.domain.Page
 
+@Schema(description = "내가 작성한 주간 대회 게시글 응답 DTO")
 data class MyWeeklyContestPostResponseDto(
+    @Schema(description = "내가 작성한 게시글 정보", required = true)
     val postInfo: List<PostInfo>,
+
+    @Schema(description = "페이지네이션 정보", required = true)
     val pageInfo: PageDto
 ) {
     data class PostInfo(
