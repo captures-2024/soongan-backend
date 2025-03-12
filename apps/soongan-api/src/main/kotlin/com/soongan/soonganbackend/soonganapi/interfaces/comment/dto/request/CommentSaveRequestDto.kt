@@ -3,15 +3,16 @@ package com.soongan.soonganbackend.soonganapi.interfaces.comment.dto.request
 import com.soongan.soonganbackend.soongansupport.domain.ContestTypeEnum
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.NotNull
 
 @Schema(description = "댓글 저장 요청 DTO")
 data class CommentSaveRequestDto (
     @Schema(description = "대회 타입 (weekly/daily)", required = true)
-    @field:NotBlank
+    @field:NotNull
     val contestType: ContestTypeEnum,
 
     @Schema(description = "게시글 ID", required = true)
-    @field:NotBlank
+    @field:NotNull
     val postId: Long,
 
     @Schema(description = "댓글 내용", required = true)
