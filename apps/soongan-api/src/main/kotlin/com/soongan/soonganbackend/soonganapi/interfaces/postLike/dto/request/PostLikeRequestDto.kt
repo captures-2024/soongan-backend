@@ -10,7 +10,7 @@ data class PostLikeRequestDto (
     @field:NotNull
     val postId: Long,
 
-    @Schema(description = "대회 타입 (weekly/daily)", required = true)
+    @Schema(description = "대회 타입 (WEEKLY/DAILY)", required = true)
     @field:NotNull
     val contestType: ContestTypeEnum
 )

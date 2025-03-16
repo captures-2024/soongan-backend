@@ -30,5 +30,5 @@ jobs:
           export INFISICAL_TOKEN=${{ secrets.INFISICAL_TOKEN_API_DEV }}
           export INFISICAL_PROJECT_ID=${{ secrets.INFISICAL_PROJECT_ID_API }}
           export SPRING_PROFILES_ACTIVE=local
-          infisical run --env=local -- ./gradlew :soongan-api:build
+          infisical run --token=${{ secrets.INFISICAL_TOKEN_API_DEV }} --projectId=${{ secrets.INFISICAL_PROJECT_ID_API }} --env=local -- ./gradlew :soongan-api:build
 # TODO: 인피지컬 환경 test 추가 필요
