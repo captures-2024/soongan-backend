@@ -35,9 +35,11 @@ data class ReportEntity(
     val targetId: Long,
 
     @Column(name = "target_type", nullable = false)
+    @Enumerated(EnumType.STRING)
     val targetType: ReportTargetTypeEnum,
 
     @Column(name = "report_type", nullable = false)
+    @Enumerated(EnumType.STRING)
     val reportType: ReportTypeEnum,
 
     @Column(name = "reason", nullable = true)
