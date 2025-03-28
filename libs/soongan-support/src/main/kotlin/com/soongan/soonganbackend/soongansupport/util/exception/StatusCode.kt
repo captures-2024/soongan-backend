@@ -23,6 +23,7 @@ enum class StatusCode(val code: Int, val message: String) {
     SOONGAN_API_BANNED_MEMBER(702, "Banned Member"),
     SOONGAN_API_WITHDRAWN_MEMBER(703, "Withdrawn Member"),
     SOONGAN_API_DUPLICATED_NICKNAME(704, "Duplicated Nickname"),
+    SOONGAN_API_DIFFERENT_PROVIDER(705, "Different Provider"),
 
     // 800 ~ 899 FCM Status Code
     SOONGAN_API_ALREADY_EXIST_FCM_TOKEN(800, "Already Exist FCM Token"),

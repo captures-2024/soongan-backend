@@ -45,6 +45,11 @@ class AuthService(
                     provider = provider,
                 )
             )
+
+        if (member.provider != provider) {
+            throw SoonganException(StatusCode.SOONGAN_API_DIFFERENT_PROVIDER, "해당 이메일은 ${member.provider}로 가입된 회원입니다.")
+        }
+
         this.checkMember(member)
 
         fcmTokenAdapter.findByToken(loginDto.fcmToken)?.let { foundFcmToken ->
