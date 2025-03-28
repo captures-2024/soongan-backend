@@ -26,9 +26,12 @@ data class ReportSaveResponseDto(
 
     @Schema(description = "신고 사유", required = false)
     val reason: String?,
+
+    @Schema(description = "유저가 신고한 내역", required = true)
+    val reportHistories: List<ReportHistoryResponseDto>
 ) {
     companion object {
-        fun from(reportEntity: ReportEntity): ReportSaveResponseDto {
+        fun from(reportEntity: ReportEntity, reportHistories: List<ReportEntity>): ReportSaveResponseDto {
             return ReportSaveResponseDto(
                 id = reportEntity.id!!,
                 reportMemberId = reportEntity.reportMember.id!!,
@@ -37,6 +40,9 @@ data class ReportSaveResponseDto(
                 targetType = reportEntity.targetType.name,
                 reportType = reportEntity.reportType,
                 reason = reportEntity.reason,
+                reportHistories = reportHistories.map { reportHistory ->
+                    ReportHistoryResponseDto.from(reportHistory)
+                }
             )
         }
     }
