@@ -27,12 +27,16 @@ class NotificationService(
         return GetNotificationResponseDto.from(type, notifications)
     }
 
-    fun readNotification(notificationId: Long): Long {
+    fun readNotification(loginMember: MemberEntity, notificationId: Long): Long {
         val notification = notificationAdapter.getByIdOrNull(notificationId)
-            ?: throw SoonganException(StatusCode.SOONGAN_API_NOT_FOUND_NOTIFICATION)
+            ?: throw SoonganException(StatusCode.SOONGAN_API_NOT_FOUND_NOTIFICATION, "해당 id로 조회되는 알림이 없습니다.")
+
+        if (notification.member.id != loginMember.id) {
+            throw SoonganException(StatusCode.SOONGAN_API_NOT_LOGIN_MEMBER_NOTIFICATION, "해당 알림은 로그인한 유저의 알림이 아닙니다.")
+        }
 
         if (notification.isRead) {
-            throw SoonganException(StatusCode.SOONGAN_API_ALREADY_READ_NOTIFICATION)
+            throw SoonganException(StatusCode.SOONGAN_API_ALREADY_READ_NOTIFICATION, "이미 읽은 알림입니다.")
         }
 
         val savedEntity = notificationAdapter.save(notification.copy(isRead = true))
@@ -41,12 +45,16 @@ class NotificationService(
     }
 
     @Transactional
-    fun deleteNotification(notificationId: Long) {
+    fun deleteNotification(loginMember: MemberEntity, notificationId: Long): Unit {
         val notification = notificationAdapter.getByIdOrNull(notificationId)
-            ?: throw SoonganException(StatusCode.SOONGAN_API_NOT_FOUND_NOTIFICATION)
+            ?: throw SoonganException(StatusCode.SOONGAN_API_NOT_FOUND_NOTIFICATION, "해당 id로 조회되는 알림이 없습니다.")
+
+        if (notification.member.id != loginMember.id) {
+            throw SoonganException(StatusCode.SOONGAN_API_NOT_LOGIN_MEMBER_NOTIFICATION, "해당 알림은 로그인한 유저의 알림이 아닙니다.")
+        }
 
         if (notification.subType == NotificationSubTypeEnum.APPEAL) {
-            throw SoonganException(StatusCode.SOONGAN_API_CANNOT_DELETE_REPORT_CLARIFICATION)
+            throw SoonganException(StatusCode.SOONGAN_API_CANNOT_DELETE_REPORT_CLARIFICATION, "소명 알림은 삭제할 수 없습니다.")
         }
 
         notificationAdapter.delete(notification)

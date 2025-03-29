@@ -56,6 +56,7 @@ enum class StatusCode(val code: Int, val message: String) {
     SOONGAN_API_NOT_FOUND_NOTIFICATION(1400, "Not Found Notification"),
     SOONGAN_API_ALREADY_READ_NOTIFICATION(1401, "Already Read Notification"),
     SOONGAN_API_CANNOT_DELETE_REPORT_CLARIFICATION(1402, "Cannot Delete Report Clarification"),
+    SOONGAN_API_NOT_LOGIN_MEMBER_NOTIFICATION(1403, "Not Login Member's Notification"),
 
 
 
