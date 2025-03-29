@@ -25,7 +25,7 @@ class NotificationController(
     private val notificationService: NotificationService
 ) {
 
-    @GetMapping(Uri.COUNT)
+    @GetMapping(Uri.UNREAD_COUNT)
     @Operation(
         summary = "알림 개수 조회 Api",
         description = "알림 탭 별 유저가 열람하지 않은 알림 개수를 조회합니다.",

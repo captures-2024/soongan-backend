@@ -33,7 +33,7 @@ object Uri {
     const val FCM = "/fcm"
     const val NOTIFICATIONS = "/notifications"
 
-    const val COUNT = "/count"
+    const val UNREAD_COUNT = "/unread-count"
 
     const val REPORT = "/report"
 

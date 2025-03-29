@@ -11,9 +11,10 @@ interface NotificationRepository: JpaRepository<NotificationEntity, Long> {
 
     @Query(
         "SELECT n.type, COUNT(n) AS NotificationCount" +
-            " FROM NotificationEntity n " +
-            " WHERE n.member = :member " +
-            " AND n.isRead = false "
+                " FROM NotificationEntity n " +
+                " WHERE n.member = :member " +
+                " AND n.isRead = false " +
+                " GROUP BY n.type"
     )
     fun countUnreadNotifications(member: MemberEntity): List<NotificationCountSummary>
 }
