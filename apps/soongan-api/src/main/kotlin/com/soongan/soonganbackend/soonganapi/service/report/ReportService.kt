@@ -43,6 +43,8 @@ class ReportService(
             )
         )
 
-        return ReportSaveResponseDto.from(savedReport)
+        val reportHistories = reportAdapter.getReportHistoriesByReportMember(loginMember)
+
+        return ReportSaveResponseDto.from(savedReport, reportHistories)
     }
 }

@@ -4,6 +4,7 @@ import com.soongan.soonganbackend.soonganapi.interfaces.member.dto.request.Updat
 import com.soongan.soonganbackend.soonganapi.interfaces.member.dto.response.*
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberAdapter
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
+import com.soongan.soonganbackend.soonganpersistence.storage.report.ReportAdapter
 import com.soongan.soonganbackend.soongansupport.service.GcpStorageService
 import com.soongan.soonganbackend.soongansupport.util.exception.SoonganException
 import com.soongan.soonganbackend.soongansupport.util.exception.StatusCode
@@ -13,10 +14,12 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class MemberService(
     private val memberAdapter: MemberAdapter,
+    private val reportAdapter: ReportAdapter,
     private val gcpStorageService: GcpStorageService,
 ) {
     fun getMemberInfo(loginMember: MemberEntity): MemberInfoResponseDto {
-        return MemberInfoResponseDto.from(loginMember)
+        val reportHistories = reportAdapter.getReportHistoriesByReportMember(loginMember)
+        return MemberInfoResponseDto.from(loginMember, reportHistories)
     }
 
     @Transactional(readOnly = true)

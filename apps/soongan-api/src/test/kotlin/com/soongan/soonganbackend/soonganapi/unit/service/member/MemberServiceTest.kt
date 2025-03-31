@@ -1,9 +1,11 @@
 package com.soongan.soonganbackend.soonganapi.unit.service.member
 
 import com.soongan.soonganbackend.soonganapi.interfaces.member.dto.request.UpdateProfileRequestDto
+import com.soongan.soonganbackend.soonganapi.interfaces.report.dto.response.ReportHistoryResponseDto
 import com.soongan.soonganbackend.soonganapi.service.member.MemberService
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberAdapter
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
+import com.soongan.soonganbackend.soonganpersistence.storage.report.ReportAdapter
 import com.soongan.soonganbackend.soongansupport.domain.ProviderEnum
 import com.soongan.soonganbackend.soongansupport.service.GcpStorageService
 import com.soongan.soonganbackend.soongansupport.util.exception.SoonganException
@@ -26,6 +28,9 @@ class MemberServiceTest {
     @MockK
     private lateinit var gcpStorageService: GcpStorageService
 
+    @MockK
+    private lateinit var reportAdapter: ReportAdapter
+
     @InjectMockKs
     private lateinit var memberService: MemberService
 
@@ -42,18 +47,22 @@ class MemberServiceTest {
             selfIntroduction = "test-self-introduction"
         )
 
+        // mock
+        every { reportAdapter.getReportHistoriesByReportMember(loginMember) } returns emptyList()
+
         // when
         val result = memberService.getMemberInfo(loginMember)
 
         // then
         assertThat(result)
-            .extracting("email", "nickname", "birthYear", "profileImageUrl", "selfIntroduction")
+            .extracting("email", "nickname", "birthYear", "profileImageUrl", "selfIntroduction", "reportHistories")
             .containsExactly(
                 loginMember.email,
                 loginMember.nickname,
                 loginMember.birthYear,
                 loginMember.profileImageUrl,
-                loginMember.selfIntroduction
+                loginMember.selfIntroduction,
+                emptyList<ReportHistoryResponseDto>()
             )
     }
 

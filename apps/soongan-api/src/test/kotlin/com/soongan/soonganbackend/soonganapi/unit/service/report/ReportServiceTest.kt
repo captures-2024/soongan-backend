@@ -1,6 +1,7 @@
 package com.soongan.soonganbackend.soonganapi.unit.service.report
 
 import com.soongan.soonganbackend.soonganapi.interfaces.report.dto.request.ReportSaveRequestDto
+import com.soongan.soonganbackend.soonganapi.interfaces.report.dto.response.ReportHistoryResponseDto
 import com.soongan.soonganbackend.soonganapi.service.report.ReportService
 import com.soongan.soonganbackend.soonganpersistence.storage.comment.CommentAdapter
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
@@ -66,6 +67,7 @@ class ReportServiceTest {
         // mock
         every { weeklyContestPostAdapter.getByIdOrNull(any()) } returns post
         every { reportAdapter.save(any()) } returns report
+        every { reportAdapter.getReportHistoriesByReportMember(loginMember) } returns listOf(report)
 
         // when
         val result = reportService.report(loginMember, request)
@@ -79,7 +81,8 @@ class ReportServiceTest {
                 "targetId",
                 "targetType",
                 "reportType",
-                "reason"
+                "reason",
+                "reportHistories"
             )
             .containsExactly(
                 report.id,
@@ -88,7 +91,8 @@ class ReportServiceTest {
                 post.id,
                 ReportTargetTypeEnum.WEEKLY_POST.name,
                 ReportTypeEnum.SPAM,
-                request.reason
+                request.reason,
+                listOf(ReportHistoryResponseDto.from(report))
             );
     }
 
