@@ -9,3 +9,6 @@ springdoc:
 
 jwt:
   secret: ${JWT_SECRET}
+
+soongan:
+  api-key: ${SOONGAN_API_KEY}

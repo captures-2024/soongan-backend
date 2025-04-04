@@ -1,5 +1,6 @@
 package com.soongan.soonganbackend.soonganweb.config
 
+import com.soongan.soonganbackend.soonganweb.filter.ApiKeyFilter
 import com.soongan.soonganbackend.soonganweb.filter.JwtFilter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -13,6 +14,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 
 @Configuration
 class SecurityConfig(
+    private val apiKeyFilter: ApiKeyFilter,
     private val jwtFilter: JwtFilter
 ) {
 
@@ -29,6 +31,7 @@ class SecurityConfig(
                 it.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             }
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter::class.java)
+            .addFilterBefore(apiKeyFilter, JwtFilter::class.java)
             .build()
     }
 
