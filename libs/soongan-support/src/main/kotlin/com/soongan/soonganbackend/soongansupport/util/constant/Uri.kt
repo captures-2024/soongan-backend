@@ -9,6 +9,8 @@ object Uri {
     const val SWAGGER_RESOURCES = "/swagger-resources"
     const val SWAGGER_CONFIG = "/swagger-config"
 
+    const val ADMIN = "/admin"
+
     const val AUTH = "/auth"
     const val LOGIN = "/login"
     const val LOGOUT = "/logout"
@@ -47,6 +49,8 @@ object Uri {
         SWAGGER_UI + "/**",
         SWAGGER_RESOURCES + "/**",
         V3 + API_DOCS + "/**",
+
+        ADMIN + "/**",
 
         WEEKLY + CONTESTS + POSTS,
 
