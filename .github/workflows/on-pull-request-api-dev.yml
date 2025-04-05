@@ -3,6 +3,10 @@ name: Build with Infisical Secrets
 on:
   pull_request:
     branches: [ main, develop ]
+    paths:
+      - 'apps/soongan-api/**'
+      - 'libs/**'
+      - '.github/workflows/on-pull-request-api-dev.yml'
 
 jobs:
   build:
