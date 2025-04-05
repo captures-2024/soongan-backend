@@ -42,7 +42,7 @@ object Uri {
     const val SUCCESS = "/success"
 
     val passGetUris = listOf(
-        "/_health",
+        HEALTH,
         API_DOCS,
         SWAGGER_UI + "/**",
         SWAGGER_RESOURCES + "/**",
@@ -62,11 +62,21 @@ object Uri {
     )
 
     val notWrapUris = listOf(
-        "/_health",
+        HEALTH,
         V3 + API_DOCS,
         V3 + API_DOCS + SWAGGER_CONFIG,
 
         CALLBACK + APPLE_LOGIN,
         CALLBACK + APPLE_LOGIN + SUCCESS
     )
+
+    fun isPass(uri: String, passUris: List<String>): Boolean {
+        return passUris.any { passUri ->
+            if (passUri.endsWith("/**")) {
+                uri.startsWith(passUri.removeSuffix("/**"))
+            } else {
+                uri == passUri
+            }
+        }
+    }
 }

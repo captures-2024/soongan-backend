@@ -28,19 +28,9 @@ class JwtFilter(
         val requestMethod = request.method
 
         return when (requestMethod) {
-            "GET" -> isPass(requestUri, Uri.passGetUris)
-            "POST" -> isPass(requestUri, Uri.passPostUris)
+            "GET" -> Uri.isPass(requestUri, Uri.passGetUris)
+            "POST" -> Uri.isPass(requestUri, Uri.passPostUris)
             else -> false
-        }
-    }
-
-    fun isPass(uri: String, passUris: List<String>): Boolean {
-        return passUris.any { passUri ->
-            if (passUri.endsWith("/**")) {
-                uri.startsWith(passUri.removeSuffix("/**"))
-            } else {
-                uri == passUri
-            }
         }
     }
 

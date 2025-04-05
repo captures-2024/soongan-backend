@@ -1,5 +1,6 @@
 package com.soongan.soonganbackend.soonganweb.filter
 
+import com.soongan.soonganbackend.soongansupport.util.constant.Uri
 import com.soongan.soonganbackend.soongansupport.util.converter.HttpMvcResponseJsonConverter
 import com.soongan.soonganbackend.soongansupport.util.dto.CommonErrorResponseDto
 import com.soongan.soonganbackend.soongansupport.util.exception.StatusCode
@@ -22,7 +23,9 @@ class ApiKeyFilter(
     ) {
         val apiKey = request.getHeader("Soongan-Api-Key")
 
-        if (apiKey != null && apiKey == validApiKey) {
+        if (request.method == "GET" && Uri.isPass(request.requestURI, Uri.passGetUris)) {
+            filterChain.doFilter(request, response)
+        } else if (apiKey != null && apiKey == validApiKey) {
             filterChain.doFilter(request, response)
         } else {
             val errorResponse = CommonErrorResponseDto.from(StatusCode.FORBIDDEN)
