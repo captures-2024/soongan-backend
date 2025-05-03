@@ -31,6 +31,15 @@ class WeeklyContestController (
 ){
 
     @Operation(
+        summary = "역대 주간 콘테스트 조회",
+        description = "역대 주간 콘테스트 리스트를 조회합니다."
+    )
+    @GetMapping
+    fun getWeeklyContestList(): WeeklyContestListResponseDto {
+        return weeklyContestService.getWeeklyContestList()
+    }
+
+    @Operation(
         summary = "주간 콘테스트 게시글 단일 조회 Api",
         description = "주간 콘테스트 게시글을 단일 조회합니다.",
         security = [SecurityRequirement(name = "JWT")]
@@ -59,7 +68,7 @@ class WeeklyContestController (
 
     @Operation(
         summary = "내 주간 콘테스트 게시글 조회 Api",
-        description = "내가 작성한 주간 콘테스트 게시글을 조회합니다.",
+        description = "내가 작성한 주간                                     콘테스트 게시글을 조회합니다.",
         security = [SecurityRequirement(name = "JWT")]
     )
     @GetMapping(Uri.POSTS + Uri.MY_HISTORY)
