@@ -8,6 +8,10 @@ class WeeklyContestAdapter (
     private val weeklyContestRepository: WeeklyContestRepository
 ){
 
+    fun getAllWeeklyContest(): List<WeeklyContestEntity> {
+        return weeklyContestRepository.findAll()
+    }
+
     fun getWeeklyContest(round: Int): WeeklyContestEntity? {
         return weeklyContestRepository.findByRound(round)
     }
