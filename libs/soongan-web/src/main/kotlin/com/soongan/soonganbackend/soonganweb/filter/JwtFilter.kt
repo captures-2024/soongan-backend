@@ -26,6 +26,7 @@ class JwtFilter(
     override fun shouldNotFilter(request: HttpServletRequest): Boolean {
         val requestUri = request.requestURI
         val requestMethod = request.method
+        if (requestUri.startsWith(Uri.ADMIN)) return true
 
         return when (requestMethod) {
             "GET" -> Uri.isPass(requestUri, Uri.passGetUris)
