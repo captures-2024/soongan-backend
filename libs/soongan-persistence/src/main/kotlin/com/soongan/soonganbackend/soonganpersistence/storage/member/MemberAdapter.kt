@@ -2,6 +2,7 @@ package com.soongan.soonganbackend.soonganpersistence.storage.member
 
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
+import java.util.Optional
 
 @Component
 class MemberAdapter (
@@ -32,5 +33,16 @@ class MemberAdapter (
     @Transactional(readOnly = true)
     fun getAllByNickname(nickname: String): List<MemberEntity> {
         return memberRepository.findAllByNickname(nickname)
+    }
+
+    // admin용
+    @Transactional(readOnly = true)
+    fun getById(id: Long): Optional<MemberEntity> {
+        return memberRepository.findById(id)
+    }
+
+    @Transactional
+    fun deleteOne(id: Long): Unit {
+        memberRepository.deleteById(id)
     }
 }
