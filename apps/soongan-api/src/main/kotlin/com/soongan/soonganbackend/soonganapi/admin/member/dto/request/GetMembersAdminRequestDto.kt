@@ -1,23 +1,43 @@
 package com.soongan.soonganbackend.soonganapi.admin.member.dto.request
 
 import io.swagger.v3.oas.annotations.media.Schema
-import jakarta.validation.constraints.Email
-import jakarta.validation.constraints.Min
+import jakarta.validation.Constraint
+import jakarta.validation.ConstraintValidator
+import jakarta.validation.ConstraintValidatorContext
+import jakarta.validation.Payload
+import jakarta.validation.constraints.NotNull
+import kotlin.reflect.KClass
 
 @Schema(description = "회원 정보 조회 어드민 요청 DTO")
 data class GetMembersAdminRequestDto(
-    @field:Schema(description = "회원 이메일")
-    @field:Email(message = "이메일 형식이 올바르지 않습니다.")
-    val email: String? = null,
+    @Schema(description = "조회 기준 (ex. email, nickname 등)")
+    @field:ValidSearchBy
+    @field:NotNull
+    val searchBy: SearchByType,
 
-    @field:Schema(description = "회원 이름")
-    val nickname: String? = null,
-
-    @field:Schema(description = "페이지")
-    @field:Min(value = 1, message = "페이지 번호는 1 이상이어야 합니다.")
-    val page: Int = 1,
-
-    @field:Schema(description = "페이지 사이즈")
-    @field:Min(value = 1, message = "페이지 사이즈는 1 이상이어야 합니다.")
-    val size: Int = 10
+    @Schema(description = "조회 키워드")
+    @field:NotNull
+    val searchKeyword: String,
 )
+
+enum class SearchByType {
+    EMAIL, NICKNAME
+}
+
+@MustBeDocumented
+@Constraint(validatedBy = [SearchByValidator::class])
+@Target(AnnotationTarget.FIELD)
+@Retention(AnnotationRetention.RUNTIME)
+annotation class ValidSearchBy(
+    val message: String = "허용되지 않은 검색 조건입니다.",
+    val groups: Array<KClass<*>> = [],
+    val payload: Array<KClass<out Payload>> = []
+)
+
+
+class SearchByValidator : ConstraintValidator<ValidSearchBy, String?> {
+    override fun isValid(value: String?, context: ConstraintValidatorContext): Boolean {
+        if (value == null) return true
+        return SearchByType.entries.any { it.name == value }
+    }
+}

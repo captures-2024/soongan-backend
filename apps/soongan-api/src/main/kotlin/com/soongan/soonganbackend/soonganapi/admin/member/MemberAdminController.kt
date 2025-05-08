@@ -2,6 +2,7 @@ package com.soongan.soonganbackend.soonganapi.admin.member
 
 import com.soongan.soonganbackend.soonganapi.admin.member.dto.request.GetMembersAdminRequestDto
 import com.soongan.soonganbackend.soonganapi.admin.member.dto.response.MemberAdminResponseDto
+import com.soongan.soonganbackend.soonganapi.service.member.MemberAdminService
 import com.soongan.soonganbackend.soongansupport.util.constant.Uri
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -13,7 +14,9 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping(Uri.ADMIN + Uri.MEMBERS)
 @Tag(name = "Member Admin Apis", description = "회원 관련 Admin API")
-class MemberAdminController {
+class MemberAdminController(
+    private val memberAdminService: MemberAdminService
+) {
 
     @Operation(
         summary = "회원 조회",
@@ -21,7 +24,6 @@ class MemberAdminController {
     )
     @GetMapping
     fun getAll(@ModelAttribute() requestDto: GetMembersAdminRequestDto): List<MemberAdminResponseDto> {
-        println(requestDto)
-        return emptyList()
+        return memberAdminService.getAll(requestDto)
     }
 }

@@ -21,4 +21,16 @@ class MemberAdapter (
     fun getByNickname(nickname: String): MemberEntity? {
         return memberRepository.findByNickname(nickname)
     }
+
+    // admin용
+    @Transactional(readOnly = true)
+    fun getAllByEmail(email: String): List<MemberEntity> {
+        return memberRepository.findAllByEmail(email)
+    }
+
+    // admin용
+    @Transactional(readOnly = true)
+    fun getAllByNickname(nickname: String): List<MemberEntity> {
+        return memberRepository.findAllByNickname(nickname)
+    }
 }
