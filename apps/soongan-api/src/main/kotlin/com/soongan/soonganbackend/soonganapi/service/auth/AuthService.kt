@@ -86,7 +86,7 @@ class AuthService(
         val memberEmail = payload["sub"] as String
         val member = memberAdapter.getByEmail(memberEmail)
             ?: throw SoonganException(StatusCode.SOONGAN_MEMBER_NOT_FOUND_MEMBER_BY_EMAIL)
-        checkMember(member)
+        this.checkMember(member)
 
         val issuedTokens = jwtHandler.issueTokens(member.email)
         return LoginResponseDto(
