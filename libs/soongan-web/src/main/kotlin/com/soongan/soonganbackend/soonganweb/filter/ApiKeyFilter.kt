@@ -29,6 +29,7 @@ class ApiKeyFilter(
             filterChain.doFilter(request, response)
         } else {
             val errorResponse = CommonErrorResponseDto.from(StatusCode.FORBIDDEN)
+            response.status = errorResponse.statusCode
             HttpMvcResponseJsonConverter.writeJsonResponse(response, errorResponse)
             return
         }

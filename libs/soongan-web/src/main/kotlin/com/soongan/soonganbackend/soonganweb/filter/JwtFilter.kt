@@ -51,6 +51,7 @@ class JwtFilter(
             } catch (sue: SoonganUnauthorizedException) {
                 kLogger.error { "${sue.statusCode} \n ${sue.stackTraceToString()}" }
                 val errorResponse = CommonErrorResponseDto.from(StatusCode.UNAUTHORIZED)
+                response.status = errorResponse.statusCode
                 HttpMvcResponseJsonConverter.writeJsonResponse(response, errorResponse)
                 return
             }
