@@ -3,7 +3,7 @@ package com.soongan.soonganbackend.soonganapi.interfaces.weeklyContest.dto.respo
 
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContest.WeeklyContestEntity
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.WeeklyContestPostEntity
-import com.soongan.soonganbackend.soongansupport.util.dto.CursorResponseDto
+import com.soongan.soonganbackend.soonganpersistence.util.CursorResponseWrapper
 import io.swagger.v3.oas.annotations.media.Schema
 
 @Schema(description = "주간 콘테스트 게시글 목록 응답 DTO")
@@ -32,7 +32,7 @@ data class WeeklyContestPostListCursorResponseDto(
 
         fun from(
             weeklyContest: WeeklyContestEntity,
-            posts: CursorResponseDto<List<WeeklyContestPostEntity>>
+            posts: CursorResponseWrapper<List<WeeklyContestPostEntity>>
         ): WeeklyContestPostListCursorResponseDto {
             return WeeklyContestPostListCursorResponseDto(
                 round = weeklyContest.round,

@@ -2,6 +2,8 @@ package com.soongan.soonganbackend.soonganpersistence.util
 
 import com.querydsl.core.types.dsl.Expressions
 import com.querydsl.core.types.dsl.StringExpression
+import com.querydsl.jpa.impl.JPAQuery
+import com.soongan.soonganbackend.soongansupport.util.common.SortDirection
 import kotlin.math.pow
 
 
@@ -26,4 +28,18 @@ fun <T> calculateNextCursor(
         }
         formattedFields.joinToString(separator = "")
     }
+}
+
+fun <T> JPAQuery<T>.applySortCondition(
+    cursorExpression: StringExpression,
+    currentCursor: String?,
+    sortDirection: SortDirection
+): JPAQuery<T> {
+    currentCursor?.let {
+        when (sortDirection) {
+            SortDirection.ASC -> this.where(cursorExpression.lt(it))
+            SortDirection.DESC -> this.where(cursorExpression.gt(it))
+        }
+    }
+    return this
 }
