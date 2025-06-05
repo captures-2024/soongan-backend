@@ -106,20 +106,20 @@ class WeeklyContestService(
     fun getWeeklyContestPostListWithCursor(
         round: Int?,
         orderCriteria: WeeklyContestPostOrderCriteriaEnum,
-        nextCursor: String?,
+        currentCursor: String?,
         pageSize: Int
     ): WeeklyContestPostListCursorResponseDto {
         val weeklyContest = weeklyContestValidator.getWeeklyContestIfValidRound(round)
 
         val posts = when (orderCriteria) {
             LATEST -> {
-                weeklyContestPostAdapter.queryLatestPost(nextCursor, pageSize)
+                weeklyContestPostAdapter.queryLatestPost(currentCursor, pageSize)
             }
             MOST_LIKED -> {
-                weeklyContestPostAdapter.queryMostLikedPost(nextCursor, pageSize)
+                weeklyContestPostAdapter.queryMostLikedPost(currentCursor, pageSize)
             }
             OLDEST -> {
-                weeklyContestPostAdapter.queryOldestPost(nextCursor, pageSize)
+                weeklyContestPostAdapter.queryOldestPost(currentCursor, pageSize)
             }
         }
 

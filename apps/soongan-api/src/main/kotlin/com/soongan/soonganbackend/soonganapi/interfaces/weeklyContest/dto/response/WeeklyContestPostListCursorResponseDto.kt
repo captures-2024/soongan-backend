@@ -17,6 +17,7 @@ data class WeeklyContestPostListCursorResponseDto(
     @Schema(description = "게시글 목록", required = true)
     val posts: List<WeeklyContestPostDto>,
 
+    @Schema(description = "다음 페이지에 요청으로 전달할 커서입니다. 마지막 페이지의 경우 생략됩니다.", required = false)
     val nextCursor: String? = null
 ) {
     data class WeeklyContestPostDto(

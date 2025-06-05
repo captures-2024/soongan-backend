@@ -110,17 +110,16 @@ class WeeklyContestPostAdapter(
         return weeklyContestPostRepository.countByWeeklyContestId(contestId)
     }
 
-    override fun queryLatestPost(nextCursor: String?, size: Int): CursorResponseDto<List<WeeklyContestPostEntity>> {
+    override fun queryLatestPost(currentCursor: String?, size: Int): CursorResponseDto<List<WeeklyContestPostEntity>> {
         val weeklyContestPost = weeklyContestPostEntity
-
-        val cursorExpression: StringExpression = generateCursor(weeklyContestPost.createdAt, weeklyContestPost.id)
 
         val query: JPAQuery<WeeklyContestPostEntity> = queryFactory
             .selectFrom(weeklyContestPost)
             .orderBy(weeklyContestPost.createdAt.desc(), weeklyContestPost.id.desc())
             .limit(size.toLong())
 
-        nextCursor?.let {
+        val cursorExpression: StringExpression = generateCursor(weeklyContestPost.createdAt, weeklyContestPost.id)
+        currentCursor?.let {
             query.where(cursorExpression.gt(it))
         }
 
@@ -132,17 +131,16 @@ class WeeklyContestPostAdapter(
 
     }
 
-    override fun queryOldestPost(cursor: String?, size: Int): CursorResponseDto<List<WeeklyContestPostEntity>> {
+    override fun queryOldestPost(currentCursor: String?, size: Int): CursorResponseDto<List<WeeklyContestPostEntity>> {
         val weeklyContestPost = weeklyContestPostEntity
-
-        val cursorExpression: StringExpression = generateCursor(weeklyContestPost.createdAt, weeklyContestPost.id)
 
         val query: JPAQuery<WeeklyContestPostEntity> = queryFactory
             .selectFrom(weeklyContestPost)
             .orderBy(weeklyContestPost.createdAt.asc(), weeklyContestPost.id.asc())
             .limit(size.toLong())
 
-        cursor?.let {
+        val cursorExpression: StringExpression = generateCursor(weeklyContestPost.createdAt, weeklyContestPost.id)
+        currentCursor?.let {
             query.where(cursorExpression.lt(it))
         }
 
@@ -153,17 +151,16 @@ class WeeklyContestPostAdapter(
         return CursorResponseDto.from(nextCursor, posts)
     }
 
-    override fun queryMostLikedPost(cursor: String?, size: Int): CursorResponseDto<List<WeeklyContestPostEntity>> {
+    override fun queryMostLikedPost(currentCursor: String?, size: Int): CursorResponseDto<List<WeeklyContestPostEntity>> {
         val weeklyContestPost = weeklyContestPostEntity
-
-        val cursorExpression: StringExpression = generateCursor(weeklyContestPost.likeCount, weeklyContestPost.id)
 
         val query: JPAQuery<WeeklyContestPostEntity> = queryFactory
             .selectFrom(weeklyContestPost)
             .orderBy(weeklyContestPost.likeCount.desc(), weeklyContestPost.id.desc())
             .limit(size.toLong())
 
-        cursor?.let {
+        val cursorExpression: StringExpression = generateCursor(weeklyContestPost.likeCount, weeklyContestPost.id)
+        currentCursor?.let {
             query.where(cursorExpression.gt(it))
         }
 

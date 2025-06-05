@@ -83,10 +83,10 @@ class WeeklyContestController (
     fun getWeeklyContestPostsCursor(
         @RequestParam(required = false) round: Int? = null,
         @RequestParam orderCriteria: WeeklyContestPostOrderCriteriaEnum,
-        @RequestParam(required = false) nextCursor: String?,
+        @RequestParam(required = false) currentCursor: String?,
         @RequestParam(required = false, defaultValue = "50") pageSize: Int
     ): WeeklyContestPostListCursorResponseDto {
-        return weeklyContestService.getWeeklyContestPostListWithCursor(round, orderCriteria, nextCursor, pageSize)
+        return weeklyContestService.getWeeklyContestPostListWithCursor(round, orderCriteria, currentCursor, pageSize)
     }
 
 

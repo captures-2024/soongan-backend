@@ -50,11 +50,11 @@ interface WeeklyContestPostRepository : JpaRepository<WeeklyContestPostEntity, L
 interface WeeklyContestPostRepositoryCustom {
 
     // 현재 회차 최신순
-    fun queryLatestPost(nextCursor: String?, size: Int): CursorResponseDto<List<WeeklyContestPostEntity>>
+    fun queryLatestPost(currentCursor: String?, size: Int): CursorResponseDto<List<WeeklyContestPostEntity>>
 
     // 현재 회차 오래된 순
-    fun queryOldestPost(nextCursor: String?, size: Int): CursorResponseDto<List<WeeklyContestPostEntity>>
+    fun queryOldestPost(currentCursor: String?, size: Int): CursorResponseDto<List<WeeklyContestPostEntity>>
 
     // 현재 회차 좋아요 많은 순
-    fun queryMostLikedPost(nextCursor: String?, size: Int): CursorResponseDto<List<WeeklyContestPostEntity>>
+    fun queryMostLikedPost(currentCursor: String?, size: Int): CursorResponseDto<List<WeeklyContestPostEntity>>
 }
