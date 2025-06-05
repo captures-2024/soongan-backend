@@ -40,10 +40,10 @@ class WeeklyContestController (
     }
 
     @Operation(
-        summary = "특정 주간 콘테스트 조회",
-        description = "특정 주간 콘테스트를 상세 조회합니다. 해당 콘테스트의 1차 투표 상위 7개 게시글을 함께 조회합니다."
+        summary = "특정 역대 주간 콘테스트 조회",
+        description = "특정 역대 주간 콘테스트를 상세 조회합니다. 해당 콘테스트의 1차 투표 상위 7개 게시글을 함께 조회합니다."
     )
-    @GetMapping("/{contestId}")
+    @GetMapping(Uri.HISTORIES + "/{contestId}")
     fun getWeeklyContestDetail(@PathVariable contestId: Long): WeeklyContestDetailResponseDto {
         return weeklyContestService.getWeeklyContestDetail(contestId)
     }
