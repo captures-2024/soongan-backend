@@ -8,8 +8,8 @@ class WeeklyContestAdapter (
     private val weeklyContestRepository: WeeklyContestRepository
 ){
 
-    fun getAllWeeklyContest(): List<WeeklyContestEntity> {
-        return weeklyContestRepository.findAll()
+    fun getEndedWeeklyContests(now: LocalDateTime = LocalDateTime.now()): List<WeeklyContestEntity> {
+        return weeklyContestRepository.findEndedContests(now)
     }
 
     fun getWeeklyContest(round: Int): WeeklyContestEntity? {

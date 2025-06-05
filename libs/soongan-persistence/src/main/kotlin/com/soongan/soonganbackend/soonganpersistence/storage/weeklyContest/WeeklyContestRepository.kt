@@ -7,6 +7,9 @@ import java.time.LocalDateTime
 interface WeeklyContestRepository: JpaRepository<WeeklyContestEntity, Long> {
     fun findByRound(round: Int): WeeklyContestEntity?
 
+    @Query("SELECT wc FROM WeeklyContestEntity wc WHERE wc.endAt <= :now")
+    fun findEndedContests(now: LocalDateTime): List<WeeklyContestEntity>
+
     @Query("SELECT wc FROM WeeklyContestEntity wc WHERE wc.startAt <= :now AND wc.endAt > :now")
     fun findInProgressWeeklyContest(now: LocalDateTime): WeeklyContestEntity?
 

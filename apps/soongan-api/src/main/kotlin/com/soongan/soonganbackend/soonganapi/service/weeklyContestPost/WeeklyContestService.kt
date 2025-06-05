@@ -35,7 +35,8 @@ class WeeklyContestService(
 
     @Transactional(readOnly = true)
     fun getWeeklyContestList(): WeeklyContestListResponseDto {
-        val weeklyContestList: List<WeeklyContestEntity> = weeklyContestAdapter.getAllWeeklyContest()
+        // 1차 투표가 끝난 주간 콘테스트들만 조회
+        val weeklyContestList: List<WeeklyContestEntity> = weeklyContestAdapter.getEndedWeeklyContests()
         return WeeklyContestListResponseDto.from(weeklyContestList)
     }
 
