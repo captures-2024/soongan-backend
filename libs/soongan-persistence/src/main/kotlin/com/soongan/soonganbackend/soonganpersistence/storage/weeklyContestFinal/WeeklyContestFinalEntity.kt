@@ -44,7 +44,7 @@ data class WeeklyContestFinalEntity(
     val ranking: Int,
 
     @Column(name = "score")
-    val score: BigDecimal
+    val score: Int
 ) {
 
     @CreatedDate

@@ -26,6 +26,7 @@ object Uri {
 
     const val WEEKLY = "/weekly"
     const val CONTESTS = "/contests"
+    const val HISTORIES = "/histories"
     const val POSTS = "/posts"
     const val COMMENTS = "/comments"
     const val REPLIES = "/replies"

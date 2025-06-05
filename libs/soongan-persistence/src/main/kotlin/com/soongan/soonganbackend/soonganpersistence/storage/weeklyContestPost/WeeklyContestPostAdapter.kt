@@ -95,4 +95,9 @@ class WeeklyContestPostAdapter(
     fun deleteWeeklyContestPost(postId: Long) {
         weeklyContestPostRepository.deleteById(postId)
     }
+
+    @Transactional(readOnly = true)
+    fun countByWeeklyContestId(contestId: Long): Int {
+        return weeklyContestPostRepository.countByWeeklyContestId(contestId)
+    }
 }
