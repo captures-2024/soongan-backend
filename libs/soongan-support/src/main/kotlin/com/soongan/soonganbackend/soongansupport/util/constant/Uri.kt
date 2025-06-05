@@ -44,6 +44,8 @@ object Uri {
     const val APPLE_LOGIN = "/apple_login"
     const val SUCCESS = "/success"
 
+    const val CURSOR = "/cursor"
+
     val passGetUris = listOf(
         HEALTH,
         API_DOCS,

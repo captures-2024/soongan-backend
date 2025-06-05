@@ -79,8 +79,8 @@ class WeeklyContestController (
         summary = "[커서기반] 주간 콘테스트 게시글 조회 Api",
         description = "[커서기반] 주간 콘테스트 게시글을 조회합니다. 라운드와 정렬 기준을 이용하여 조회할 수 있습니다."
     )
-    @GetMapping(Uri.POSTS)
-    fun getWeeklyContestPosts(
+    @GetMapping(Uri.POSTS + Uri.CURSOR)
+    fun getWeeklyContestPostsCursor(
         @RequestParam(required = false) round: Int? = null,
         @RequestParam orderCriteria: WeeklyContestPostOrderCriteriaEnum,
         @RequestParam(required = false) nextCursor: String?,
