@@ -30,7 +30,7 @@ data class WeeklyContestPostEntity(
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = null,
+    val id: Long = 0L,
 
     @ManyToOne(targetEntity = WeeklyContestEntity::class, fetch = FetchType.LAZY)
     @JoinColumn(name = "weekly_contest_id")

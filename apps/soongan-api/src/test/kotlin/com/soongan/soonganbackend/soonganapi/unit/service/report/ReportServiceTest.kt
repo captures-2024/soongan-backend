@@ -58,7 +58,7 @@ class ReportServiceTest {
             id = 1,
             reportMember = loginMember,
             targetMember = targetMember,
-            targetId = post.id!!,
+            targetId = post.id,
             targetType = ReportTargetTypeEnum.WEEKLY_POST,
             reportType = ReportTypeEnum.SPAM,
             reason = request.reason

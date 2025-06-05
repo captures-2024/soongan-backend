@@ -25,7 +25,7 @@ class PostLikeService(
             val updatedPost: WeeklyContestPostEntity = weeklyContestPostAdapter.getByIdOrNull(request.postId)?.let { post ->
 
                 // 중복 좋아요 방지
-                isDuplicateLike(post.id!!, request.contestType, loginMember)
+                isDuplicateLike(post.id, request.contestType, loginMember)
 
                 // 좋아요 추가
                 postLikeAdapter.addLike(
@@ -41,7 +41,7 @@ class PostLikeService(
             } ?: throw SoonganException(StatusCode.SOONGAN_API_NOT_FOUND_WEEKLY_CONTEST_POST)
 
             return PostLikeResponseDto(
-                postId = updatedPost.id!!,
+                postId = updatedPost.id,
                 likeCount = updatedPost.likeCount
             )
         } else {
@@ -55,7 +55,7 @@ class PostLikeService(
             val updatedPost: WeeklyContestPostEntity = weeklyContestPostAdapter.getByIdOrNull(request.postId)?.let { post ->
 
                 // 좋아요 취소
-                postLikeAdapter.cancelLike(post.id!!, request.contestType, loginMember)
+                postLikeAdapter.cancelLike(post.id, request.contestType, loginMember)
 
                 // 좋아요 개수 감소
                 weeklyContestPostAdapter.save(
@@ -64,7 +64,7 @@ class PostLikeService(
             } ?: throw SoonganException(StatusCode.SOONGAN_API_NOT_FOUND_WEEKLY_CONTEST_POST)
 
             return PostLikeResponseDto(
-                postId = updatedPost.id!!,
+                postId = updatedPost.id,
                 likeCount = updatedPost.likeCount
             )
         } else {

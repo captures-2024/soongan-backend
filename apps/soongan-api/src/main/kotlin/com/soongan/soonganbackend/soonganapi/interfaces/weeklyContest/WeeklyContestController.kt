@@ -76,6 +76,21 @@ class WeeklyContestController (
     }
 
     @Operation(
+        summary = "[커서기반] 주간 콘테스트 게시글 조회 Api",
+        description = "[커서기반] 주간 콘테스트 게시글을 조회합니다. 라운드와 정렬 기준을 이용하여 조회할 수 있습니다."
+    )
+    @GetMapping(Uri.POSTS)
+    fun getWeeklyContestPosts(
+        @RequestParam(required = false) round: Int? = null,
+        @RequestParam orderCriteria: WeeklyContestPostOrderCriteriaEnum,
+        @RequestParam(required = false) nextCursor: String?,
+        @RequestParam(required = false, defaultValue = "50") pageSize: Int
+    ): WeeklyContestPostListCursorResponseDto {
+        return weeklyContestService.getWeeklyContestPostListWithCursor(round, orderCriteria, nextCursor, pageSize)
+    }
+
+
+    @Operation(
         summary = "내 주간 콘테스트 게시글 조회 Api",
         description = "내가 작성한 주간                                     콘테스트 게시글을 조회합니다.",
         security = [SecurityRequirement(name = "JWT")]

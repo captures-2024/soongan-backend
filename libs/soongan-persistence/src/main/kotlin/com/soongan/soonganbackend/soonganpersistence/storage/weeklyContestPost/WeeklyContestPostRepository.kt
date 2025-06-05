@@ -2,6 +2,7 @@ package com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost
 
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContest.WeeklyContestEntity
+import com.soongan.soonganbackend.soongansupport.util.dto.CursorResponseDto
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Slice
@@ -44,4 +45,16 @@ interface WeeklyContestPostRepository : JpaRepository<WeeklyContestPostEntity, L
     ): List<WeeklyContestPostEntity>
 
     fun countByWeeklyContestId(weeklyContestId: Long): Int
+}
+
+interface WeeklyContestPostRepositoryCustom {
+
+    // 현재 회차 최신순
+    fun queryLatestPost(nextCursor: String?, size: Int): CursorResponseDto<List<WeeklyContestPostEntity>>
+
+    // 현재 회차 오래된 순
+    fun queryOldestPost(nextCursor: String?, size: Int): CursorResponseDto<List<WeeklyContestPostEntity>>
+
+    // 현재 회차 좋아요 많은 순
+    fun queryMostLikedPost(nextCursor: String?, size: Int): CursorResponseDto<List<WeeklyContestPostEntity>>
 }

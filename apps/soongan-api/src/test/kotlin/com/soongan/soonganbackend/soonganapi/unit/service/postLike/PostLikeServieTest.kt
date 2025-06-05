@@ -56,7 +56,7 @@ class PostLikeServieTest {
         every { postLikeAdapter.existsByPostIdAndContestTypeAndMember(any(), any(), any()) } returns false
         every { postLikeAdapter.addLike(any(), any(), any()) } returns PostLikeEntity(
             id = 1,
-            postId = post.id!!,
+            postId = post.id,
             contestType = contestType,
             member = loginMember
         )

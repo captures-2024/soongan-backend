@@ -31,7 +31,7 @@ data class HomeResponseDto(
                 ),
                 postInfo = postInfo.map {
                     HomeMyPostInfo(
-                        postId = it.id!!,
+                        postId = it.id,
                         imageUrl = it.imageUrl,
                         likeCount = it.likeCount,
                         commentCount = it.commentCount
