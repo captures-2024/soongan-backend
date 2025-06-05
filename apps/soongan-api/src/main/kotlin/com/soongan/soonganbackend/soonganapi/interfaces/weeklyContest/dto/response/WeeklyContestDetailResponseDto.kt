@@ -14,6 +14,7 @@ data class WeeklyContestDetailResponseDto(
         val id: Long,
         val postId: Long,
         val nickname: String?,
+        val ranking: Int?,
         val score: Int,
     ) {
 
@@ -23,6 +24,7 @@ data class WeeklyContestDetailResponseDto(
                     id = weeklyContestFinalEntity.id!!,
                     postId = weeklyContestFinalEntity.weeklyContestPost.id!!,
                     nickname = weeklyContestFinalEntity.weeklyContestPost.member.nickname,
+                    ranking = weeklyContestFinalEntity.ranking,
                     score = weeklyContestFinalEntity.score
                 )
             }
