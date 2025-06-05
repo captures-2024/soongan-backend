@@ -2,7 +2,6 @@ package com.soongan.soonganbackend.soonganapi.interfaces.weeklyContest.dto.respo
 
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestFinal.WeeklyContestFinalEntity
 import io.swagger.v3.oas.annotations.media.Schema
-import java.math.BigDecimal
 
 @Schema(description = "역대 주간 콘테스트 상세 조회 응답 DTO")
 data class WeeklyContestDetailResponseDto(
