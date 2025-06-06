@@ -33,24 +33,24 @@ data class WeeklyContestListResponseDto(
 
         @Schema(required = true, description = "주간 콘테스트 공지 일자")
         val announcedAt: LocalDateTime,
-    )
 
-    companion object {
-        fun from(weeklyContests: List<WeeklyContestEntity>): WeeklyContestListResponseDto {
-            return WeeklyContestListResponseDto(
-                contests = weeklyContests.map {
-                    WeeklyContestDto(
-                        id = it.id!!,
-                        round = it.round,
-                        subject = it.subject,
-                        startAt = it.startAt,
-                        endAt = it.endAt,
-                        voteStartAt = it.voteStartAt,
-                        voteEndAt = it.voteEndAt,
-                        announcedAt = it.announcedAt,
-                    )
-                }
-            )
+        @Schema(required = true, description = "썸네일 이미지 URL (해당 콘테스트 1등 게시글 이미지)")
+        val thumbnailImageUrl: String,
+    ) {
+        companion object {
+            fun from(entity: WeeklyContestEntity, thumbnailImageUrl: String): WeeklyContestDto {
+                return WeeklyContestDto(
+                    id = entity.id!!,
+                    round = entity.round,
+                    subject = entity.subject,
+                    startAt = entity.startAt,
+                    endAt = entity.endAt,
+                    voteStartAt = entity.voteStartAt,
+                    voteEndAt = entity.voteEndAt,
+                    announcedAt = entity.announcedAt,
+                    thumbnailImageUrl = thumbnailImageUrl,
+                )
+            }
         }
     }
 }

@@ -39,7 +39,18 @@ class WeeklyContestService(
     fun getWeeklyContestList(): WeeklyContestListResponseDto {
         // 1차 투표가 끝난 주간 콘테스트들만 조회
         val weeklyContestList: List<WeeklyContestEntity> = weeklyContestAdapter.getEndedWeeklyContests()
-        return WeeklyContestListResponseDto.from(weeklyContestList)
+        return weeklyContestList.map { contest ->
+            val firstPrizePost = weeklyContestFinalAdapter.getFirstPrizePostByContestId(contest.id!!)
+                ?: throw SoonganException(
+                    StatusCode.SOONGAN_API_NOT_FOUND_WEEKLY_CONTEST_POST,
+                    "해당 콘테스트의 1등 게시글이 존재하지 않습니다."
+                )
+
+            WeeklyContestListResponseDto.WeeklyContestDto.from(
+                entity = contest,
+                thumbnailImageUrl = firstPrizePost.weeklyContestPost.imageUrl
+            )
+        }.let { WeeklyContestListResponseDto(it) }
     }
 
     @Transactional(readOnly = true)

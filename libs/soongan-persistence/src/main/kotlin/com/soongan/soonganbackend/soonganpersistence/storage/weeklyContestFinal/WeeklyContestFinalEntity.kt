@@ -41,7 +41,7 @@ data class WeeklyContestFinalEntity(
     val weeklyContestPost: WeeklyContestPostEntity,
 
     @Column(name = "ranking")
-    val ranking: Int?,
+    val ranking: Int,
 
     @Column(name = "score")
     val score: Int

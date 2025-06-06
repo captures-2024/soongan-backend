@@ -9,4 +9,8 @@ class WeeklyContestFinalAdapter(
     fun getFinalPostsByContestId(contestId: Long): List<WeeklyContestFinalEntity> {
         return weeklyContestFinRepository.findAllByWeeklyContestId(contestId)
     }
+
+    fun getFirstPrizePostByContestId(contestId: Long): WeeklyContestFinalEntity? {
+        return weeklyContestFinRepository.findFirstPrizePostByContestId(contestId)
+    }
 }
