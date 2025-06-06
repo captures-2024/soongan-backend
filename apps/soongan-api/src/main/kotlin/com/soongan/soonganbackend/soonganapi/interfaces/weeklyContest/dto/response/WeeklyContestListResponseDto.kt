@@ -25,12 +25,6 @@ data class WeeklyContestListResponseDto(
         @Schema(required = true, description = "주간 콘테스트 종료 일자")
         val endAt: LocalDateTime,
 
-        @Schema(required = true, description = "주간 콘테스트 투표 시작 일자")
-        val voteStartAt: LocalDateTime,
-
-        @Schema(required = true, description = "주간 콘테스트 투표 종료 일자")
-        val voteEndAt: LocalDateTime,
-
         @Schema(required = true, description = "주간 콘테스트 공지 일자")
         val announcedAt: LocalDateTime,
 
@@ -45,8 +39,6 @@ data class WeeklyContestListResponseDto(
                     subject = entity.subject,
                     startAt = entity.startAt,
                     endAt = entity.endAt,
-                    voteStartAt = entity.voteStartAt,
-                    voteEndAt = entity.voteEndAt,
                     announcedAt = entity.announcedAt,
                     thumbnailImageUrl = thumbnailImageUrl,
                 )

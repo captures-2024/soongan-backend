@@ -18,6 +18,7 @@ import com.soongan.soonganbackend.soongansupport.domain.ContestTypeEnum
 import com.soongan.soonganbackend.soongansupport.domain.WeeklyContestPostOrderCriteriaEnum
 import com.soongan.soonganbackend.soongansupport.util.exception.SoonganException
 import com.soongan.soonganbackend.soongansupport.util.exception.StatusCode
+import com.soongan.soonganbackend.soongansupport.util.exception.StatusCode.SOONGAN_API_CANNOT_UPDATE_POST_AFTER_VOTE_END
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Slice
 import org.springframework.stereotype.Service
@@ -154,8 +155,8 @@ class WeeklyContestService(
         val weeklyContest = weeklyContestValidator.getWeeklyContestIfValidRound()
 
         val now = LocalDateTime.now()
-        if (weeklyContest.voteStartAt.isBefore(now)) {
-            throw SoonganException(StatusCode.SOONGAN_API_CANNOT_UPDATE_POST_AFTER_STARTING_VOTE)
+        if (weeklyContest.endAt.isBefore(now)) {
+            throw SoonganException(SOONGAN_API_CANNOT_UPDATE_POST_AFTER_VOTE_END)
         }
 
         val validatedPost = weeklyContestPostValidator.validatePostOwner(loginMember, postId)

@@ -6,8 +6,6 @@ create table weekly_contest
     max_post_allowed int          not null,
     start_at         datetime     not null,
     end_at           datetime     not null,
-    vote_start_at    datetime     not null,
-    vote_end_at      datetime     not null,
     announced_at     datetime     not null,
     created_at       datetime     null,
     updated_at       datetime     null
