@@ -21,6 +21,6 @@ class WeeklyContestAdapter (
     }
 
     fun getLatestEndedWeeklyContest(now: LocalDateTime = LocalDateTime.now()): WeeklyContestEntity? {
-        return weeklyContestRepository.findLatestEndedWeeklyContest(now)
+        return weeklyContestRepository.findFirstByEndAtBeforeOrderByEndAtDesc(now)
     }
 }

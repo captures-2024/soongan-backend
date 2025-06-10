@@ -13,6 +13,5 @@ interface WeeklyContestRepository: JpaRepository<WeeklyContestEntity, Long> {
     @Query("SELECT wc FROM WeeklyContestEntity wc WHERE wc.startAt <= :now AND wc.endAt > :now")
     fun findInProgressWeeklyContest(now: LocalDateTime): WeeklyContestEntity?
 
-    @Query("SELECT wc FROM WeeklyContestEntity wc WHERE wc.endAt < :now ORDER BY wc.endAt DESC LIMIT 1")
-    fun findLatestEndedWeeklyContest(now: LocalDateTime): WeeklyContestEntity?
+    fun findFirstByEndAtBeforeOrderByEndAtDesc(now: LocalDateTime): WeeklyContestEntity?
 }
