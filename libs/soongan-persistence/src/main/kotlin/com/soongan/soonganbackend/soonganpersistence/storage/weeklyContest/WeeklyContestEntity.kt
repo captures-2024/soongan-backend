@@ -43,12 +43,6 @@ data class WeeklyContestEntity(
     @Column(name = "end_at", nullable = false)
     val endAt: LocalDateTime = LocalDateTime.MIN,
 
-    @Column(name = "vote_start_at", nullable = false)
-    val voteStartAt: LocalDateTime = LocalDateTime.MIN,
-
-    @Column(name = "vote_end_at", nullable = false)
-    val voteEndAt: LocalDateTime = LocalDateTime.MIN,
-
     @Column(name = "announced_at", nullable = false)
     val announcedAt: LocalDateTime = LocalDateTime.MIN
 ) {

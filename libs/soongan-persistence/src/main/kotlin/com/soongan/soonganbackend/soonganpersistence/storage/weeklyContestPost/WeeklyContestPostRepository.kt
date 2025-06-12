@@ -42,4 +42,6 @@ interface WeeklyContestPostRepository : JpaRepository<WeeklyContestPostEntity, L
         member: MemberEntity,
         weeklyContestEntity: WeeklyContestEntity
     ): List<WeeklyContestPostEntity>
+
+    fun countByWeeklyContestId(weeklyContestId: Long): Int
 }
