@@ -1,5 +1,7 @@
 package com.soongan.soonganbackend.soongansupport.util.constant
 
+import org.springframework.util.AntPathMatcher
+
 object Uri {
     const val HEALTH = "/_health"
     const val V3 = "/v3"
@@ -51,9 +53,16 @@ object Uri {
         SWAGGER_RESOURCES + "/**",
         V3 + API_DOCS + "/**",
 
-        ADMIN + "/**",
+        HOME,
+
+        COMMENTS,
+        COMMENTS + REPLIES,
 
         WEEKLY + CONTESTS + POSTS,
+        WEEKLY + CONTESTS + POSTS + "/{postId}",
+
+        WEEKLY + CONTESTS + HISTORIES,
+        WEEKLY + CONTESTS + HISTORIES + "/{contestId}",
 
         CALLBACK + APPLE_LOGIN,
         CALLBACK + APPLE_LOGIN + SUCCESS
@@ -76,12 +85,7 @@ object Uri {
     )
 
     fun isPass(uri: String, passUris: List<String>): Boolean {
-        return passUris.any { passUri ->
-            if (passUri.endsWith("/**")) {
-                uri.startsWith(passUri.removeSuffix("/**"))
-            } else {
-                uri == passUri
-            }
-        }
+        val matcher = AntPathMatcher()
+        return passUris.any { pattern -> matcher.match(pattern, uri) }
     }
 }
