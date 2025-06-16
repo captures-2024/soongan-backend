@@ -1,10 +1,10 @@
-package com.soongan.soonganbackend.soonganapi.interfaces.weeklyContest.dto.response
+package com.soongan.soonganbackend.soonganapi.interfaces.awards.dto.response
 
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestFinal.WeeklyContestFinalEntity
 import io.swagger.v3.oas.annotations.media.Schema
 
 @Schema(description = "역대 주간 콘테스트 상세 조회 응답 DTO")
-data class WeeklyContestDetailResponseDto(
+data class AwardsDetailResponseDto(
     val postsCount: Int,
     val firstPrizePost: FirstPrizePostResponseDto,
     val otherTop7Posts: List<TopPostResponseDto>
@@ -53,14 +53,14 @@ data class WeeklyContestDetailResponseDto(
     }
 
     companion object {
-        fun from(postsCount: Int, top7Posts: List<WeeklyContestFinalEntity>): WeeklyContestDetailResponseDto {
+        fun from(postsCount: Int, top7Posts: List<WeeklyContestFinalEntity>): AwardsDetailResponseDto {
             if (top7Posts.isEmpty()) {
                 throw IllegalArgumentException("Top posts list cannot be empty")
             }
             val sortedTop7Posts = top7Posts.sortedBy { it.ranking }
             val firstPrizePost = FirstPrizePostResponseDto.from(sortedTop7Posts.first())
             val otherTop7Posts = sortedTop7Posts.drop(1).map { TopPostResponseDto.from(it) }
-            return WeeklyContestDetailResponseDto(
+            return AwardsDetailResponseDto(
                 postsCount = postsCount,
                 firstPrizePost = firstPrizePost,
                 otherTop7Posts = otherTop7Posts

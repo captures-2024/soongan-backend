@@ -35,6 +35,8 @@ object Uri {
     const val LIKE = "/like"
     const val MY_HISTORY = "/my-hisotry"
 
+    const val AWARDS = "/awards"
+
     const val FCM = "/fcm"
     const val NOTIFICATIONS = "/notifications"
 
@@ -61,8 +63,8 @@ object Uri {
         WEEKLY + CONTESTS + POSTS,
         WEEKLY + CONTESTS + POSTS + "/{postId}",
 
-        WEEKLY + CONTESTS + HISTORIES,
-        WEEKLY + CONTESTS + HISTORIES + "/{contestId}",
+        AWARDS,
+        AWARDS + "/{contestId}",
 
         CALLBACK + APPLE_LOGIN,
         CALLBACK + APPLE_LOGIN + SUCCESS

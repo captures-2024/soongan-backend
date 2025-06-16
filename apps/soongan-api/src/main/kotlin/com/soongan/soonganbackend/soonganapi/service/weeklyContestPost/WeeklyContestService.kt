@@ -12,8 +12,6 @@ import com.soongan.soonganbackend.soonganapi.service.weeklyContest.validator.Wee
 import com.soongan.soonganbackend.soongansupport.domain.WeeklyContestPostOrderCriteriaEnum.*
 import com.soongan.soonganbackend.soonganapi.service.weeklyContestPost.validator.WeeklyContestPostValidator
 import com.soongan.soonganbackend.soonganpersistence.storage.postLike.PostLikeAdapter
-import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContest.WeeklyContestAdapter
-import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestFinal.WeeklyContestFinalAdapter
 import com.soongan.soonganbackend.soongansupport.domain.ContestTypeEnum
 import com.soongan.soonganbackend.soongansupport.domain.WeeklyContestPostOrderCriteriaEnum
 import com.soongan.soonganbackend.soongansupport.util.exception.SoonganException
@@ -27,39 +25,12 @@ import java.time.LocalDateTime
 
 @Service
 class WeeklyContestService(
-    private val weeklyContestAdapter: WeeklyContestAdapter,
     private val weeklyContestPostAdapter: WeeklyContestPostAdapter,
-    private val weeklyContestFinalAdapter: WeeklyContestFinalAdapter,
     private val gcpStorageService: GcpStorageService,
     private val weeklyContestPostValidator: WeeklyContestPostValidator,
     private val weeklyContestValidator: WeeklyContestValidator,
     private val likeAdapter: PostLikeAdapter
 ) {
-
-    @Transactional(readOnly = true)
-    fun getWeeklyContestList(): WeeklyContestListResponseDto {
-        // 1차 투표가 끝난 주간 콘테스트들만 조회
-        val weeklyContestList: List<WeeklyContestEntity> = weeklyContestAdapter.getEndedWeeklyContests()
-        return weeklyContestList.map { contest ->
-            val firstPrizePost = weeklyContestFinalAdapter.getFirstPrizePostByContestId(contest.id!!)
-                ?: throw SoonganException(
-                    StatusCode.SOONGAN_API_NOT_FOUND_WEEKLY_CONTEST_POST,
-                    "해당 콘테스트의 1등 게시글이 존재하지 않습니다."
-                )
-
-            WeeklyContestListResponseDto.WeeklyContestDto.from(
-                entity = contest,
-                thumbnailImageUrl = firstPrizePost.weeklyContestPost.imageUrl
-            )
-        }.let { WeeklyContestListResponseDto(it) }
-    }
-
-    @Transactional(readOnly = true)
-    fun getWeeklyContestDetail(contestId: Long): WeeklyContestDetailResponseDto {
-        val postsCount = weeklyContestPostAdapter.countByWeeklyContestId(contestId)
-        val top7Posts = weeklyContestFinalAdapter.getFinalPostsByContestId(contestId)
-        return WeeklyContestDetailResponseDto.from(postsCount, top7Posts)
-    }
 
     @Transactional(readOnly = true)
     fun getWeeklyContestPost(postId: Long, loginMember: MemberEntity?): WeeklyContestPostResponseDto {

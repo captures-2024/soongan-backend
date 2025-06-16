@@ -1,10 +1,10 @@
-package com.soongan.soonganbackend.soonganapi.interfaces.weeklyContest.dto.response
+package com.soongan.soonganbackend.soonganapi.interfaces.awards.dto.response
 
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContest.WeeklyContestEntity
 import io.swagger.v3.oas.annotations.media.Schema
 import java.time.LocalDateTime
 
-data class WeeklyContestListResponseDto(
+data class WeeklyContestAwardsResponseDto(
     @Schema(description = "주간 콘테스트 목록", required = true)
     val contests: List<WeeklyContestDto>,
 ) {
