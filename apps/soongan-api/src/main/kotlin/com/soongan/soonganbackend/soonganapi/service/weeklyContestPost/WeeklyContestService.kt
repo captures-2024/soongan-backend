@@ -12,6 +12,7 @@ import com.soongan.soonganbackend.soonganapi.service.weeklyContest.validator.Wee
 import com.soongan.soonganbackend.soongansupport.domain.WeeklyContestPostOrderCriteriaEnum.*
 import com.soongan.soonganbackend.soonganapi.service.weeklyContestPost.validator.WeeklyContestPostValidator
 import com.soongan.soonganbackend.soonganpersistence.storage.postLike.PostLikeAdapter
+import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContest.WeeklyContestAdapter
 import com.soongan.soonganbackend.soongansupport.domain.ContestTypeEnum
 import com.soongan.soonganbackend.soongansupport.domain.WeeklyContestPostOrderCriteriaEnum
 import com.soongan.soonganbackend.soongansupport.util.exception.SoonganException
@@ -25,12 +26,19 @@ import java.time.LocalDateTime
 
 @Service
 class WeeklyContestService(
+    private val weeklyContestAdapter: WeeklyContestAdapter,
     private val weeklyContestPostAdapter: WeeklyContestPostAdapter,
     private val gcpStorageService: GcpStorageService,
     private val weeklyContestPostValidator: WeeklyContestPostValidator,
     private val weeklyContestValidator: WeeklyContestValidator,
     private val likeAdapter: PostLikeAdapter
 ) {
+
+    @Transactional(readOnly = true)
+    fun getWeeklyContestList(): WeeklyContestListResponseDto {
+        val weeklyContestList = weeklyContestAdapter.getAllWeeklyContests()
+        return WeeklyContestListResponseDto.from(weeklyContestList)
+    }
 
     @Transactional(readOnly = true)
     fun getWeeklyContestPost(postId: Long, loginMember: MemberEntity?): WeeklyContestPostResponseDto {

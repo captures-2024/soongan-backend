@@ -60,6 +60,7 @@ object Uri {
         COMMENTS,
         COMMENTS + REPLIES,
 
+        WEEKLY + CONTESTS,
         WEEKLY + CONTESTS + POSTS,
         WEEKLY + CONTESTS + POSTS + "/{postId}",
 
