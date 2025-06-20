@@ -103,6 +103,32 @@ class WeeklyContestService(
     }
 
     @Transactional(readOnly = true)
+    fun getWeeklyContestPostListWithCursor(
+        round: Int?,
+        orderCriteria: WeeklyContestPostOrderCriteriaEnum,
+        currentCursor: String?,
+        pageSize: Int
+    ): WeeklyContestPostListCursorResponseDto {
+        val weeklyContest = weeklyContestValidator.getWeeklyContestIfValidRound(round)
+
+        val posts = when (orderCriteria) {
+            LATEST -> {
+                weeklyContestPostAdapter.queryLatestPost(currentCursor, pageSize)
+            }
+            MOST_LIKED -> {
+                weeklyContestPostAdapter.queryMostLikedPost(currentCursor, pageSize)
+            }
+            OLDEST -> {
+                weeklyContestPostAdapter.queryOldestPost(currentCursor, pageSize)
+            }
+        }
+
+        return WeeklyContestPostListCursorResponseDto.from(
+            weeklyContest, posts
+        )
+    }
+
+    @Transactional(readOnly = true)
     fun getMyWeeklyContestPostList(
         loginMember: MemberEntity,
         page: Int,
@@ -143,7 +169,7 @@ class WeeklyContestService(
         )
 
         return WeeklyContestPostRegisterResponseDto(
-            postId = savedPost.id!!,
+            postId = savedPost.id,
             title = savedPost.title,
             imageUrl = savedPost.imageUrl,
             registerNickname = loginMember.nickname!!

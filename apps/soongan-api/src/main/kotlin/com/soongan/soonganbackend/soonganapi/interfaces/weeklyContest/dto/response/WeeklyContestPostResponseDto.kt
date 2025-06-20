@@ -34,7 +34,7 @@ data class WeeklyContestPostResponseDto(
         fun from(memberId: Long? = null, weeklyContestPost: WeeklyContestPostEntity, isLiked: Boolean = false): WeeklyContestPostResponseDto {
             return WeeklyContestPostResponseDto(
                 memberId = memberId,
-                postId = weeklyContestPost.id!!,
+                postId = weeklyContestPost.id,
                 title = weeklyContestPost.title,
                 imageUrl = weeklyContestPost.imageUrl,
                 nickname = weeklyContestPost.member.nickname!!,

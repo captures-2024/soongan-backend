@@ -30,7 +30,7 @@ data class MyWeeklyContestPostResponseDto(
                     PostInfo(
                         round = it.weeklyContest.round,
                         subject = it.weeklyContest.subject,
-                        postId = it.id!!,
+                        postId = it.id,
                         imageUrl = it.imageUrl,
                         likeCount = it.likeCount
                     )
