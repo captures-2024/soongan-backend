@@ -8,7 +8,7 @@ create table comment
     parent_comment_id bigint      null,
     comment_status    varchar(20) not null,
     like_count        int default 0,
-    is_blind          boolean default false,
+    blinded_at        datetime    null,
     created_at        datetime    null,
     updated_at        datetime    null,
     deleted_at        datetime    null,
