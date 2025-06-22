@@ -21,6 +21,7 @@ class ReportService(
     private val weeklyContestPostAdapter: WeeklyContestPostAdapter,
     private val commentAdapter: CommentAdapter
 ) {
+    private val BLIND_REPORT_COUNT = 3
 
     fun report(loginMember: MemberEntity, dto: ReportSaveRequestDto): ReportSaveResponseDto {
         val target = getTargetEntity(dto.targetType, dto.targetId)
@@ -68,7 +69,7 @@ class ReportService(
 
     private fun handleBlindingIfNeeded(targetId: Long, targetType: ReportTargetTypeEnum, target: Any): Unit {
         val reportCount = reportAdapter.countByTargetIdAndTargetType(targetId, targetType)
-        if (reportCount < 3) return
+        if (reportCount < BLIND_REPORT_COUNT) return
 
         val now = LocalDateTime.now()
         when (target) {
