@@ -1,6 +1,8 @@
 package com.soongan.soonganbackend.soonganapi.interfaces.awards.dto.response
 
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestFinal.WeeklyContestFinalEntity
+import com.soongan.soonganbackend.soongansupport.domain.AwardsPostStatusEnum
+import com.soongan.soonganbackend.soongansupport.domain.DeletedReasonEnum
 import io.swagger.v3.oas.annotations.media.Schema
 
 @Schema(description = "역대 주간 콘테스트 상세 조회 응답 DTO")
@@ -37,16 +39,30 @@ data class AwardsDetailResponseDto(
         val nickname: String?,
         val ranking: Int,
         val score: Int,
+        val status: AwardsPostStatusEnum
     ) {
 
         companion object {
             fun from(weeklyContestFinalEntity: WeeklyContestFinalEntity): TopPostResponseDto {
+                val post = weeklyContestFinalEntity.weeklyContestPost
+                val status = if (post.deletedAt != null) {
+                    when (post.deletedReason) {
+                        DeletedReasonEnum.BY_CREATOR -> AwardsPostStatusEnum.DELETED_BY_CREATOR
+                        else -> AwardsPostStatusEnum.DELETED_BY_ADMIN // deletedAt이 true인데 deletedReason이 null인 경우는 어쩌지? 일단 admin 삭제로 처리
+                    }
+                } else if (post.blindedAt != null) {
+                    AwardsPostStatusEnum.BLINDED
+                } else {
+                    AwardsPostStatusEnum.ACTIVE
+                }
+
                 return TopPostResponseDto(
                     postId = weeklyContestFinalEntity.weeklyContestPost.id!!,
-                    imageUrl = weeklyContestFinalEntity.weeklyContestPost.imageUrl,
-                    nickname = weeklyContestFinalEntity.weeklyContestPost.member.nickname,
+                    imageUrl = post.imageUrl,
+                    nickname = post.member.nickname,
                     ranking = weeklyContestFinalEntity.ranking,
-                    score = weeklyContestFinalEntity.score
+                    score = weeklyContestFinalEntity.score,
+                    status = status
                 )
             }
         }

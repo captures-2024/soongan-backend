@@ -2,6 +2,7 @@ package com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost
 
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContest.WeeklyContestEntity
+import com.soongan.soonganbackend.soongansupport.domain.DeletedReasonEnum
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.EntityListeners
@@ -52,14 +53,14 @@ data class WeeklyContestPostEntity(
     @Column(name = "comment_count")
     val commentCount: Int = 0,
 
-    @Column(name = "is_blind")
-    val isBlind: Boolean = false,
+    @Column(name = "bliended_at")
+    val blindedAt: LocalDateTime? = null,
 
     @Column(name = "deleted_at")
     val deletedAt: LocalDateTime? = null,
 
     @Column(name = "deleted_reason")
-    val deletedReason: String? = null,
+    val deletedReason: DeletedReasonEnum? = null,
 ) {
 
     @CreatedDate
