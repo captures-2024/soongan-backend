@@ -10,7 +10,8 @@ create table comment
     like_count        int default 0,
     is_blind          boolean default false,
     created_at        datetime    null,
-    updated_at        datetime    null
+    updated_at        datetime    null,
+    deleted_at        datetime    null,
 );
 
 create index comment_idx_member_id_contest_type on comment (member_id, contest_type);

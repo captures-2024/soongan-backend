@@ -53,7 +53,13 @@ data class WeeklyContestPostEntity(
     val commentCount: Int = 0,
 
     @Column(name = "is_blind")
-    val isBlind: Boolean = false
+    val isBlind: Boolean = false,
+
+    @Column(name = "deleted_at")
+    val deletedAt: LocalDateTime? = null,
+
+    @Column(name = "deleted_reason")
+    val deletedReason: String? = null,
 ) {
 
     @CreatedDate
