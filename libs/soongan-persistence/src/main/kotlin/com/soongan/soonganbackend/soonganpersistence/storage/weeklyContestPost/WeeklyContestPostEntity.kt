@@ -53,7 +53,7 @@ data class WeeklyContestPostEntity(
     @Column(name = "comment_count")
     val commentCount: Int = 0,
 
-    @Column(name = "bliended_at")
+    @Column(name = "blinded_at")
     val blindedAt: LocalDateTime? = null,
 
     @Column(name = "deleted_at")
