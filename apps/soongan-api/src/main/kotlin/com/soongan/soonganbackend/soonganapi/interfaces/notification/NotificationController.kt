@@ -1,5 +1,6 @@
 package com.soongan.soonganbackend.soonganapi.interfaces.notification
 
+import com.soongan.soonganbackend.soonganapi.interfaces.notification.dto.response.GetNotiSettingResponseDto
 import com.soongan.soonganbackend.soonganapi.interfaces.notification.dto.response.GetNotificationCountResponseDto
 import com.soongan.soonganbackend.soonganapi.interfaces.notification.dto.response.GetNotificationResponseDto
 import com.soongan.soonganbackend.soonganapi.service.notification.NotificationService
@@ -64,5 +65,15 @@ class NotificationController(
     )
     fun deleteNotification(@LoginMember loginMember: MemberEntity, @PathVariable("notificationId") notificationId: Long): Unit {
         notificationService.deleteNotification(loginMember, notificationId)
+    }
+
+    @GetMapping(Uri.SETTINGS)
+    @Operation(
+        summary = "알림 설정 조회 Api",
+        description = "유저의 알림 설정을 조회합니다.",
+        security = [SecurityRequirement(name = "JWT")]
+    )
+    fun getNotiSetting(@LoginMember loginMember: MemberEntity): GetNotiSettingResponseDto {
+        return notificationService.getNotiSetting(loginMember)
     }
 }

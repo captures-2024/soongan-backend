@@ -1,8 +1,11 @@
 package com.soongan.soonganbackend.soonganapi.service.notification
 
+import com.soongan.soonganbackend.soonganapi.interfaces.notification.dto.response.GetNotiSettingResponseDto
 import com.soongan.soonganbackend.soonganapi.interfaces.notification.dto.response.GetNotificationCountResponseDto
 import com.soongan.soonganbackend.soonganapi.interfaces.notification.dto.response.GetNotificationResponseDto
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
+import com.soongan.soonganbackend.soonganpersistence.storage.notiSetting.NotiSettingAdapter
+import com.soongan.soonganbackend.soonganpersistence.storage.notiSetting.NotiSettingEntity
 import com.soongan.soonganbackend.soonganpersistence.storage.notification.NotificationAdapter
 import com.soongan.soonganbackend.soongansupport.domain.NotificationSubTypeEnum
 import com.soongan.soonganbackend.soongansupport.domain.NotificationTypeEnum
@@ -13,7 +16,8 @@ import org.springframework.transaction.annotation.Transactional
 
 @Service
 class NotificationService(
-    private val notificationAdapter: NotificationAdapter
+    private val notificationAdapter: NotificationAdapter,
+    private val notiSettingAdapter: NotiSettingAdapter
 ) {
 
     fun countNotification(loginMember: MemberEntity): List<GetNotificationCountResponseDto> {
@@ -58,5 +62,24 @@ class NotificationService(
         }
 
         notificationAdapter.delete(notification)
+    }
+
+    @Transactional
+    fun getNotiSetting(loginMember: MemberEntity): GetNotiSettingResponseDto {
+        val notiSetting = notiSettingAdapter.findByMemberId(loginMember.id)
+        return if (notiSetting == null) {
+            // 알림 설정이 없으면 새로 생성
+            val createdNotiSetting = notiSettingAdapter.save(
+                NotiSettingEntity(
+                    member = loginMember,
+                    contestPush = false,
+                    activityPush = false,
+                    noticePush = false
+                )
+            )
+            GetNotiSettingResponseDto.from(createdNotiSetting)
+        } else {
+            GetNotiSettingResponseDto.from(notiSetting)
+        }
     }
 }

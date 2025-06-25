@@ -34,9 +34,10 @@ object Uri {
     const val MY_HISTORY = "/my-hisotry"
 
     const val FCM = "/fcm"
-    const val NOTIFICATIONS = "/notifications"
 
+    const val NOTIFICATIONS = "/notifications"
     const val UNREAD_COUNT = "/unread-count"
+    const val SETTINGS = "/settings"
 
     const val REPORT = "/report"
 
