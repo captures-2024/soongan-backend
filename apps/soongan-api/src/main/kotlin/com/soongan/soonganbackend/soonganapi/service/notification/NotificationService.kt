@@ -1,6 +1,7 @@
 package com.soongan.soonganbackend.soonganapi.service.notification
 
-import com.soongan.soonganbackend.soonganapi.interfaces.notification.dto.response.GetNotiSettingResponseDto
+import com.soongan.soonganbackend.soonganapi.interfaces.notification.dto.request.UpdateNotiSettingRequestDto
+import com.soongan.soonganbackend.soonganapi.interfaces.notification.dto.response.NotiSettingResponseDto
 import com.soongan.soonganbackend.soonganapi.interfaces.notification.dto.response.GetNotificationCountResponseDto
 import com.soongan.soonganbackend.soonganapi.interfaces.notification.dto.response.GetNotificationResponseDto
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
@@ -65,7 +66,7 @@ class NotificationService(
     }
 
     @Transactional
-    fun getNotiSetting(loginMember: MemberEntity): GetNotiSettingResponseDto {
+    fun getNotiSetting(loginMember: MemberEntity): NotiSettingResponseDto {
         val notiSetting = notiSettingAdapter.findByMemberId(loginMember.id)
         return if (notiSetting == null) {
             // 알림 설정이 없으면 새로 생성
@@ -77,9 +78,25 @@ class NotificationService(
                     noticePush = false
                 )
             )
-            GetNotiSettingResponseDto.from(createdNotiSetting)
+            NotiSettingResponseDto.from(createdNotiSetting)
         } else {
-            GetNotiSettingResponseDto.from(notiSetting)
+            NotiSettingResponseDto.from(notiSetting)
         }
     }
+
+    fun updateNotiSetting(loginMember: com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity, requestDto: com.soongan.soonganbackend.soonganapi.interfaces.notification.dto.request.UpdateNotiSettingRequestDto): com.soongan.soonganbackend.soonganapi.interfaces.notification.dto.response.NotiSettingResponseDto {
+        val notiSetting = notiSettingAdapter.findByMemberId(loginMember.id)
+            ?: throw SoonganException(StatusCode.SOONGAN_API_NOT_FOUND_NOTI_SETTING, "알림 설정이 존재하지 않습니다.")
+
+        val updatedNotiSetting = notiSetting.copy(
+            contestPush = requestDto.contestPush ?: notiSetting.contestPush,
+            activityPush = requestDto.activityPush ?: notiSetting.activityPush,
+            noticePush = requestDto.noticePush ?: notiSetting.noticePush
+        )
+
+        val savedNotiSetting = notiSettingAdapter.save(updatedNotiSetting)
+
+        return NotiSettingResponseDto.from(savedNotiSetting)
+    }
+
 }
