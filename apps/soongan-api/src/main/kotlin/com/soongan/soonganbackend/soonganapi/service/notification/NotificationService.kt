@@ -84,7 +84,7 @@ class NotificationService(
         }
     }
 
-    fun updateNotiSetting(loginMember: com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity, requestDto: com.soongan.soonganbackend.soonganapi.interfaces.notification.dto.request.UpdateNotiSettingRequestDto): com.soongan.soonganbackend.soonganapi.interfaces.notification.dto.response.NotiSettingResponseDto {
+    fun updateNotiSetting(loginMember: MemberEntity, requestDto: UpdateNotiSettingRequestDto): NotiSettingResponseDto {
         val notiSetting = notiSettingAdapter.findByMemberId(loginMember.id)
             ?: throw SoonganException(StatusCode.SOONGAN_API_NOT_FOUND_NOTI_SETTING, "알림 설정이 존재하지 않습니다.")
 
