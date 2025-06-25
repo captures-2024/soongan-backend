@@ -1,7 +1,6 @@
-package com.soongan.soonganbackend.soonganpersistence.storage.notiMember
+package com.soongan.soonganbackend.soonganpersistence.storage.notiSetting
 
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
-import com.soongan.soonganbackend.soonganpersistence.storage.notification.NotificationEntity
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.EntityListeners
@@ -10,7 +9,6 @@ import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
-import jakarta.persistence.ManyToOne
 import jakarta.persistence.OneToOne
 import jakarta.persistence.Table
 import org.springframework.data.annotation.CreatedDate
@@ -19,23 +17,25 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import java.time.LocalDateTime
 
 @Entity
-@Table(name = "noti_member")
+@Table(name = "noti_setting")
 @EntityListeners(AuditingEntityListener::class)
-data class NotiMemberEntity (
+data class NotiSettingEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = null,
+    val id: Long = 0,
 
     @OneToOne(targetEntity = MemberEntity::class, fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     val member: MemberEntity,
 
-    @OneToOne(targetEntity = NotificationEntity::class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "notification_id")
-    val notification: NotificationEntity,
+    @Column(name = "contest_push")
+    val contestPush: Boolean,
 
-    @Column(name = "is_read")
-    val isRead: Boolean = false
+    @Column(name = "activity_push")
+    val activityPush: Boolean,
+
+    @Column(name = "notice_push")
+    val noticePush: Boolean,
 ) {
 
     @CreatedDate
