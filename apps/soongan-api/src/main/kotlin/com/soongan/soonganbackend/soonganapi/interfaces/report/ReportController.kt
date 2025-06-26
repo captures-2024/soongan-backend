@@ -1,5 +1,6 @@
 package com.soongan.soonganbackend.soonganapi.interfaces.report
 
+import com.soongan.soonganbackend.soonganapi.interfaces.report.dto.request.ExplainSaveRequestDto
 import com.soongan.soonganbackend.soonganapi.interfaces.report.dto.request.ReportSaveRequestDto
 import com.soongan.soonganbackend.soonganapi.interfaces.report.dto.response.ReportSaveResponseDto
 import com.soongan.soonganbackend.soonganapi.service.report.ReportService
@@ -30,5 +31,15 @@ class ReportController(
     @PostMapping
     fun report(@LoginMember loginMember: MemberEntity, @RequestBody @Valid reportSaveRequestDto: ReportSaveRequestDto): ReportSaveResponseDto {
         return reportService.report(loginMember, reportSaveRequestDto)
+    }
+
+    @Operation(
+        summary = "소명하기 API",
+        description = "피신고자가 소명 사유를 입력하는 API 입니다.",
+        security = [SecurityRequirement(name = "JWT")]
+    )
+    @PostMapping
+    fun explain(@LoginMember loginMember: MemberEntity, @RequestBody @Valid explainSaveRequestDto: ExplainSaveRequestDto) {
+        reportService.explain(loginMember, explainSaveRequestDto)
     }
 }
