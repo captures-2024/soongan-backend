@@ -68,6 +68,7 @@ class ReportServiceTest {
         every { weeklyContestPostAdapter.getByIdOrNull(any()) } returns post
         every { reportAdapter.save(any()) } returns report
         every { reportAdapter.getReportHistoriesByReportMember(loginMember) } returns listOf(report)
+        every { reportAdapter.countByTargetIdAndTargetType(any(), any()) } returns 1
 
         // when
         val result = reportService.report(loginMember, request)

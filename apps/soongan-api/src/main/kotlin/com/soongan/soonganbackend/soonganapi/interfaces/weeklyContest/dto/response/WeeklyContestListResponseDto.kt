@@ -2,47 +2,35 @@ package com.soongan.soonganbackend.soonganapi.interfaces.weeklyContest.dto.respo
 
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContest.WeeklyContestEntity
 import io.swagger.v3.oas.annotations.media.Schema
-import java.time.LocalDateTime
 
+@Schema(description = "주간 콘테스트 목록 조회 응답 DTO")
 data class WeeklyContestListResponseDto(
-    @Schema(description = "주간 콘테스트 목록", required = true)
-    val contests: List<WeeklyContestDto>,
+    @Schema(description = "주간 콘테스트 목록")
+    val contests: List<WeeklyContestOverviewDto>,
 ) {
 
-    data class WeeklyContestDto(
-        @Schema(required = true, description = "주간 콘테스트 ID")
+    data class WeeklyContestOverviewDto(
+        @Schema(description = "주간 콘테스트 ID", required = true)
         val id: Long,
 
-        @Schema(required = true, description = "주간 콘테스트 라운드")
+        @Schema(description = "주간 콘테스트 라운드", required = true)
         val round: Int,
 
-        @Schema(required = true, description = "주간 콘테스트 주제")
+        @Schema(description = "주간 콘테스트 주제", required = true)
         val subject: String,
+    )
 
-        @Schema(required = true, description = "주간 콘테스트 시작 일자")
-        val startAt: LocalDateTime,
-
-        @Schema(required = true, description = "주간 콘테스트 종료 일자")
-        val endAt: LocalDateTime,
-
-        @Schema(required = true, description = "주간 콘테스트 공지 일자")
-        val announcedAt: LocalDateTime,
-
-        @Schema(required = true, description = "썸네일 이미지 URL (해당 콘테스트 1등 게시글 이미지)")
-        val thumbnailImageUrl: String,
-    ) {
-        companion object {
-            fun from(entity: WeeklyContestEntity, thumbnailImageUrl: String): WeeklyContestDto {
-                return WeeklyContestDto(
-                    id = entity.id!!,
-                    round = entity.round,
-                    subject = entity.subject,
-                    startAt = entity.startAt,
-                    endAt = entity.endAt,
-                    announcedAt = entity.announcedAt,
-                    thumbnailImageUrl = thumbnailImageUrl,
-                )
-            }
+    companion object {
+        fun from(contests: List<WeeklyContestEntity>): WeeklyContestListResponseDto {
+            return WeeklyContestListResponseDto(
+                contests = contests.map {
+                    WeeklyContestOverviewDto(
+                        id = it.id!!,
+                        round = it.round,
+                        subject = it.subject
+                    )
+                }
+            )
         }
     }
 }

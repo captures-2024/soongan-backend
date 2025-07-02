@@ -7,9 +7,11 @@ create table weekly_contest_post
     title             varchar(30) not null,
     like_count        int default 0,
     comment_count     int default 0,
-    is_blind          boolean default false,
-    created_at        datetime     null,
-    updated_at        datetime     null
+    blinded_at        datetime    null,
+    created_at        datetime    null,
+    updated_at        datetime    null,
+    deleted_at        datetime    null,
+    deleted_reason    varchar(100) null
 );
 
 create index weekly_contest_post_idx_weekly_contest_id on weekly_contest_post (weekly_contest_id);

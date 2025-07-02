@@ -58,8 +58,11 @@ data class CommentEntity(
     @Column(name = "like_count")
     val likeCount: Int = 0,
 
-    @Column(name = "is_blind")
-    val isBlind: Boolean = false
+    @Column(name = "blinded_at")
+    val blindedAt: LocalDateTime? = null,
+
+    @Column(name = "deleted_at")
+    val deletedAt: LocalDateTime? = null
     ) {
 
     @CreatedDate
