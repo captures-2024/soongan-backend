@@ -5,6 +5,7 @@ import com.nimbusds.jose.crypto.RSASSAVerifier
 import com.nimbusds.jose.jwk.RSAKey
 import com.nimbusds.jose.util.Base64URL
 import com.nimbusds.jwt.SignedJWT
+import com.soongan.soonganbackend.soonganapi.service.auth.validator.dto.OAuth2ValidateResult
 import com.soongan.soonganbackend.soongansupport.util.exception.SoonganException
 import com.soongan.soonganbackend.soongansupport.util.exception.StatusCode
 import org.springframework.stereotype.Service
@@ -16,7 +17,7 @@ class AppleOAuth2Validator(
     private val restTemplate: RestTemplate
 ) {
 
-    fun validateTokenAndGetEmail(idToken: String): String {
+    fun validateTokenAndGetEmail(idToken: String): OAuth2ValidateResult {
         val applePublicKeysUrl = "https://appleid.apple.com/auth/keys"
         val applePublicKeySets = restTemplate.getForObject<Map<*, *>>(
             applePublicKeysUrl
@@ -44,6 +45,12 @@ class AppleOAuth2Validator(
         }
 
         val claims = signedJWT.jwtClaimsSet
-        return claims.getStringClaim("email")
+        return OAuth2ValidateResult(
+            providerId = claims.subject,
+            email = claims.getStringClaim("email") ?: throw SoonganException(
+                StatusCode.INVALID_OAUTH2_ID_TOKEN,
+                "Apple 계정에 이메일 정보가 없습니다."
+            )
+        )
     }
 }

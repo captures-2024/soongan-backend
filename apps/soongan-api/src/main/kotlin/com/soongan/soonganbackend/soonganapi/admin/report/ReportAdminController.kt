@@ -21,7 +21,6 @@ class ReportAdminController {
     )
     @GetMapping
     fun getAll(@ModelAttribute @Valid requestDto: GetReportsAdminRequestDto): List<Int> {
-        println(requestDto)
         return listOf(1, 2, 3)
     }
 }

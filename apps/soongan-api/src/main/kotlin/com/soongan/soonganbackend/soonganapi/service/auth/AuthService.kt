@@ -33,16 +33,17 @@ class AuthService(
     fun login(userAgent: UserAgentEnum, loginDto: LoginRequestDto): LoginResponseDto {
         val provider = loginDto.provider
         val idToken = loginDto.idToken
-        val memberEmail = when (provider) {
+        val oauthValidateResult = when (provider) {
             ProviderEnum.GOOGLE -> googleOAuth2Validator.validateTokenAndGetEmail(idToken, userAgent)
             ProviderEnum.KAKAO -> kakaoOAuth2Validator.validateTokenAndGetEmail(idToken)
             ProviderEnum.APPLE -> appleOAuth2Validator.validateTokenAndGetEmail(idToken)
         }
-        val member = memberAdapter.getByEmail(memberEmail)
+        val member = memberAdapter.getByEmail(oauthValidateResult.email)
             ?: memberAdapter.save(
                 MemberEntity(
-                    email = memberEmail,
+                    email = oauthValidateResult.email,
                     provider = provider,
+                    providerId = oauthValidateResult.providerId,
                 )
             )
 
