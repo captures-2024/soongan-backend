@@ -50,7 +50,7 @@ class MemberService(
 
         val oldProfileImageUrl = loginMember.profileImageUrl
         val updatedProfileImageUrl = request.profileImage?.let {
-            gcpStorageService.uploadProfileImage(it, loginMember.id!!)
+            gcpStorageService.uploadProfileImage(it, loginMember.id)
         }
 
         val updatedMember = loginMember.copy(

@@ -22,7 +22,7 @@ data class AwardsDetailResponseDto(
         companion object {
             fun from(weeklyContestFinalEntity: WeeklyContestFinalEntity): FirstPrizePostResponseDto {
                 return FirstPrizePostResponseDto(
-                    postId = weeklyContestFinalEntity.weeklyContestPost.id!!,
+                    postId = weeklyContestFinalEntity.weeklyContestPost.id,
                     title = weeklyContestFinalEntity.weeklyContestPost.title,
                     imageUrl = weeklyContestFinalEntity.weeklyContestPost.imageUrl,
                     nickname = weeklyContestFinalEntity.weeklyContestPost.member.nickname,
@@ -57,7 +57,7 @@ data class AwardsDetailResponseDto(
                 }
 
                 return TopPostResponseDto(
-                    postId = weeklyContestFinalEntity.weeklyContestPost.id!!,
+                    postId = weeklyContestFinalEntity.weeklyContestPost.id,
                     imageUrl = post.imageUrl,
                     nickname = post.member.nickname,
                     ranking = weeklyContestFinalEntity.ranking,

@@ -32,6 +32,6 @@ class MemberAdminService(
 
         val member = optionalMember.get()
         if (member.withdrawalAt == null) throw SoonganException(StatusCode.BAD_REQUEST, "해당 유저는 탈퇴한 회원이 아닙니다.")
-        memberAdapter.deleteOne(member.id!!)
+        memberAdapter.deleteOne(member.id)
     }
 }

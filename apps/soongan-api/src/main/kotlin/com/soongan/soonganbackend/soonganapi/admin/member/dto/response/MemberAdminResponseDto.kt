@@ -40,7 +40,7 @@ data class MemberAdminResponseDto(
     companion object {
         fun from(memberEntity: MemberEntity): MemberAdminResponseDto {
             return MemberAdminResponseDto(
-                id = memberEntity.id!!,
+                id = memberEntity.id,
                 email = memberEntity.email,
                 provider = memberEntity.provider,
                 nickname = memberEntity.nickname,

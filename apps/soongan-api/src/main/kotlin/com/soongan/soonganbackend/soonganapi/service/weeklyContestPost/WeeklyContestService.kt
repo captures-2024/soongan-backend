@@ -47,7 +47,7 @@ class WeeklyContestService(
 
         loginMember?.let {
             val isLiked: Boolean = likeAdapter.existsByPostIdAndContestTypeAndMember(postId, ContestTypeEnum.WEEKLY, loginMember)
-            return WeeklyContestPostResponseDto.from(loginMember.id!!, weeklyContestPost, isLiked)
+            return WeeklyContestPostResponseDto.from(loginMember.id, weeklyContestPost, isLiked)
         }
 
         return WeeklyContestPostResponseDto.from(weeklyContestPost =  weeklyContestPost)
@@ -133,7 +133,7 @@ class WeeklyContestService(
 
         val imageUrl = gcpStorageService.uploadContestImage(
             request.imageFile,
-            loginMember.id!!,
+            loginMember.id,
             ContestTypeEnum.WEEKLY,
             weeklyContest.round
         )
