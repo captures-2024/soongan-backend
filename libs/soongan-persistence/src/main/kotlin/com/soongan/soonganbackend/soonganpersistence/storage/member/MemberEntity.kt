@@ -21,7 +21,7 @@ import java.time.LocalDateTime
 data class MemberEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = null,
+    val id: Long = 0,
 
     @Column(name = "email", unique = true, nullable = false)
     val email: String = "",
