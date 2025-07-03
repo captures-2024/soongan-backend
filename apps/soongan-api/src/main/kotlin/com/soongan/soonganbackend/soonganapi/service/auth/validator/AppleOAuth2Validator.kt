@@ -47,10 +47,8 @@ class AppleOAuth2Validator(
         val claims = signedJWT.jwtClaimsSet
         return OAuth2ValidateResult(
             providerId = claims.subject,
-            email = claims.getStringClaim("email") ?: throw SoonganException(
-                StatusCode.INVALID_OAUTH2_ID_TOKEN,
-                "Apple 계정에 이메일 정보가 없습니다."
-            )
+            // 애플은 email을 오직 1회만 제공하므로, 그 때 저장을 하지 못한 경우를 대비해 기본값 설정
+            email = claims.getStringClaim("email") ?: "${claims.subject}@apple.soongan.site"
         )
     }
 }

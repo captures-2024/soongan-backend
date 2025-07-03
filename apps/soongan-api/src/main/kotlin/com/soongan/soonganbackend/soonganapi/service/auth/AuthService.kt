@@ -38,12 +38,8 @@ class AuthService(
             ProviderEnum.KAKAO -> kakaoOAuth2Validator.validateTokenAndGetEmail(idToken)
             ProviderEnum.APPLE -> appleOAuth2Validator.validateTokenAndGetEmail(idToken)
         }
-        var member = memberAdapter.getByEmail(oauthValidateResult.email)
+        var member = memberAdapter.getByProviderAndProviderId(provider = provider, providerId = oauthValidateResult.providerId)
         if (member != null) {
-            if (member.provider != provider) {
-                throw SoonganException(StatusCode.SOONGAN_API_DIFFERENT_PROVIDER, "해당 회원은 ${member.provider}로 가입된 회원입니다.")
-            }
-
             this.checkMember(member)
         } else {
             // 회원이 존재하지 않는 경우, 새로 생성
