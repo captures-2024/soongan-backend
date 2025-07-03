@@ -38,20 +38,23 @@ class AuthService(
             ProviderEnum.KAKAO -> kakaoOAuth2Validator.validateTokenAndGetEmail(idToken)
             ProviderEnum.APPLE -> appleOAuth2Validator.validateTokenAndGetEmail(idToken)
         }
-        val member = memberAdapter.getByEmail(oauthValidateResult.email)
-            ?: memberAdapter.save(
+        var member = memberAdapter.getByEmail(oauthValidateResult.email)
+        if (member != null) {
+            if (member.provider != provider) {
+                throw SoonganException(StatusCode.SOONGAN_API_DIFFERENT_PROVIDER, "해당 회원은 ${member.provider}로 가입된 회원입니다.")
+            }
+
+            this.checkMember(member)
+        } else {
+            // 회원이 존재하지 않는 경우, 새로 생성
+            member = memberAdapter.save(
                 MemberEntity(
                     email = oauthValidateResult.email,
                     provider = provider,
-                    providerId = oauthValidateResult.providerId,
+                    providerId =  oauthValidateResult.providerId,
                 )
             )
-
-        if (member.provider != provider) {
-            throw SoonganException(StatusCode.SOONGAN_API_DIFFERENT_PROVIDER, "해당 이메일은 ${member.provider}로 가입된 회원입니다.")
         }
-
-        this.checkMember(member)
 
         fcmTokenAdapter.findByToken(loginDto.fcmToken)?.let { foundFcmToken ->
             if (foundFcmToken.member == null || foundFcmToken.member!!.id != member.id) {

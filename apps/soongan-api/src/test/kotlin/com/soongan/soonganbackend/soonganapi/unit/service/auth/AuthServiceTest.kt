@@ -63,7 +63,7 @@ class AuthServiceTest {
         )
         val member = MemberEntity(
             email = email,
-            provider = ProviderEnum.GOOGLE
+            provider = ProviderEnum.GOOGLE,
         )
         val fcmToken = FcmTokenEntity(
             token = "fcm-token",
@@ -74,7 +74,7 @@ class AuthServiceTest {
 
         // mock
         every { googleOAuth2Validator.validateTokenAndGetEmail(any(), any()) } returns OAuth2ValidateResult(
-            providerId = "provider-id",
+            providerId = "",
             email = email
         )
         every { memberAdapter.getByEmail(email) } returns null

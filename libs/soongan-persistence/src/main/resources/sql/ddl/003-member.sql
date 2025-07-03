@@ -7,8 +7,11 @@ create table member
     self_introduction text         null,
     profile_image_url varchar(255) null,
     provider          varchar(20)  not null,
+    provider_id       varchar(255) not null,
     withdrawal_at     datetime     null,
     ban_until         datetime     null,
     created_at        datetime     null,
     updated_at        datetime     null
 );
+
+create unique index idx_member_email_provider on member (email, provider);
