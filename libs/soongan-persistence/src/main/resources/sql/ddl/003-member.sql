@@ -14,5 +14,5 @@ create table member
     updated_at        datetime     null
 );
 
-create index idx_member_email on member (email);
+create unique index idx_member_email on member (email);
 create unique index idx_member_provider_provider_id on member (provider, provider_id);

@@ -42,6 +42,11 @@ class AuthService(
         if (member != null) {
             this.checkMember(member)
         } else {
+            val sameEmailMember = memberAdapter.getByEmail(oauthValidateResult.email)
+            if (sameEmailMember != null) {
+                throw SoonganException(StatusCode.SOONGAN_API_DIFFERENT_PROVIDER, "해당 이메일은 ${sameEmailMember.provider}로 가입된 회원입니다.")
+            }
+
             // 회원이 존재하지 않는 경우, 새로 생성
             member = memberAdapter.save(
                 MemberEntity(
