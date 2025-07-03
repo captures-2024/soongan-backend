@@ -74,9 +74,10 @@ class AuthServiceTest {
 
         // mock
         every { googleOAuth2Validator.validateTokenAndGetEmail(any(), any()) } returns OAuth2ValidateResult(
-            providerId = "",
+            providerId = "provider-id",
             email = email
         )
+        every { memberAdapter.getByProviderAndProviderId(provider = ProviderEnum.GOOGLE, providerId = "provider-id") } returns null
         every { memberAdapter.getByEmail(email) } returns null
         every { memberAdapter.save(any()) } returns member
         every { fcmTokenAdapter.findByToken(loginDto.fcmToken) } returns fcmToken
@@ -120,7 +121,7 @@ class AuthServiceTest {
             providerId = "provider-id",
             email = email
         )
-        every { memberAdapter.getByEmail(email) } returns member
+        every { memberAdapter.getByProviderAndProviderId(provider = ProviderEnum.GOOGLE, providerId =  "provider-id") } returns member
         every { fcmTokenAdapter.findByToken(loginDto.fcmToken) } returns fcmToken
         every { fcmTokenAdapter.save(any()) } returns fcmToken
         every { jwtHandler.issueTokens(email) } returns Pair("access-token", "refresh-token")
@@ -157,7 +158,7 @@ class AuthServiceTest {
             providerId = "provider-id",
             email = email
         )
-        every { memberAdapter.getByEmail(email) } returns member
+        every { memberAdapter.getByProviderAndProviderId(provider = ProviderEnum.GOOGLE, providerId = "provider-id") } returns member
 
         // when & then
         assertThatThrownBy { authService.login(UserAgentEnum.ANDROID, loginDto) }
@@ -184,7 +185,7 @@ class AuthServiceTest {
             providerId = "provider-id",
             email = email
         )
-        every { memberAdapter.getByEmail(email) } returns member
+        every { memberAdapter.getByProviderAndProviderId(provider = ProviderEnum.GOOGLE, providerId = "provider-id") } returns member
         every { fcmTokenAdapter.findByToken(loginDto.fcmToken) } returns null
 
         // when & then
