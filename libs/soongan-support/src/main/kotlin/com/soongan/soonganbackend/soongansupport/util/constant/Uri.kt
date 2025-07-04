@@ -65,10 +65,10 @@ object Uri {
 
         WEEKLY + CONTESTS,
         WEEKLY + CONTESTS + POSTS,
-        WEEKLY + CONTESTS + POSTS + "/{postId}",
+        WEEKLY + CONTESTS + POSTS + "/{postId:[0-9]+}",
 
         AWARDS,
-        AWARDS + "/{contestId}",
+        AWARDS + "/{contestId:[0-9]+}",
 
         CALLBACK + APPLE_LOGIN,
         CALLBACK + APPLE_LOGIN + SUCCESS
