@@ -1,9 +1,12 @@
 package com.soongan.soonganbackend.soonganapi.service.report
 
+import com.soongan.soonganbackend.soonganapi.interfaces.report.dto.request.ExplainSaveRequestDto
 import com.soongan.soonganbackend.soonganapi.interfaces.report.dto.request.ReportSaveRequestDto
 import com.soongan.soonganbackend.soonganapi.interfaces.report.dto.response.ReportSaveResponseDto
 import com.soongan.soonganbackend.soonganpersistence.storage.comment.CommentAdapter
 import com.soongan.soonganbackend.soonganpersistence.storage.comment.CommentEntity
+import com.soongan.soonganbackend.soonganpersistence.storage.explain.ExplainAdapter
+import com.soongan.soonganbackend.soonganpersistence.storage.explain.ExplainEntity
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
 import com.soongan.soonganbackend.soonganpersistence.storage.report.ReportAdapter
 import com.soongan.soonganbackend.soonganpersistence.storage.report.ReportEntity
@@ -19,7 +22,8 @@ import java.time.LocalDateTime
 class ReportService(
     private val reportAdapter: ReportAdapter,
     private val weeklyContestPostAdapter: WeeklyContestPostAdapter,
-    private val commentAdapter: CommentAdapter
+    private val commentAdapter: CommentAdapter,
+    private val explainAdapter: ExplainAdapter
 ) {
     private val BLIND_REPORT_COUNT = 3
 
@@ -42,6 +46,17 @@ class ReportService(
 
         val reportHistories = reportAdapter.getReportHistoriesByReportMember(loginMember)
         return ReportSaveResponseDto.from(savedReport, reportHistories)
+    }
+
+    fun explain(loginMember: MemberEntity, explainSaveRequestDto: ExplainSaveRequestDto) {
+        explainAdapter.save(
+            ExplainEntity(
+                member = loginMember,
+                targetId = explainSaveRequestDto.targetId,
+                targetType = explainSaveRequestDto.targetType,
+                explain = explainSaveRequestDto.explain
+            )
+        )
     }
 
     private fun getTargetEntity(type: ReportTargetTypeEnum, id: Long): Any {
@@ -78,6 +93,7 @@ class ReportService(
                     weeklyContestPostAdapter.save(target.copy(blindedAt = now))
                 }
             }
+
             is CommentEntity -> {
                 if (target.blindedAt == null) {
                     commentAdapter.save(target.copy(blindedAt = now))
