@@ -16,7 +16,11 @@ class WeeklyContestAdapter (
         return weeklyContestRepository.findEndedContests(now)
     }
 
-    fun getWeeklyContest(round: Int): WeeklyContestEntity? {
+    fun getWeeklyContestById(id: Long): WeeklyContestEntity? {
+        return weeklyContestRepository.findById(id).orElse(null)
+    }
+
+    fun getWeeklyContestByRound(round: Int): WeeklyContestEntity? {
         return weeklyContestRepository.findByRound(round)
     }
 
