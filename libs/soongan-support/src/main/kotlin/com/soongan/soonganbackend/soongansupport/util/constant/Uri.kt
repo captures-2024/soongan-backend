@@ -60,12 +60,8 @@ object Uri {
 
         HOME,
 
-        COMMENTS,
-        COMMENTS + REPLIES,
-
         WEEKLY + CONTESTS,
         WEEKLY + CONTESTS + POSTS,
-        WEEKLY + CONTESTS + POSTS + "/{postId:[0-9]+}",
 
         AWARDS,
         AWARDS + "/{contestId:[0-9]+}",

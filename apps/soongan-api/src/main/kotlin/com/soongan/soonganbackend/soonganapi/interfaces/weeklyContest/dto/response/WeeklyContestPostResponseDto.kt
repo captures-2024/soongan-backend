@@ -6,7 +6,10 @@ import io.swagger.v3.oas.annotations.media.Schema
 @Schema(description = "주간 콘테스트 게시글 조회 응답 DTO")
 data class WeeklyContestPostResponseDto(
     @Schema(description = "조회 요청한 회원의 ID", type = "Long", nullable = true)
-    val memberId: Long?,
+    val memberId: Long?, // 이거 왜 게시글 작성자가 아니라 조회 요청한 회원의 ID인지?
+
+    @Schema(description = "게시글 작성자 회원 ID", type = "Long", nullable = true)
+    val authorMemberId: Long,
 
     @Schema(description = "게시글 ID", type = "Long")
     val postId: Long,
@@ -34,6 +37,7 @@ data class WeeklyContestPostResponseDto(
         fun from(memberId: Long? = null, weeklyContestPost: WeeklyContestPostEntity, isLiked: Boolean = false): WeeklyContestPostResponseDto {
             return WeeklyContestPostResponseDto(
                 memberId = memberId,
+                authorMemberId = weeklyContestPost.member.id,
                 postId = weeklyContestPost.id,
                 title = weeklyContestPost.title,
                 imageUrl = weeklyContestPost.imageUrl,
