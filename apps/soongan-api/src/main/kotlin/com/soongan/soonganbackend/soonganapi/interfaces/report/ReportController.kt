@@ -38,7 +38,7 @@ class ReportController(
         description = "피신고자가 소명 사유를 입력하는 API 입니다.",
         security = [SecurityRequirement(name = "JWT")]
     )
-    @PostMapping
+    @PostMapping(Uri.EXPLAIN)
     fun explain(@LoginMember loginMember: MemberEntity, @RequestBody @Valid explainSaveRequestDto: ExplainSaveRequestDto) {
         reportService.explain(loginMember, explainSaveRequestDto)
     }

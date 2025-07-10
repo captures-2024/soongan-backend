@@ -44,6 +44,7 @@ object Uri {
     const val SETTINGS = "/settings"
 
     const val REPORT = "/report"
+    const val EXPLAIN ="/explain"
 
     const val CALLBACK = "/callback"
     const val APPLE_LOGIN = "/apple_login"
