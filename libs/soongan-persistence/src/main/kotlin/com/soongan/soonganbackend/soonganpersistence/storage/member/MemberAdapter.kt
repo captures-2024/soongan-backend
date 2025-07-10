@@ -1,5 +1,6 @@
 package com.soongan.soonganbackend.soonganpersistence.storage.member
 
+import com.soongan.soonganbackend.soongansupport.domain.ProviderEnum
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 import java.util.Optional
@@ -16,6 +17,11 @@ class MemberAdapter (
     @Transactional(readOnly = true)
     fun getByEmail(email: String): MemberEntity? {
         return memberRepository.findByEmail(email)
+    }
+
+    @Transactional(readOnly = true)
+    fun getByProviderAndProviderId(provider: ProviderEnum, providerId: String): MemberEntity? {
+        return memberRepository.findByProviderAndProviderId(provider, providerId)
     }
 
     @Transactional(readOnly = true)

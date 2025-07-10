@@ -6,6 +6,7 @@ import com.soongan.soonganbackend.soonganapi.service.auth.AuthService
 import com.soongan.soonganbackend.soonganapi.service.auth.validator.AppleOAuth2Validator
 import com.soongan.soonganbackend.soonganapi.service.auth.validator.GoogleOAuth2Validator
 import com.soongan.soonganbackend.soonganapi.service.auth.validator.KakaoOAuth2Validator
+import com.soongan.soonganbackend.soonganapi.service.auth.validator.dto.OAuth2ValidateResult
 import com.soongan.soonganbackend.soonganpersistence.storage.fcm.FcmTokenAdapter
 import com.soongan.soonganbackend.soonganpersistence.storage.fcm.FcmTokenEntity
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberAdapter
@@ -62,7 +63,7 @@ class AuthServiceTest {
         )
         val member = MemberEntity(
             email = email,
-            provider = ProviderEnum.GOOGLE
+            provider = ProviderEnum.GOOGLE,
         )
         val fcmToken = FcmTokenEntity(
             token = "fcm-token",
@@ -72,7 +73,11 @@ class AuthServiceTest {
         )
 
         // mock
-        every { googleOAuth2Validator.validateTokenAndGetEmail(any(), any()) } returns email
+        every { googleOAuth2Validator.validateTokenAndGetEmail(any(), any()) } returns OAuth2ValidateResult(
+            providerId = "provider-id",
+            email = email
+        )
+        every { memberAdapter.getByProviderAndProviderId(provider = ProviderEnum.GOOGLE, providerId = "provider-id") } returns null
         every { memberAdapter.getByEmail(email) } returns null
         every { memberAdapter.save(any()) } returns member
         every { fcmTokenAdapter.findByToken(loginDto.fcmToken) } returns fcmToken
@@ -112,8 +117,11 @@ class AuthServiceTest {
         )
 
         // mock
-        every { googleOAuth2Validator.validateTokenAndGetEmail(any(), any()) } returns email
-        every { memberAdapter.getByEmail(email) } returns member
+        every { googleOAuth2Validator.validateTokenAndGetEmail(any(), any()) } returns OAuth2ValidateResult(
+            providerId = "provider-id",
+            email = email
+        )
+        every { memberAdapter.getByProviderAndProviderId(provider = ProviderEnum.GOOGLE, providerId =  "provider-id") } returns member
         every { fcmTokenAdapter.findByToken(loginDto.fcmToken) } returns fcmToken
         every { fcmTokenAdapter.save(any()) } returns fcmToken
         every { jwtHandler.issueTokens(email) } returns Pair("access-token", "refresh-token")
@@ -146,8 +154,11 @@ class AuthServiceTest {
         )
 
         // mock
-        every { googleOAuth2Validator.validateTokenAndGetEmail(any(), any()) } returns email
-        every { memberAdapter.getByEmail(email) } returns member
+        every { googleOAuth2Validator.validateTokenAndGetEmail(any(), any()) } returns OAuth2ValidateResult(
+            providerId = "provider-id",
+            email = email
+        )
+        every { memberAdapter.getByProviderAndProviderId(provider = ProviderEnum.GOOGLE, providerId = "provider-id") } returns member
 
         // when & then
         assertThatThrownBy { authService.login(UserAgentEnum.ANDROID, loginDto) }
@@ -170,8 +181,11 @@ class AuthServiceTest {
         )
 
         // mock
-        every { googleOAuth2Validator.validateTokenAndGetEmail(any(), any()) } returns email
-        every { memberAdapter.getByEmail(email) } returns member
+        every { googleOAuth2Validator.validateTokenAndGetEmail(any(), any()) } returns OAuth2ValidateResult(
+            providerId = "provider-id",
+            email = email
+        )
+        every { memberAdapter.getByProviderAndProviderId(provider = ProviderEnum.GOOGLE, providerId = "provider-id") } returns member
         every { fcmTokenAdapter.findByToken(loginDto.fcmToken) } returns null
 
         // when & then

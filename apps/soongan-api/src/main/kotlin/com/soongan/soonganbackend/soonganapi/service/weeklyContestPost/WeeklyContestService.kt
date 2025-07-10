@@ -133,7 +133,7 @@ class WeeklyContestService(
 
         val imageUrl = gcpStorageService.uploadContestImage(
             request.imageFile,
-            loginMember.id!!,
+            loginMember.id,
             ContestTypeEnum.WEEKLY,
             weeklyContest.round
         )

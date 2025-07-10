@@ -1,6 +1,7 @@
 package com.soongan.soonganbackend.soonganapi.service.auth.validator
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.soongan.soonganbackend.soonganapi.service.auth.validator.dto.OAuth2ValidateResult
 import com.soongan.soonganbackend.soongansupport.util.exception.SoonganException
 import com.soongan.soonganbackend.soongansupport.util.exception.StatusCode
 import org.springframework.http.HttpEntity
@@ -15,7 +16,7 @@ class KakaoOAuth2Validator(
     private val restTemplate: RestTemplate
 ) {
 
-    fun validateTokenAndGetEmail(idToken: String): String {
+    fun validateTokenAndGetEmail(idToken: String): OAuth2ValidateResult {
         val url = "https://kapi.kakao.com/v2/user/me"
 
         val headers = HttpHeaders().apply {
@@ -30,11 +31,13 @@ class KakaoOAuth2Validator(
                 KakaoUserResponse::class.java
             )
 
-            response.body?.kakaoAccount?.email
-                ?: throw SoonganException(
+            OAuth2ValidateResult(
+                providerId = response.body?.id.toString(),
+                email = response.body?.kakaoAccount?.email ?: throw SoonganException(
                     StatusCode.INVALID_OAUTH2_ID_TOKEN,
-                    "카카오 이메일 정보를 찾을 수 없습니다."
+                    "카카오 계정에 이메일 정보가 없습니다."
                 )
+            )
         } catch (e: RestClientException) {
             throw SoonganException(
                 StatusCode.INVALID_OAUTH2_ID_TOKEN,

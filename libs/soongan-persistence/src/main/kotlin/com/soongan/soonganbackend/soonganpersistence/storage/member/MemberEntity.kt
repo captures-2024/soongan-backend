@@ -42,6 +42,9 @@ data class MemberEntity(
     @Enumerated(EnumType.STRING)
     val provider: ProviderEnum = ProviderEnum.GOOGLE,
 
+    @Column(name = "provider_id")
+    val providerId: String = "",
+
     @Column(name = "withdrawal_at")
     val withdrawalAt: LocalDateTime? = null,
 

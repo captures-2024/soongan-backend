@@ -27,7 +27,7 @@ data class GetCommentResponseDto(
                 comments = commentSlice.content.map {
                     CommentDto(
                         commentId = it.id!!,
-                        memberId = it.member.id!!,
+                        memberId = it.member.id,
                         memberNickname = it.member.nickname ?: "",
                         commentText = it.commentText,
                         parentCommentID = it.parentComment?.id,
@@ -56,7 +56,7 @@ data class GetCommentReplyResponseDto(
                 comments = commentSlice.content.map {
                     CommentDto(
                         commentId = it.id!!,
-                        memberId = it.member.id!!,
+                        memberId = it.member.id,
                         memberNickname = it.member.nickname ?: "",
                         commentText = it.commentText,
                         parentCommentID = it.parentComment?.id,

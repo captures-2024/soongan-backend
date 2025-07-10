@@ -3,6 +3,7 @@ package com.soongan.soonganbackend.soonganapi.service.auth.validator
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport
 import com.google.api.client.json.gson.GsonFactory
+import com.soongan.soonganbackend.soonganapi.service.auth.validator.dto.OAuth2ValidateResult
 import com.soongan.soonganbackend.soongansupport.domain.UserAgentEnum
 import com.soongan.soonganbackend.soongansupport.util.exception.SoonganException
 import com.soongan.soonganbackend.soongansupport.util.exception.StatusCode
@@ -14,7 +15,7 @@ class GoogleOAuth2Validator(
     private val env: Environment
 ) {
 
-    fun validateTokenAndGetEmail(idToken: String, userAgent: UserAgentEnum): String {
+    fun validateTokenAndGetEmail(idToken: String, userAgent: UserAgentEnum): OAuth2ValidateResult {
         val clientId = when (userAgent) {
             UserAgentEnum.ANDROID -> env.getProperty("oauth2.android.google.client-id")
             UserAgentEnum.IOS -> env.getProperty("oauth2.ios.google.client-id")
@@ -31,8 +32,10 @@ class GoogleOAuth2Validator(
                     "Google IdToken이 유효하지 않아 회원 정보를 가져올 수 없습니다."
                 )
 
-            val email = verifiedIdToken.payload.email
-            return email as String
+            return OAuth2ValidateResult(
+                providerId = verifiedIdToken.payload.subject,
+                email = verifiedIdToken.payload.email
+            )
         } catch (e: IllegalArgumentException) {  // 토큰 자체 형식이 맞지 않아 해독 도중 에러가 발생한 경우
             throw SoonganException(StatusCode.INVALID_OAUTH2_ID_TOKEN, "잘못된 Google IdToken 형식으로 회원 정보를 가져올 수 없습니다.")
         }

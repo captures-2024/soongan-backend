@@ -34,8 +34,8 @@ data class ReportSaveResponseDto(
         fun from(reportEntity: ReportEntity, reportHistories: List<ReportEntity>): ReportSaveResponseDto {
             return ReportSaveResponseDto(
                 id = reportEntity.id!!,
-                reportMemberId = reportEntity.reportMember.id!!,
-                targetMemberId = reportEntity.targetMember.id!!,
+                reportMemberId = reportEntity.reportMember.id,
+                targetMemberId = reportEntity.targetMember.id,
                 targetId = reportEntity.targetId,
                 targetType = reportEntity.targetType.name,
                 reportType = reportEntity.reportType,

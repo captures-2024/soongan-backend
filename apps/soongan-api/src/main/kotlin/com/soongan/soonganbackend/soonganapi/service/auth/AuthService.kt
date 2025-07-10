@@ -33,24 +33,29 @@ class AuthService(
     fun login(userAgent: UserAgentEnum, loginDto: LoginRequestDto): LoginResponseDto {
         val provider = loginDto.provider
         val idToken = loginDto.idToken
-        val memberEmail = when (provider) {
+        val oauthValidateResult = when (provider) {
             ProviderEnum.GOOGLE -> googleOAuth2Validator.validateTokenAndGetEmail(idToken, userAgent)
             ProviderEnum.KAKAO -> kakaoOAuth2Validator.validateTokenAndGetEmail(idToken)
             ProviderEnum.APPLE -> appleOAuth2Validator.validateTokenAndGetEmail(idToken)
         }
-        val member = memberAdapter.getByEmail(memberEmail)
-            ?: memberAdapter.save(
+        var member = memberAdapter.getByProviderAndProviderId(provider = provider, providerId = oauthValidateResult.providerId)
+        if (member != null) {
+            this.checkMember(member)
+        } else {
+            val sameEmailMember = memberAdapter.getByEmail(oauthValidateResult.email)
+            if (sameEmailMember != null) {
+                throw SoonganException(StatusCode.SOONGAN_API_DIFFERENT_PROVIDER, "해당 이메일은 ${sameEmailMember.provider}로 가입된 회원입니다.")
+            }
+
+            // 회원이 존재하지 않는 경우, 새로 생성
+            member = memberAdapter.save(
                 MemberEntity(
-                    email = memberEmail,
+                    email = oauthValidateResult.email,
                     provider = provider,
+                    providerId =  oauthValidateResult.providerId,
                 )
             )
-
-        if (member.provider != provider) {
-            throw SoonganException(StatusCode.SOONGAN_API_DIFFERENT_PROVIDER, "해당 이메일은 ${member.provider}로 가입된 회원입니다.")
         }
-
-        this.checkMember(member)
 
         fcmTokenAdapter.findByToken(loginDto.fcmToken)?.let { foundFcmToken ->
             if (foundFcmToken.member == null || foundFcmToken.member!!.id != member.id) {
