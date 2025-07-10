@@ -21,7 +21,7 @@ class WeeklyContestValidator(
         val now = LocalDateTime.now()
 
         return round?.let {
-            weeklyContestAdapter.getWeeklyContest(round)
+            weeklyContestAdapter.getWeeklyContestByRound(round)
                 ?: throw SoonganException(StatusCode.SOONGAN_API_NOT_FOUND_WEEKLY_CONTEST)
         }
             ?: weeklyContestAdapter.getInProgressWeeklyContest(now)

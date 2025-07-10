@@ -26,7 +26,7 @@ class AwardsService(
             val firstPrizePost = weeklyContestFinalAdapter.getFirstPrizePostByContestId(contest.id!!)
                 ?: throw SoonganException(
                     StatusCode.SOONGAN_API_NOT_FOUND_WEEKLY_CONTEST_POST,
-                    "해당 콘테스트의 1등 게시글이 존재하지 않습니다."
+                    "해당 콘테스트의 1등 게시글이 존재하지 않습니다. contestId: ${contest.id}"
                 )
 
             WeeklyContestAwardsResponseDto.WeeklyContestDto.from(
@@ -38,8 +38,13 @@ class AwardsService(
 
     @Transactional(readOnly = true)
     fun getAwardsDetail(contestId: Long): AwardsDetailResponseDto {
+        val contest = weeklyContestAdapter.getWeeklyContestById(contestId)
+            ?: throw SoonganException(
+                StatusCode.SOONGAN_API_NOT_FOUND_WEEKLY_CONTEST,
+                "해당 주간 콘테스트가 존재하지 않습니다. contestId: $contestId"
+            )
         val postsCount = weeklyContestPostAdapter.countByWeeklyContestId(contestId)
         val top7Posts = weeklyContestFinalAdapter.getFinalPostsByContestId(contestId)
-        return AwardsDetailResponseDto.from(postsCount, top7Posts)
+        return AwardsDetailResponseDto.from(contest, postsCount, top7Posts)
     }
 }

@@ -32,7 +32,7 @@ class WeeklyContestValidatorTest {
         )
 
         // mock
-        every { weeklyContestAdapter.getWeeklyContest(round) } returns contest
+        every { weeklyContestAdapter.getWeeklyContestByRound(round) } returns contest
 
         // when
         val result = weeklyContestValidator.getWeeklyContestIfValidRound(round)
@@ -47,7 +47,7 @@ class WeeklyContestValidatorTest {
         val round = 1
 
         // mock
-        every { weeklyContestAdapter.getWeeklyContest(round) } returns null
+        every { weeklyContestAdapter.getWeeklyContestByRound(round) } returns null
 
         // when
         val exception = assertThrows<SoonganException> {
