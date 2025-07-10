@@ -4,6 +4,7 @@ import com.soongan.soonganbackend.soonganapi.interfaces.report.dto.request.Repor
 import com.soongan.soonganbackend.soonganapi.interfaces.report.dto.response.ReportHistoryResponseDto
 import com.soongan.soonganbackend.soonganapi.service.report.ReportService
 import com.soongan.soonganbackend.soonganpersistence.storage.comment.CommentAdapter
+import com.soongan.soonganbackend.soonganpersistence.storage.explain.ExplainAdapter
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
 import com.soongan.soonganbackend.soonganpersistence.storage.report.ReportAdapter
 import com.soongan.soonganbackend.soonganpersistence.storage.report.ReportEntity
@@ -34,6 +35,9 @@ class ReportServiceTest {
 
     @MockK
     private lateinit var commentAdapter: CommentAdapter
+
+    @MockK
+    private lateinit var explainAdapter: ExplainAdapter
 
     @InjectMockKs
     private lateinit var reportService: ReportService
