@@ -6,9 +6,12 @@ import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
 import com.soongan.soonganbackend.soonganpersistence.storage.report.ReportEntity
 import io.swagger.v3.oas.annotations.media.Schema
 
-@Schema(description = "회원 정보 응답 DTO")
+@Schema(description = "로그인한 회원 정보 응답 DTO")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class LoginMemberInfoResponseDto(
+    @Schema(description = "회원 ID", required = true)
+    val id: Long,
+
     @Schema(description = "이메일", required = true)
     val email: String,
 
@@ -34,6 +37,7 @@ data class LoginMemberInfoResponseDto(
             }
 
             return LoginMemberInfoResponseDto(
+                id = member.id,
                 email = member.email,
                 nickname = member.nickname,
                 birthYear = member.birthYear,
