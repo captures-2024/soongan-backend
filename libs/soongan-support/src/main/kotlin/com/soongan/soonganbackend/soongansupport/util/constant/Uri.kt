@@ -59,8 +59,6 @@ object Uri {
         SWAGGER_RESOURCES + "/**",
         V3 + API_DOCS + "/**",
 
-        HOME,
-
         WEEKLY + CONTESTS,
         WEEKLY + CONTESTS + POSTS,
 

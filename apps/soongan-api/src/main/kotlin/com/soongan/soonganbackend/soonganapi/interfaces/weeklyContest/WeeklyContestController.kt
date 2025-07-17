@@ -83,7 +83,7 @@ class WeeklyContestController (
 
     @Operation(
         summary = "내 주간 콘테스트 게시글 조회 Api",
-        description = "내가 작성한 주간                                     콘테스트 게시글을 조회합니다.",
+        description = "내가 작성한 주간 콘테스트 게시글을 조회합니다.",
         security = [SecurityRequirement(name = "JWT")]
     )
     @GetMapping(Uri.POSTS + Uri.MY_HISTORY)
