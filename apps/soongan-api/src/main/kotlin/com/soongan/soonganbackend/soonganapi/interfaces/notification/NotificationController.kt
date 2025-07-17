@@ -49,7 +49,7 @@ class NotificationController(
         return notificationService.getNotifications(loginMember, type)
     }
 
-    @PostMapping("/{notificationId}/read")
+    @PostMapping("/{notificationId:[0-9]+}/read")
     @Operation(
         summary = "알림 읽음 처리 Api",
         description = "알림을 읽음 처리합니다.",
@@ -60,7 +60,7 @@ class NotificationController(
     }
 
     // TODO: 소명 완료 시 삭제?
-    @DeleteMapping("/{notificationId}")
+    @DeleteMapping("/{notificationId:[0-9]+}")
     @Operation(
         summary = "알림 삭제 Api",
         description = "알림을 삭제합니다.",

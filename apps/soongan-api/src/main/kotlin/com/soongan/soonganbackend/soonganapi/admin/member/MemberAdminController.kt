@@ -33,7 +33,7 @@ class MemberAdminController(
         summary = "탈퇴 회원 재가입 제한 해제",
         description = "탈퇴한 회원 데이터를 완전히 삭제하여 재가입 제한을 해제합니다. 단, 회원의 모든 데이터가 삭제되며, 다시 가입해야 합니다."
     )
-    @DeleteMapping("/{memberId}")
+    @DeleteMapping("/{memberId:[0-9]+}")
     fun deleteOne(@PathVariable memberId: Long): Unit {
         memberAdminService.deleteOne(memberId)
     }
