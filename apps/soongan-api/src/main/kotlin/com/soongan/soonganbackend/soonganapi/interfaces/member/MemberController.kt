@@ -38,7 +38,7 @@ class MemberController(
     @Operation(
         summary = "회원 정보 조회 Api",
         description = "회원 ID로 회원 정보를 조회합니다. 다른 회원의 프로필 정보를 조회할 때 사용합니다.",
-        servers = []
+        security = []
     )
     @GetMapping("{memberId:[0-9]+}")
     fun getMemberInfo(
