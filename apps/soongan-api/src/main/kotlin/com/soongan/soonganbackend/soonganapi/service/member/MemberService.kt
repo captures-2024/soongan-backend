@@ -23,12 +23,9 @@ class MemberService(
     }
 
     fun getMemberInfo(memberId: Long): MemberInfoResponseDto {
-        val optionalMember = memberAdapter.getById(memberId)
-        if (optionalMember.isEmpty) {
-            throw SoonganException(StatusCode.NOT_FOUND, "해당 ID의 회원이 존재하지 않습니다. memberId: $memberId")
-        }
-
-        return MemberInfoResponseDto.from(optionalMember.get())
+        val member = memberAdapter.getById(memberId)
+            .orElseThrow { SoonganException(StatusCode.NOT_FOUND, "해당 ID의 회원이 존재하지 않습니다. memberId: $memberId") }
+        return MemberInfoResponseDto.from(member)
     }
 
     @Transactional(readOnly = true)
