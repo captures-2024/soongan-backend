@@ -44,7 +44,7 @@ class WeeklyContestController (
         description = "주간 콘테스트 게시글을 단일 조회합니다.",
         security = [SecurityRequirement(name = "JWT")]
     )
-    @GetMapping(Uri.POSTS + "/{postId}")
+    @GetMapping(Uri.POSTS + "/{postId:[0-9]+}")
     fun getWeeklyContestPost(
         @LoginMember(throwIfUnauthorized = false) loginMember: MemberEntity?,
         @PathVariable postId: Long
@@ -113,7 +113,7 @@ class WeeklyContestController (
         description = "주간 콘테스트 게시글을 수정합니다.",
         security = [SecurityRequirement(name = "JWT")]
     )
-    @PatchMapping(Uri.POSTS + "/{postId}")
+    @PatchMapping(Uri.POSTS + "/{postId:[0-9]+}")
     fun updateWeeklyContestPost(
         @LoginMember loginMember: MemberEntity,
         @PathVariable postId: Long,
@@ -127,7 +127,7 @@ class WeeklyContestController (
         description = "내가 작성한 주간 콘테스트 게시글을 삭제합니다.",
         security = [SecurityRequirement(name = "JWT")]
     )
-    @DeleteMapping(Uri.POSTS + "/{postId}")
+    @DeleteMapping(Uri.POSTS + "/{postId:[0-9]+}")
     fun deleteMyWeeklyContestPost(
         @LoginMember loginMember: MemberEntity,
         @PathVariable postId: Long
