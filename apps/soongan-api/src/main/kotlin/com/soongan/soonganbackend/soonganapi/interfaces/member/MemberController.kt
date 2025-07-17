@@ -13,6 +13,7 @@ import jakarta.validation.Valid
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PatchMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
@@ -25,14 +26,27 @@ class MemberController(
 ) {
 
     @Operation(
-        summary = "회원 정보 조회 Api",
+        summary = "로그인한 회원 정보 조회 Api",
         description = "JWT를 읽어 로그인한 회원의 정보를 조회합니다.",
         security = [SecurityRequirement(name = "JWT")]
     )
     @GetMapping
-    fun getUserinfo(@LoginMember loginMember: MemberEntity): MemberInfoResponseDto {
-        return memberService.getMemberInfo(loginMember)
+    fun getLoginMemberinfo(@LoginMember loginMember: MemberEntity): LoginMemberInfoResponseDto {
+        return memberService.getLoginMemberInfo(loginMember)
     }
+
+    @Operation(
+        summary = "회원 정보 조회 Api",
+        description = "회원 ID로 회원 정보를 조회합니다. 다른 회원의 프로필 정보를 조회할 때 사용합니다.",
+        security = []
+    )
+    @GetMapping("{memberId:[0-9]+}")
+    fun getMemberInfo(
+        @PathVariable("memberId") memberId: Long,
+    ): MemberInfoResponseDto {
+        return memberService.getMemberInfo(memberId)
+    }
+
 
     @Operation(
         summary = "닉네임 중복 확인 Api",

@@ -51,7 +51,7 @@ class MemberServiceTest {
         every { reportAdapter.getReportHistoriesByReportMember(loginMember) } returns emptyList()
 
         // when
-        val result = memberService.getMemberInfo(loginMember)
+        val result = memberService.getLoginMemberInfo(loginMember)
 
         // then
         assertThat(result)

@@ -1,12 +1,14 @@
 package com.soongan.soonganbackend.soonganapi.interfaces.member.dto.response
 
 import com.fasterxml.jackson.annotation.JsonInclude
+import com.soongan.soonganbackend.soonganapi.interfaces.report.dto.response.ReportHistoryResponseDto
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
+import com.soongan.soonganbackend.soonganpersistence.storage.report.ReportEntity
 import io.swagger.v3.oas.annotations.media.Schema
 
-@Schema(description = "회원 정보 응답 DTO")
+@Schema(description = "로그인한 회원 정보 응답 DTO")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-data class MemberInfoResponseDto(
+data class LoginMemberInfoResponseDto(
     @Schema(description = "회원 ID", required = true)
     val id: Long,
 
@@ -24,16 +26,24 @@ data class MemberInfoResponseDto(
 
     @Schema(description = "자기소개")
     val selfIntroduction: String?,
+
+    @Schema(description = "유저가 신고한 내역")
+    val reportHistories: List<ReportHistoryResponseDto>
 ) {
     companion object {
-        fun from(member: MemberEntity): MemberInfoResponseDto {
-            return MemberInfoResponseDto(
+        fun from(member: MemberEntity, reportHistories: List<ReportEntity>): LoginMemberInfoResponseDto {
+            val reportHistoryResponseDtos = reportHistories.map { reportHistory ->
+                ReportHistoryResponseDto.from(reportHistory)
+            }
+
+            return LoginMemberInfoResponseDto(
                 id = member.id,
                 email = member.email,
                 nickname = member.nickname,
                 birthYear = member.birthYear,
                 profileImageUrl = member.profileImageUrl,
                 selfIntroduction = member.selfIntroduction,
+                reportHistories = reportHistoryResponseDtos
             )
         }
     }

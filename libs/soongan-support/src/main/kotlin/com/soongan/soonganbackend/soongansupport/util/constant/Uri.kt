@@ -59,6 +59,8 @@ object Uri {
         SWAGGER_RESOURCES + "/**",
         V3 + API_DOCS + "/**",
 
+        MEMBERS + "/{memberId:[0-9]+}",
+
         WEEKLY + CONTESTS,
         WEEKLY + CONTESTS + POSTS,
 
