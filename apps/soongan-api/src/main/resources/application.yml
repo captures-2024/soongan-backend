@@ -9,6 +9,10 @@ spring:
       - optional:soongan-web.yml
   profiles:
     active: ${EXECUTION_ENV}
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
 
 server:
   port: ${SERVER_PORT}
