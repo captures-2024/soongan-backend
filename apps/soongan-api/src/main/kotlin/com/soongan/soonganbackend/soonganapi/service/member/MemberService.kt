@@ -17,9 +17,18 @@ class MemberService(
     private val reportAdapter: ReportAdapter,
     private val gcpStorageService: GcpStorageService,
 ) {
-    fun getMemberInfo(loginMember: MemberEntity): MemberInfoResponseDto {
+    fun getLoginMemberInfo(loginMember: MemberEntity): LoginMemberInfoResponseDto {
         val reportHistories = reportAdapter.getReportHistoriesByReportMember(loginMember)
-        return MemberInfoResponseDto.from(loginMember, reportHistories)
+        return LoginMemberInfoResponseDto.from(loginMember, reportHistories)
+    }
+
+    fun getMemberInfo(memberId: Long): MemberInfoResponseDto {
+        val optionalMember = memberAdapter.getById(memberId)
+        if (optionalMember.isEmpty) {
+            throw SoonganException(StatusCode.NOT_FOUND, "해당 ID의 회원이 존재하지 않습니다. memberId: $memberId")
+        }
+
+        return MemberInfoResponseDto.from(optionalMember.get())
     }
 
     @Transactional(readOnly = true)

@@ -15,6 +15,11 @@ class MemberAdapter (
     }
 
     @Transactional(readOnly = true)
+    fun getById(id: Long): Optional<MemberEntity> {
+        return memberRepository.findById(id)
+    }
+
+    @Transactional(readOnly = true)
     fun getByEmail(email: String): MemberEntity? {
         return memberRepository.findByEmail(email)
     }
@@ -39,12 +44,6 @@ class MemberAdapter (
     @Transactional(readOnly = true)
     fun getAllByNickname(nickname: String): List<MemberEntity> {
         return memberRepository.findAllByNickname(nickname)
-    }
-
-    // admin용
-    @Transactional(readOnly = true)
-    fun getById(id: Long): Optional<MemberEntity> {
-        return memberRepository.findById(id)
     }
 
     @Transactional
