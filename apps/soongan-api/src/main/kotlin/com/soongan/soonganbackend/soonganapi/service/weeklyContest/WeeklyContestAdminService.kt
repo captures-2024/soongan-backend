@@ -1,0 +1,15 @@
+package com.soongan.soonganbackend.soonganapi.service.weeklyContest
+
+import com.soongan.soonganbackend.soonganapi.admin.weeklyContest.dto.response.WeeklyContestAdminResponseDto
+import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContest.WeeklyContestAdapter
+import org.springframework.stereotype.Service
+
+@Service
+class WeeklyContestAdminService(
+    private val weeklyContestAdapter: WeeklyContestAdapter
+) {
+    fun getWeeklyContests(): List<WeeklyContestAdminResponseDto> {
+        val weeklyContestEntities = weeklyContestAdapter.getAllWeeklyContests()
+        return weeklyContestEntities.map { WeeklyContestAdminResponseDto.Companion.from(it) }
+    }
+}

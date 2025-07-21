@@ -25,7 +25,7 @@ data class WeeklyContestListResponseDto(
             return WeeklyContestListResponseDto(
                 contests = contests.map {
                     WeeklyContestOverviewDto(
-                        id = it.id!!,
+                        id = it.id,
                         round = it.round,
                         subject = it.subject
                     )
