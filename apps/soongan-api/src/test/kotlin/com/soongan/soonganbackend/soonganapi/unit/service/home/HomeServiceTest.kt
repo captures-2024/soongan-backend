@@ -3,6 +3,7 @@ package com.soongan.soonganbackend.soonganapi.unit.service.home
 import com.soongan.soonganbackend.soonganapi.service.home.HomeService
 import com.soongan.soonganbackend.soonganapi.service.weeklyContest.validator.WeeklyContestValidator
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
+import com.soongan.soonganbackend.soonganpersistence.storage.postLike.PostLikeAdapter
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContest.WeeklyContestEntity
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.WeeklyContestPostAdapter
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.WeeklyContestPostEntity
@@ -23,6 +24,9 @@ class HomeServiceTest {
 
     @MockK
     private lateinit var weeklyContestValidator: WeeklyContestValidator
+
+    @MockK
+    private lateinit var postLikeAdapter: PostLikeAdapter
 
     @InjectMockKs
     private lateinit var homeService: HomeService
@@ -55,6 +59,7 @@ class HomeServiceTest {
         // mock
         every { weeklyContestValidator.getWeeklyContestIfValidRound() } returns weeklyContest
         every { weeklyContestPostAdapter.getAllWeeklyContestPostByMemberAndWeeklyContest(loginMember, weeklyContest) } returns homeWeeklyContestPostList
+        every { postLikeAdapter.existsByPostIdAndContestTypeAndMember(any(), any(), any()) } returns false
 
         // when
         val homeResponseDto = homeService.getHome(loginMember)
