@@ -20,7 +20,7 @@ data class HomeResponseDto(
         // daily contest response 와 분리하기 위한 네이밍
         fun fromWeeklyContest(
             weeklyContest: WeeklyContestEntity,
-            postInfo: List<WeeklyContestPostEntity>
+            postInfo: List<Pair<WeeklyContestPostEntity, Boolean>>
         ): HomeResponseDto {
             return HomeResponseDto(
                 contestInfo = ContestInfo(
@@ -31,10 +31,11 @@ data class HomeResponseDto(
                 ),
                 postInfo = postInfo.map {
                     HomeMyPostInfo(
-                        postId = it.id,
-                        imageUrl = it.imageUrl,
-                        likeCount = it.likeCount,
-                        commentCount = it.commentCount
+                        postId = it.first.id,
+                        imageUrl = it.first.imageUrl,
+                        likeCount = it.first.likeCount,
+                        commentCount = it.first.commentCount,
+                        isLiked = it.second
                     )
                 }
             )
@@ -52,6 +53,7 @@ data class HomeResponseDto(
         val postId: Long,
         val imageUrl: String,
         val likeCount: Int,
-        val commentCount: Int
+        val commentCount: Int,
+        val isLiked: Boolean
     )
 }
