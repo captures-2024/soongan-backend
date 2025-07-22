@@ -1,11 +1,14 @@
 package com.soongan.soonganbackend.soonganapi.admin.weeklyContest
 
+import com.soongan.soonganbackend.soonganapi.admin.weeklyContest.dto.request.CreateWeeklyContestAdminRequestDto
 import com.soongan.soonganbackend.soonganapi.admin.weeklyContest.dto.response.WeeklyContestAdminResponseDto
 import com.soongan.soonganbackend.soonganapi.service.weeklyContest.WeeklyContestAdminService
 import com.soongan.soonganbackend.soongansupport.util.constant.Uri
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
@@ -23,5 +26,14 @@ class WeeklyContestAdminController(
     @GetMapping
     fun getWeeklyContests(): List<WeeklyContestAdminResponseDto> {
         return weeklyContestAdminService.getWeeklyContests()
+    }
+
+    @Operation(
+        summary = "새로운 주간 콘테스트 생성",
+        description = "새로운 주간 콘테스트를 생성합니다."
+    )
+    @PostMapping
+    fun createWeeklyContest(@RequestBody requestDto: CreateWeeklyContestAdminRequestDto): WeeklyContestAdminResponseDto {
+        return weeklyContestAdminService.createWeeklyContest(requestDto)
     }
 }
