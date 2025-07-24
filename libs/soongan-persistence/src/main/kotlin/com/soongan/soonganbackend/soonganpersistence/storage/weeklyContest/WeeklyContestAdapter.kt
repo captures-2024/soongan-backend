@@ -31,4 +31,18 @@ class WeeklyContestAdapter (
     fun getLatestEndedWeeklyContest(now: LocalDateTime = LocalDateTime.now()): WeeklyContestEntity? {
         return weeklyContestRepository.findFirstByEndAtBeforeOrderByEndAtDesc(now)
     }
+
+    fun getLatestRound(): Int {
+        return weeklyContestRepository.findFirstByOrderByRoundDesc()?.round ?: 0
+    }
+
+    // admin용
+    fun save(weeklyContestEntity: WeeklyContestEntity): WeeklyContestEntity {
+        return weeklyContestRepository.save(weeklyContestEntity)
+    }
+
+    // admin용
+    fun deleteWeeklyContestById(contestId: Long) {
+        weeklyContestRepository.deleteById(contestId)
+    }
 }

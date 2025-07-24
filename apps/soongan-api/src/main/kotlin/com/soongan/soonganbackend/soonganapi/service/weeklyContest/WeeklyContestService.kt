@@ -1,23 +1,27 @@
-package com.soongan.soonganbackend.soonganapi.service.weeklyContestPost
+package com.soongan.soonganbackend.soonganapi.service.weeklyContest
 
-import com.soongan.soonganbackend.soonganapi.interfaces.weeklyContest.dto.request.WeeklyContestPostUpdateRequestDto
 import com.soongan.soonganbackend.soonganapi.interfaces.weeklyContest.dto.request.WeeklyContestPostRegisterRequestDto
-import com.soongan.soonganbackend.soonganapi.interfaces.weeklyContest.dto.response.*
+import com.soongan.soonganbackend.soonganapi.interfaces.weeklyContest.dto.request.WeeklyContestPostUpdateRequestDto
+import com.soongan.soonganbackend.soonganapi.interfaces.weeklyContest.dto.response.MyWeeklyContestPostResponseDto
+import com.soongan.soonganbackend.soonganapi.interfaces.weeklyContest.dto.response.WeeklyContestListResponseDto
+import com.soongan.soonganbackend.soonganapi.interfaces.weeklyContest.dto.response.WeeklyContestPostListCursorResponseDto
+import com.soongan.soonganbackend.soonganapi.interfaces.weeklyContest.dto.response.WeeklyContestPostListResponseDto
+import com.soongan.soonganbackend.soonganapi.interfaces.weeklyContest.dto.response.WeeklyContestPostRegisterResponseDto
+import com.soongan.soonganbackend.soonganapi.interfaces.weeklyContest.dto.response.WeeklyContestPostResponseDto
+import com.soongan.soonganbackend.soonganapi.interfaces.weeklyContest.dto.response.WeeklyContestPostUpdateResponseDto
+import com.soongan.soonganbackend.soonganapi.service.weeklyContest.validator.WeeklyContestValidator
+import com.soongan.soonganbackend.soonganapi.service.weeklyContestPost.validator.WeeklyContestPostValidator
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
+import com.soongan.soonganbackend.soonganpersistence.storage.postLike.PostLikeAdapter
+import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContest.WeeklyContestAdapter
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContest.WeeklyContestEntity
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.WeeklyContestPostAdapter
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.WeeklyContestPostEntity
-import com.soongan.soonganbackend.soongansupport.service.GcpStorageService
-import com.soongan.soonganbackend.soonganapi.service.weeklyContest.validator.WeeklyContestValidator
-import com.soongan.soonganbackend.soongansupport.domain.WeeklyContestPostOrderCriteriaEnum.*
-import com.soongan.soonganbackend.soonganapi.service.weeklyContestPost.validator.WeeklyContestPostValidator
-import com.soongan.soonganbackend.soonganpersistence.storage.postLike.PostLikeAdapter
-import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContest.WeeklyContestAdapter
 import com.soongan.soonganbackend.soongansupport.domain.ContestTypeEnum
 import com.soongan.soonganbackend.soongansupport.domain.WeeklyContestPostOrderCriteriaEnum
+import com.soongan.soonganbackend.soongansupport.service.GcpStorageService
 import com.soongan.soonganbackend.soongansupport.util.exception.SoonganException
 import com.soongan.soonganbackend.soongansupport.util.exception.StatusCode
-import com.soongan.soonganbackend.soongansupport.util.exception.StatusCode.SOONGAN_API_CANNOT_UPDATE_POST_AFTER_VOTE_END
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Slice
 import org.springframework.stereotype.Service
@@ -37,7 +41,7 @@ class WeeklyContestService(
     @Transactional(readOnly = true)
     fun getWeeklyContestList(): WeeklyContestListResponseDto {
         val weeklyContestList = weeklyContestAdapter.getAllWeeklyContests()
-        return WeeklyContestListResponseDto.from(weeklyContestList)
+        return WeeklyContestListResponseDto.Companion.from(weeklyContestList)
     }
 
     @Transactional(readOnly = true)
@@ -47,10 +51,10 @@ class WeeklyContestService(
 
         loginMember?.let {
             val isLiked: Boolean = likeAdapter.existsByPostIdAndContestTypeAndMember(postId, ContestTypeEnum.WEEKLY, loginMember)
-            return WeeklyContestPostResponseDto.from(loginMember.id, weeklyContestPost, isLiked)
+            return WeeklyContestPostResponseDto.Companion.from(loginMember.id, weeklyContestPost, isLiked)
         }
 
-        return WeeklyContestPostResponseDto.from(weeklyContestPost =  weeklyContestPost)
+        return WeeklyContestPostResponseDto.Companion.from(weeklyContestPost =  weeklyContestPost)
     }
 
     @Transactional(readOnly = true)
@@ -63,20 +67,20 @@ class WeeklyContestService(
         val weeklyContest = weeklyContestValidator.getWeeklyContestIfValidRound(round)
 
         val weeklyContestPostSlice: Slice<WeeklyContestPostEntity> = when (orderCriteria) {
-            LATEST -> {
+            WeeklyContestPostOrderCriteriaEnum.LATEST -> {
                 weeklyContestPostAdapter.getLatestPostWithSlicing(weeklyContest, page, pageSize)
             }
 
-            MOST_LIKED -> {
+            WeeklyContestPostOrderCriteriaEnum.MOST_LIKED -> {
                 weeklyContestPostAdapter.getMostLikedPostWithSlicing(weeklyContest, page, pageSize)
             }
 
-            OLDEST -> {
+            WeeklyContestPostOrderCriteriaEnum.OLDEST -> {
                 weeklyContestPostAdapter.getOldestPostWithSlicing(weeklyContest, page, pageSize)
             }
         }
 
-        return WeeklyContestPostListResponseDto.from(
+        return WeeklyContestPostListResponseDto.Companion.from(
             weeklyContest, weeklyContestPostSlice
         )
     }
@@ -91,18 +95,18 @@ class WeeklyContestService(
         val weeklyContest = weeklyContestValidator.getWeeklyContestIfValidRound(round)
 
         val posts = when (orderCriteria) {
-            LATEST -> {
+            WeeklyContestPostOrderCriteriaEnum.LATEST -> {
                 weeklyContestPostAdapter.queryLatestPost(currentCursor, pageSize)
             }
-            MOST_LIKED -> {
+            WeeklyContestPostOrderCriteriaEnum.MOST_LIKED -> {
                 weeklyContestPostAdapter.queryMostLikedPost(currentCursor, pageSize)
             }
-            OLDEST -> {
+            WeeklyContestPostOrderCriteriaEnum.OLDEST -> {
                 weeklyContestPostAdapter.queryOldestPost(currentCursor, pageSize)
             }
         }
 
-        return WeeklyContestPostListCursorResponseDto.from(
+        return WeeklyContestPostListCursorResponseDto.Companion.from(
             weeklyContest, posts
         )
     }
@@ -117,7 +121,7 @@ class WeeklyContestService(
             loginMember, page, pageSize
         )
 
-        return MyWeeklyContestPostResponseDto.from(weeklyContestPostPage)
+        return MyWeeklyContestPostResponseDto.Companion.from(weeklyContestPostPage)
     }
 
 
@@ -161,7 +165,7 @@ class WeeklyContestService(
 
         val now = LocalDateTime.now()
         if (weeklyContest.endAt.isBefore(now)) {
-            throw SoonganException(SOONGAN_API_CANNOT_UPDATE_POST_AFTER_VOTE_END)
+            throw SoonganException(StatusCode.SOONGAN_API_CANNOT_UPDATE_POST_AFTER_VOTE_END)
         }
 
         val validatedPost = weeklyContestPostValidator.validatePostOwner(loginMember, postId)

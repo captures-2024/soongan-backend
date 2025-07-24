@@ -5,7 +5,7 @@ import com.soongan.soonganbackend.soonganapi.interfaces.weeklyContest.dto.reques
 import com.soongan.soonganbackend.soonganapi.interfaces.weeklyContest.dto.response.*
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
 import com.soongan.soonganbackend.soongansupport.domain.WeeklyContestPostOrderCriteriaEnum
-import com.soongan.soonganbackend.soonganapi.service.weeklyContestPost.WeeklyContestService
+import com.soongan.soonganbackend.soonganapi.service.weeklyContest.WeeklyContestService
 import com.soongan.soonganbackend.soongansupport.util.constant.Uri
 import com.soongan.soonganbackend.soonganweb.resolver.LoginMember
 import io.swagger.v3.oas.annotations.Operation

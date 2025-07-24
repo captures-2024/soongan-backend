@@ -17,4 +17,6 @@ interface WeeklyContestRepository: JpaRepository<WeeklyContestEntity, Long> {
     fun findInProgressWeeklyContest(now: LocalDateTime): WeeklyContestEntity?
 
     fun findFirstByEndAtBeforeOrderByEndAtDesc(now: LocalDateTime): WeeklyContestEntity?
+
+    fun findFirstByOrderByRoundDesc(): WeeklyContestEntity?
 }
