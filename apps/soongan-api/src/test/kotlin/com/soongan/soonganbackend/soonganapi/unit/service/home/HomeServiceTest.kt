@@ -7,6 +7,7 @@ import com.soongan.soonganbackend.soonganpersistence.storage.postLike.PostLikeAd
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContest.WeeklyContestEntity
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.WeeklyContestPostAdapter
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.WeeklyContestPostEntity
+import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.type.WeeklyContestPostAndIsLiked
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -43,23 +44,29 @@ class HomeServiceTest {
             endAt = LocalDateTime.now().plusDays(1),
         )
         val homeWeeklyContestPostList = listOf(
-            WeeklyContestPostEntity(
+            WeeklyContestPostAndIsLiked(
+                post = WeeklyContestPostEntity(
                 id = 1,
                 member = loginMember,
                 weeklyContest = weeklyContest,
                 imageUrl = "test-image-url",
+                ),
+                isLiked = true,
             ),
-            WeeklyContestPostEntity(
-                id = 2,
-                member = loginMember,
-                weeklyContest = weeklyContest,
+            WeeklyContestPostAndIsLiked(
+                post = WeeklyContestPostEntity(
+                    id = 2,
+                    member = loginMember,
+                    weeklyContest = weeklyContest,
+                    imageUrl = "test-image-url-2",
+                ),
+                isLiked = false,
             )
         )
 
         // mock
         every { weeklyContestValidator.getWeeklyContestIfValidRound() } returns weeklyContest
         every { weeklyContestPostAdapter.getHomePostsWithIsLiked(loginMember, weeklyContest) } returns homeWeeklyContestPostList
-        every { postLikeAdapter.existsByPostIdAndContestTypeAndMember(any(), any(), any()) } returns false
 
         // when
         val homeResponseDto = homeService.getHome(loginMember)
