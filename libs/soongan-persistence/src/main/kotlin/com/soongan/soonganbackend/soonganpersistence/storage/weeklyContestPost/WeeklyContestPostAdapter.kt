@@ -6,6 +6,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContest.WeeklyContestEntity
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.QWeeklyContestPostEntity.*
+import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.type.WeeklyContestPostAndIsLiked
 import com.soongan.soonganbackend.soonganpersistence.util.applySortCondition
 import com.soongan.soonganbackend.soonganpersistence.util.calculateNextCursor
 import com.soongan.soonganbackend.soonganpersistence.util.generateCursor
@@ -92,13 +93,13 @@ class WeeklyContestPostAdapter(
     }
 
     @Transactional(readOnly = true)
-    fun getAllWeeklyContestPostByMemberAndWeeklyContest(
+    fun getHomePostsWithIsLiked(
         member: MemberEntity,
         weeklyContest: WeeklyContestEntity
-    ): List<WeeklyContestPostEntity> {
-        return weeklyContestPostRepository.findAllByMemberAndWeeklyContestOrderByCreatedAtDesc(
-            member,
-            weeklyContest
+    ): List<WeeklyContestPostAndIsLiked> {
+        return weeklyContestPostRepository.findHomePostsWithIsLiked(
+            member.id,
+            weeklyContest.id
         )
     }
 
