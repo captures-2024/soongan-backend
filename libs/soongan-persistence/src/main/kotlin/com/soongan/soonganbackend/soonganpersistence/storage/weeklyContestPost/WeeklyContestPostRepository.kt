@@ -66,8 +66,7 @@ interface WeeklyContestPostRepository : JpaRepository<WeeklyContestPostEntity, L
             END
         )
         FROM WeeklyContestPostEntity p
-        LEFT JOIN p.weeklyContest wc
-        WHERE wc.id = :weeklyContestId
+        WHERE p.weeklyContest.id = :weeklyContestId
             AND p.member.id = :memberId
     """)
     fun findHomePostsWithIsLiked(
