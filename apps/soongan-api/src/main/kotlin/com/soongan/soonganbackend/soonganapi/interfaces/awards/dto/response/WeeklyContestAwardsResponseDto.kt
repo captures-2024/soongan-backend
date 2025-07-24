@@ -34,7 +34,7 @@ data class WeeklyContestAwardsResponseDto(
         companion object {
             fun from(entity: WeeklyContestEntity, thumbnailImageUrl: String): WeeklyContestDto {
                 return WeeklyContestDto(
-                    id = entity.id!!,
+                    id = entity.id,
                     round = entity.round,
                     subject = entity.subject,
                     startAt = entity.startAt,

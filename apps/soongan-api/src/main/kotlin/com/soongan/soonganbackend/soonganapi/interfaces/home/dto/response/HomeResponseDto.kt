@@ -2,8 +2,10 @@ package com.soongan.soonganbackend.soonganapi.interfaces.home.dto.response
 
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContest.WeeklyContestEntity
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.WeeklyContestPostEntity
+import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.type.WeeklyContestPostAndIsLiked
 import com.soongan.soonganbackend.soongansupport.domain.ContestTypeEnum
 import io.swagger.v3.oas.annotations.media.Schema
+import org.springframework.data.domain.Slice
 import java.time.LocalDateTime
 
 @Schema(description = "홈 화면 정보 응답 DTO")
@@ -20,7 +22,7 @@ data class HomeResponseDto(
         // daily contest response 와 분리하기 위한 네이밍
         fun fromWeeklyContest(
             weeklyContest: WeeklyContestEntity,
-            postInfo: List<Pair<WeeklyContestPostEntity, Boolean>>
+            postInfo: List<WeeklyContestPostAndIsLiked>
         ): HomeResponseDto {
             return HomeResponseDto(
                 contestInfo = ContestInfo(
@@ -31,11 +33,11 @@ data class HomeResponseDto(
                 ),
                 postInfo = postInfo.map {
                     HomeMyPostInfo(
-                        postId = it.first.id,
-                        imageUrl = it.first.imageUrl,
-                        likeCount = it.first.likeCount,
-                        commentCount = it.first.commentCount,
-                        isLiked = it.second
+                        postId = it.post.id,
+                        imageUrl = it.post.imageUrl,
+                        likeCount = it.post.likeCount,
+                        commentCount = it.post.commentCount,
+                        isLiked = it.isLiked
                     )
                 }
             )

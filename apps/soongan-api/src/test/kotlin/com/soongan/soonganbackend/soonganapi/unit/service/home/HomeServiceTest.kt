@@ -58,7 +58,7 @@ class HomeServiceTest {
 
         // mock
         every { weeklyContestValidator.getWeeklyContestIfValidRound() } returns weeklyContest
-        every { weeklyContestPostAdapter.getAllWeeklyContestPostByMemberAndWeeklyContest(loginMember, weeklyContest) } returns homeWeeklyContestPostList
+        every { weeklyContestPostAdapter.getHomePostsWithIsLiked(loginMember, weeklyContest) } returns homeWeeklyContestPostList
         every { postLikeAdapter.existsByPostIdAndContestTypeAndMember(any(), any(), any()) } returns false
 
         // when
