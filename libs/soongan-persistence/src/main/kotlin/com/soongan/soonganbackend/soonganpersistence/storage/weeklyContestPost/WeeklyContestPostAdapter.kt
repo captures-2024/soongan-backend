@@ -100,7 +100,7 @@ class WeeklyContestPostAdapter(
         return weeklyContestPostRepository.findHomePostsWithIsLiked(
             member.id,
             weeklyContest.id
-        ).toList()
+        )
     }
 
     @Transactional

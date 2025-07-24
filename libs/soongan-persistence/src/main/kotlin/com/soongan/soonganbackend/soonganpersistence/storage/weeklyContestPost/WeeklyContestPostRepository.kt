@@ -58,7 +58,7 @@ interface WeeklyContestPostRepository : JpaRepository<WeeklyContestPostEntity, L
                     SELECT 1 
                     FROM PostLikeEntity pl 
                     WHERE pl.postId = p.id 
-                    AND pl.contestType = 'WEEKLY' 
+                    AND pl.contestType = 'WEEKLY'
                     AND pl.member.id = :memberId
                 ) 
                 THEN TRUE
@@ -68,17 +68,12 @@ interface WeeklyContestPostRepository : JpaRepository<WeeklyContestPostEntity, L
         FROM WeeklyContestPostEntity p
         LEFT JOIN p.weeklyContest wc
         WHERE wc.id = :weeklyContestId
-            AND EXISTS (
-                SELECT 1 
-                FROM PostLikeEntity pl 
-                WHERE pl.postId = p.id 
-                AND pl.member.id = :memberId
-            )
+            AND p.member.id = :memberId
     """)
     fun findHomePostsWithIsLiked(
         @Param("memberId") memberId: Long,
         @Param("weeklyContestId") weeklyContestId: Long,
-    ): Slice<WeeklyContestPostAndIsLiked>
+    ): List<WeeklyContestPostAndIsLiked>
 }
 
 interface WeeklyContestPostRepositoryCustom {
