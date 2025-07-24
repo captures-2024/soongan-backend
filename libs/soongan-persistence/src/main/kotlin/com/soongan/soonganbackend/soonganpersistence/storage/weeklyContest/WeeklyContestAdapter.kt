@@ -40,4 +40,9 @@ class WeeklyContestAdapter (
     fun save(weeklyContestEntity: WeeklyContestEntity): WeeklyContestEntity {
         return weeklyContestRepository.save(weeklyContestEntity)
     }
+
+    // admin용
+    fun deleteWeeklyContestById(contestId: Long) {
+        weeklyContestRepository.deleteById(contestId)
+    }
 }

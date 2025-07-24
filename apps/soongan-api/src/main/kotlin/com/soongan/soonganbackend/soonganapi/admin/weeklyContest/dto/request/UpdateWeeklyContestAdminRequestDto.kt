@@ -4,7 +4,7 @@ import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContest.Weekl
 import io.swagger.v3.oas.annotations.media.Schema
 import java.time.LocalDateTime
 
-@Schema(description = "주간 콘테스트 생성 요청 Admin DTO. round는 자동 생성됩니다.")
+@Schema(description = "주간 콘테스트 수정 요청 Admin DTO")
 data class UpdateWeeklyContestAdminRequestDto(
     @Schema(description = "주제")
     val subject: String? = null,

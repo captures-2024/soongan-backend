@@ -7,6 +7,7 @@ import com.soongan.soonganbackend.soonganapi.service.weeklyContest.WeeklyContest
 import com.soongan.soonganbackend.soongansupport.util.constant.Uri
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -44,11 +45,20 @@ class WeeklyContestAdminController(
         summary = "주간 콘테스트 수정",
         description = "주간 콘테스트를 수정합니다."
     )
-    @PatchMapping("{contestId}")
+    @PatchMapping("/{contestId}")
     fun updateWeeklyContest(
         @PathVariable contestId: Long,
         @RequestBody requestDto: UpdateWeeklyContestAdminRequestDto,
     ): WeeklyContestAdminResponseDto {
         return weeklyContestAdminService.updateWeeklyContest(contestId, requestDto)
+    }
+
+    @Operation(
+        summary = "주간 콘테스트 삭제",
+        description = "주간 콘테스트를 삭제합니다."
+    )
+    @DeleteMapping("/{contestId}")
+    fun deleteWeeklyContest(@PathVariable contestId: Long) {
+        weeklyContestAdminService.deleteWeeklyContest(contestId)
     }
 }

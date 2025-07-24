@@ -55,4 +55,17 @@ class WeeklyContestAdminService(
         val updatedWeeklyContestEntity = weeklyContestAdapter.save(updated)
         return WeeklyContestAdminResponseDto.Companion.from(updatedWeeklyContestEntity)
     }
+
+    fun deleteWeeklyContest(contestId: Long) {
+        val existWeeklyContestEntity = weeklyContestAdapter.getWeeklyContestById(contestId)
+            ?: throw SoonganException(statusCode = StatusCode.NOT_FOUND, "해당 콘테스트가 존재하지 않습니다. contestId: $contestId")
+
+        val now = LocalDateTime.now()
+
+        if (existWeeklyContestEntity.announcedAt < now) {
+            throw SoonganException(statusCode = StatusCode.BAD_REQUEST, "이미 노출된 콘테스트는 삭제할 수 없습니다.")
+        }
+
+        weeklyContestAdapter.deleteWeeklyContestById(contestId)
+    }
 }
