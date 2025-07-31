@@ -54,7 +54,7 @@ class ReportService(
                 member = loginMember,
                 targetId = explainSaveRequestDto.targetId,
                 targetType = explainSaveRequestDto.targetType,
-                explain = explainSaveRequestDto.explain
+                explains = explainSaveRequestDto.explain
             )
         )
     }
