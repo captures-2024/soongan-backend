@@ -19,7 +19,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import java.time.LocalDateTime
 
 @Entity
-@Table(name = "explain")
+@Table(name = "explains")
 @EntityListeners(AuditingEntityListener::class)
 data class ExplainEntity(
 
@@ -37,8 +37,8 @@ data class ExplainEntity(
     @Column(name = "target_type")
     val targetType: ReportTargetTypeEnum,
 
-    @Column(name = "explain")
-    val explain: String
+    @Column(name = "explains")
+    val explains: String
 ) {
 
     @CreatedDate
