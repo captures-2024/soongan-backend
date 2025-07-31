@@ -1,7 +1,6 @@
 package com.soongan.soonganbackend.soonganpersistence.storage.explain
 
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
-import com.soongan.soonganbackend.soonganpersistence.storage.notification.NotificationEntity
 import com.soongan.soonganbackend.soongansupport.domain.ReportTargetTypeEnum
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
