@@ -84,7 +84,7 @@ class CommentServiceTest {
         every { commentAdapter.save(any()) } returns savedComment
         every { weeklyContestPostAdapter.save(any()) } returns post.copy(commentCount = 1)
         every { fcmTokenAdapter.findAllByMemberId(any()) } returns fcmTokens
-        every { redisMessageProducer.sendMessage(any(), any<Message>()) } returns Unit
+        every { redisMessageProducer.addMessage(any(), any<Message>()) } returns Unit
 
         // when
         commentService.saveComment(loginMember, request)
@@ -93,7 +93,7 @@ class CommentServiceTest {
         verify { commentAdapter.save(any()) }
         verify { weeklyContestPostAdapter.save(match { it.commentCount == 1 }) }
         verify { fcmTokenAdapter.findAllByMemberId(any()) }
-        verify { redisMessageProducer.sendMessage(any(), any<Message>()) }
+        verify { redisMessageProducer.addMessage(any(), any<Message>()) }
     }
 
     @Test
@@ -130,7 +130,7 @@ class CommentServiceTest {
         every { commentAdapter.save(any()) } returns parentComment
         every { weeklyContestPostAdapter.save(any()) } returns post.copy(commentCount = 2)
         every { fcmTokenAdapter.findAllByMemberId(any()) } returns fcmTokens
-        every { redisMessageProducer.sendMessage(any(), any<Message>()) } returns Unit
+        every { redisMessageProducer.addMessage(any(), any<Message>()) } returns Unit
 
         // when
         commentService.saveComment(loginMember, request)
@@ -141,7 +141,7 @@ class CommentServiceTest {
                     it.commentText == request.commentText
         }) }
         verify { fcmTokenAdapter.findAllByMemberId(any()) }
-        verify { redisMessageProducer.sendMessage(any(), any<Message>()) }
+        verify { redisMessageProducer.addMessage(any(), any<Message>()) }
     }
 
     @Test
