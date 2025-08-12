@@ -20,6 +20,8 @@ import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.*
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.web.client.RestClientException
+import org.springframework.web.client.RestClientResponseException
 import org.springframework.web.client.RestTemplate
 
 @Service
@@ -75,30 +77,46 @@ class FcmService(
         )
     }
 
-    fun pushFcmMessage(messages: List<Message>): Unit {
-        val url = "https://fcm.googleapis.com/v1/projects/${firebaseProjectId}/messages:send"
+    fun pushFcmMessage(messages: List<Message>) {
+        val url = "https://fcm.googleapis.com/v1/projects/$firebaseProjectId/messages:send"
 
         val headers = HttpHeaders().apply {
             setBearerAuth(getFcmAccessToken())
             contentType = MediaType.APPLICATION_JSON
         }
 
-        messages.forEach { message ->
-            val fcmMessageDto = FcmMessageDto(message = message)
-            val request = HttpEntity(fcmMessageDto, headers)
+        for (msg in messages) {
+            try {
+                val req = HttpEntity(FcmMessageDto(message = msg), headers)
+                val started = System.currentTimeMillis()
 
-            val response = restTemplate.exchange(
-                url,
-                HttpMethod.POST,
-                request,
-                object : ParameterizedTypeReference<Map<String, Any>>() {}
-            )
+                val res = restTemplate.exchange(
+                    url, HttpMethod.POST, req,
+                    object : ParameterizedTypeReference<Map<String, Any>>() {}
+                )
 
-            if (!response.statusCode.is2xxSuccessful) {
-                logger.error { "FCM 메시지 전송 실패: ${response.statusCode} - ${response.body}" }
+                val took = System.currentTimeMillis() - started
+                val name = res.body?.get("name") as? String ?: ""
+                logger.info {
+                    "FCM 전송 성공 name=$name took=${took}ms token=${mask(msg.token)} " +
+                            "type=${msg.data["notificationType"]} postId=${msg.data["postId"]}"
+                }
+            } catch (e: RestClientResponseException) {
+                // 4xx/5xx 응답 (본문 포함)
+                logger.error(e) {
+                    "FCM 전송 실패 status=${e.statusCode} body=${e.responseBodyAsString} " +
+                            "token=${mask(msg.token)}"
+                }
+            } catch (e: RestClientException) {
+                // 네트워크/직렬화 등 전송 레벨 예외
+                logger.error(e) { "FCM 전송 실패 transport=${e.message} token=${mask(msg.token)}" }
             }
         }
     }
+
+    private fun mask(token: String) =
+        if (token.length > 16) token.take(8) + "…" + token.takeLast(6) else "****"
+
 
     fun getFcmAccessToken(): String {
         val googleCredentials = GoogleCredentials.fromStream(firebaseKeyJsonString.byteInputStream())
