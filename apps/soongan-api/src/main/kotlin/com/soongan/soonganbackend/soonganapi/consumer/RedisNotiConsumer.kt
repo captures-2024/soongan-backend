@@ -1,5 +1,6 @@
 package com.soongan.soonganbackend.soonganapi.consumer
 
+import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.soongan.soonganbackend.soonganapi.service.fcm.FcmService
 import com.soongan.soonganbackend.soonganredis.constant.RedisMessageConsumer
@@ -72,8 +73,8 @@ class RedisNotiConsumer(
     }
 
     private fun processNotiMessage(message: String) {
-        val notificationMessage = objectMapper.readValue(message, Message::class.java)
-        logger.info { "Processing Noti Message: $notificationMessage"  }
-        fcmService.pushFcmMessage(notificationMessage)
+        val notificationMessages: List<Message> = objectMapper.readValue(message, object : TypeReference<List<Message>>() {})
+        logger.info { "Processing Noti Message: $notificationMessages"  }
+        fcmService.pushFcmMessage(notificationMessages)
     }
 }

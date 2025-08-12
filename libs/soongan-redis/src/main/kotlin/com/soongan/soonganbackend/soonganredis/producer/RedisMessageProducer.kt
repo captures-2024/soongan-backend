@@ -16,7 +16,7 @@ class RedisMessageProducer(
         private val logger = KotlinLogging.logger { }
     }
 
-    fun <T> sendMessage(streamKey: String, message: T) {
+    fun <T> addMessage(streamKey: String, message: T) {
         val record = StreamRecords.string(mapOf("message" to objectMapper.writeValueAsString(message))).withStreamKey(streamKey)
         val recordId = redisTemplate.opsForStream<String, Any>()
             .add(record)
