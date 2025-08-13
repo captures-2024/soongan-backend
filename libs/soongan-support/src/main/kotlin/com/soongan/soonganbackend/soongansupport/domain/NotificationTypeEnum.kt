@@ -15,7 +15,8 @@ enum class NotificationSubTypeEnum(
 
     COMMENT(NotificationTypeEnum.ACTIVITY),
     LIKE(NotificationTypeEnum.ACTIVITY),
-    APPEAL(NotificationTypeEnum.ACTIVITY),
+    EXPLAIN(NotificationTypeEnum.ACTIVITY),
+    BLOCK(NotificationTypeEnum.ACTIVITY),
 
     NOTICE(NotificationTypeEnum.NOTICE)
     ;

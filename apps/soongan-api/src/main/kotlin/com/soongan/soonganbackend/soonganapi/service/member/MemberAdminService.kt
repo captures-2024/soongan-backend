@@ -26,7 +26,7 @@ class MemberAdminService(
         }
     }
 
-    fun deleteOne(memberId: Long): Unit {
+    fun deleteOne(memberId: Long) {
         val optionalMember = memberAdapter.getById(memberId)
         if (optionalMember.isEmpty) throw SoonganException(StatusCode.NOT_FOUND, "해당 id로 회원이 존재하지 않습니다. id: $memberId")
 

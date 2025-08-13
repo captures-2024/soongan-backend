@@ -44,8 +44,8 @@ fun createNeedExplainMessages(tokens: List<String>, targetId: Long, targetType: 
     }
 }
 
-// 내 작품이 3회 이상 신고받아서 숨김 처리된 경우
-fun createBlockPostMessages(tokens: List<String>, postId: Long): List<Message> {
+// 내 게시글 혹은 댓글이 3회 이상 신고받아서 숨김 처리된 경우
+fun createBlockMessages(tokens: List<String>, targetId: Long, targetType: ReportTargetTypeEnum): List<Message> {
     return tokens.map { token ->
         Message(
             token = token,
@@ -54,9 +54,9 @@ fun createBlockPostMessages(tokens: List<String>, postId: Long): List<Message> {
                 body = "해당 작품은 모두에게 숨겨집니다. 클릭해 확인해 주세요."
             ),
             data = mapOf(
-                "link" to "/post/$postId",
                 "notificationType" to NotificationTypeEnum.ACTIVITY.toString(),
-                "postId" to postId.toString(),
+                "targetId" to targetId.toString(),
+                "targetType" to targetType.toString(),
                 "timestamp" to LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
             )
         )

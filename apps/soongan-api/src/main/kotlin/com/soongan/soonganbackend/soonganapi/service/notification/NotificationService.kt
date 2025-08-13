@@ -50,7 +50,7 @@ class NotificationService(
     }
 
     @Transactional
-    fun deleteNotification(loginMember: MemberEntity, notificationId: Long): Unit {
+    fun deleteNotification(loginMember: MemberEntity, notificationId: Long) {
         val notification = notificationAdapter.getByIdOrNull(notificationId)
             ?: throw SoonganException(StatusCode.SOONGAN_API_NOT_FOUND_NOTIFICATION, "해당 id로 조회되는 알림이 없습니다.")
 
@@ -58,7 +58,7 @@ class NotificationService(
             throw SoonganException(StatusCode.SOONGAN_API_NOT_LOGIN_MEMBER_NOTIFICATION, "해당 알림은 로그인한 유저의 알림이 아닙니다.")
         }
 
-        if (notification.subType == NotificationSubTypeEnum.APPEAL) {
+        if (notification.subType == NotificationSubTypeEnum.EXPLAIN) {
             throw SoonganException(StatusCode.SOONGAN_API_CANNOT_DELETE_REPORT_CLARIFICATION, "소명 알림은 삭제할 수 없습니다.")
         }
 

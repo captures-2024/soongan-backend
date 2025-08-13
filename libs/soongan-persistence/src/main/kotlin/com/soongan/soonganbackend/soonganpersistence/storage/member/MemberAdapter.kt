@@ -47,7 +47,7 @@ class MemberAdapter (
     }
 
     @Transactional
-    fun deleteOne(id: Long): Unit {
+    fun deleteOne(id: Long) {
         memberRepository.deleteById(id)
     }
 }

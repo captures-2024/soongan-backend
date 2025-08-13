@@ -23,6 +23,7 @@ import com.soongan.soonganbackend.soongansupport.domain.ReportTargetTypeEnum
 import com.soongan.soonganbackend.soongansupport.domain.ReportTypeEnum
 import com.soongan.soonganbackend.soongansupport.util.exception.SoonganException
 import com.soongan.soonganbackend.soongansupport.util.exception.StatusCode
+import com.soongan.soonganbackend.soongansupport.util.noti.createBlockMessages
 import com.soongan.soonganbackend.soongansupport.util.noti.createNeedExplainMessages
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
@@ -66,6 +67,8 @@ class ReportService(
                 targetId = dto.targetId,
                 targetType = dto.targetType
             )
+            if (messages.isEmpty()) return ReportSaveResponseDto.from(savedReport, reportHistories)
+
             // 알림 전송
             redisMessageProducer.addMessage(RedisStreamKey.SOONGAN_NOTI, messages)
 
@@ -74,9 +77,9 @@ class ReportService(
                 NotificationEntity(
                     member = targetMember,
                     type = NotificationTypeEnum.ACTIVITY,
-                    subType = NotificationSubTypeEnum.APPEAL,
-                    title = "[필수] 신고 접수로 인한 소명 절차 진행",
-                    body = "신고가 접수돼 소명이 필요합니다. 소명 절차를 진행해 주세요.",
+                    subType = NotificationSubTypeEnum.EXPLAIN,
+                    title = messages.first().notification.title,
+                    body = messages.first().notification.body,
                 )
             )
         }
@@ -118,7 +121,7 @@ class ReportService(
         }
     }
 
-    private fun handleBlindingIfNeeded(targetId: Long, targetType: ReportTargetTypeEnum, target: Any): Unit {
+    private fun handleBlindingIfNeeded(targetId: Long, targetType: ReportTargetTypeEnum, target: Any) {
         val reportCount = reportAdapter.countByTargetIdAndTargetType(targetId, targetType)
         if (reportCount < BLIND_REPORT_COUNT) return
 
@@ -127,14 +130,52 @@ class ReportService(
             is WeeklyContestPostEntity -> {
                 if (target.blindedAt == null) {
                     weeklyContestPostAdapter.save(target.copy(blindedAt = now))
+                    sendAndSaveNoti(
+                        targetMember = target.member,
+                        targetId = targetId,
+                        targetType = targetType
+                    )
                 }
             }
 
             is CommentEntity -> {
                 if (target.blindedAt == null) {
                     commentAdapter.save(target.copy(blindedAt = now))
+                    sendAndSaveNoti(
+                        targetMember = target.member,
+                        targetId = targetId,
+                        targetType = targetType
+                    )
                 }
             }
         }
+    }
+
+    private fun sendAndSaveNoti(
+        targetMember: MemberEntity,
+        targetId: Long,
+        targetType: ReportTargetTypeEnum
+    ) {
+        val tokens = fcmTokenAdapter.findAllByMemberId(targetMember.id)
+        val messages = createBlockMessages(
+            tokens = tokens.map { it.token },
+            targetId = targetId,
+            targetType = targetType
+        )
+        if (messages.isEmpty()) return
+
+        // 알림 전송
+        redisMessageProducer.addMessage(RedisStreamKey.SOONGAN_NOTI, messages)
+
+        // 알림센터에 저장
+        notificationAdapter.save(
+            NotificationEntity(
+                member = targetMember,
+                type = NotificationTypeEnum.ACTIVITY,
+                subType = NotificationSubTypeEnum.BLOCK,
+                title = messages.first().notification.title,
+                body = messages.first().notification.body,
+            )
+        )
     }
 }
