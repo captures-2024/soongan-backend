@@ -7,14 +7,23 @@ import com.soongan.soonganbackend.soonganpersistence.storage.comment.CommentAdap
 import com.soongan.soonganbackend.soonganpersistence.storage.comment.CommentEntity
 import com.soongan.soonganbackend.soonganpersistence.storage.explain.ExplainAdapter
 import com.soongan.soonganbackend.soonganpersistence.storage.explain.ExplainEntity
+import com.soongan.soonganbackend.soonganpersistence.storage.fcm.FcmTokenAdapter
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
+import com.soongan.soonganbackend.soonganpersistence.storage.notification.NotificationAdapter
+import com.soongan.soonganbackend.soonganpersistence.storage.notification.NotificationEntity
 import com.soongan.soonganbackend.soonganpersistence.storage.report.ReportAdapter
 import com.soongan.soonganbackend.soonganpersistence.storage.report.ReportEntity
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.WeeklyContestPostAdapter
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.WeeklyContestPostEntity
+import com.soongan.soonganbackend.soonganredis.constant.RedisStreamKey
+import com.soongan.soonganbackend.soonganredis.producer.RedisMessageProducer
+import com.soongan.soonganbackend.soongansupport.domain.NotificationSubTypeEnum
+import com.soongan.soonganbackend.soongansupport.domain.NotificationTypeEnum
 import com.soongan.soonganbackend.soongansupport.domain.ReportTargetTypeEnum
+import com.soongan.soonganbackend.soongansupport.domain.ReportTypeEnum
 import com.soongan.soonganbackend.soongansupport.util.exception.SoonganException
 import com.soongan.soonganbackend.soongansupport.util.exception.StatusCode
+import com.soongan.soonganbackend.soongansupport.util.noti.createNeedExplainMessages
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 
@@ -23,7 +32,10 @@ class ReportService(
     private val reportAdapter: ReportAdapter,
     private val weeklyContestPostAdapter: WeeklyContestPostAdapter,
     private val commentAdapter: CommentAdapter,
-    private val explainAdapter: ExplainAdapter
+    private val explainAdapter: ExplainAdapter,
+    private val fcmTokenAdapter: FcmTokenAdapter,
+    private val notificationAdapter: NotificationAdapter,
+    private val redisMessageProducer: RedisMessageProducer,
 ) {
     private val BLIND_REPORT_COUNT = 3
 
@@ -45,6 +57,30 @@ class ReportService(
         handleBlindingIfNeeded(dto.targetId, dto.targetType, target)
 
         val reportHistories = reportAdapter.getReportHistoriesByReportMember(loginMember)
+
+        // 도용, 초상권, 저작권 등 타인의 권리 침해인 경우 소명 요청
+        if (dto.reportType == ReportTypeEnum.COPYRIGHT_OR_PRIVACY_VIOLATION) {
+            val tokens = fcmTokenAdapter.findAllByMemberId(targetMember.id)
+            val messages = createNeedExplainMessages(
+                tokens = tokens.map { it.token },
+                targetId = dto.targetId,
+                targetType = dto.targetType
+            )
+            // 알림 전송
+            redisMessageProducer.addMessage(RedisStreamKey.SOONGAN_NOTI, messages)
+
+            // 알림센터에 저장
+            notificationAdapter.save(
+                NotificationEntity(
+                    member = targetMember,
+                    type = NotificationTypeEnum.ACTIVITY,
+                    subType = NotificationSubTypeEnum.APPEAL,
+                    title = "[필수] 신고 접수로 인한 소명 절차 진행",
+                    body = "신고가 접수돼 소명이 필요합니다. 소명 절차를 진행해 주세요.",
+                )
+            )
+        }
+
         return ReportSaveResponseDto.from(savedReport, reportHistories)
     }
 

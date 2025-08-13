@@ -1,6 +1,7 @@
 package com.soongan.soonganbackend.soongansupport.util.noti
 
 import com.soongan.soonganbackend.soongansupport.domain.NotificationTypeEnum
+import com.soongan.soonganbackend.soongansupport.domain.ReportTargetTypeEnum
 import com.soongan.soonganbackend.soongansupport.util.dto.Message
 import com.soongan.soonganbackend.soongansupport.util.dto.Notification
 import java.time.LocalDateTime
@@ -16,7 +17,6 @@ fun createCommentNotiMessages(tokens: List<String>, postId: Long): List<Message>
                 body = "지금 바로 확인해 보세요!"
             ),
             data = mapOf(
-                "link" to "/post/$postId",
                 "notificationType" to NotificationTypeEnum.ACTIVITY.toString(),
                 "postId" to postId.toString(),
                 "timestamp" to LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
@@ -26,7 +26,7 @@ fun createCommentNotiMessages(tokens: List<String>, postId: Long): List<Message>
 }
 
 // 내 작품이 신고받아서 소명이 필요한 경우
-fun createNeedExplainMessages(tokens: List<String>, postId: Long): List<Message> {
+fun createNeedExplainMessages(tokens: List<String>, targetId: Long, targetType: ReportTargetTypeEnum): List<Message> {
     return tokens.map { token ->
         Message(
             token = token,
@@ -35,9 +35,9 @@ fun createNeedExplainMessages(tokens: List<String>, postId: Long): List<Message>
                 body = "신고가 접수돼 소명이 필요합니다. 소명 절차를 진행해 주세요."
             ),
             data = mapOf(
-                "link" to "/post/$postId",
                 "notificationType" to NotificationTypeEnum.ACTIVITY.toString(),
-                "postId" to postId.toString(),
+                "targetId" to targetId.toString(),
+                "targetType" to targetType.toString(),
                 "timestamp" to LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
             )
         )
