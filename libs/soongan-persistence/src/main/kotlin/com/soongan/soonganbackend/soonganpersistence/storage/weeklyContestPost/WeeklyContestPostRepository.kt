@@ -82,7 +82,7 @@ interface WeeklyContestPostRepositoryCustom {
 
     // 현재 회차 오래된 순
     fun queryOldestPost(currentCursor: String?, size: Int): CursorResponseWrapper<List<WeeklyContestPostEntity>>
-//
-//    // 현재 회차 좋아요 많은 순
-//    fun queryMostLikedPost(currentCursor: String?, size: Int): CursorResponseWrapper<List<WeeklyContestPostEntity>>
+
+    // 현재 회차 좋아요 많은 순
+    fun queryMostLikedPost(currentCursor: String?, size: Int): CursorResponseWrapper<List<WeeklyContestPostEntity>>
 }

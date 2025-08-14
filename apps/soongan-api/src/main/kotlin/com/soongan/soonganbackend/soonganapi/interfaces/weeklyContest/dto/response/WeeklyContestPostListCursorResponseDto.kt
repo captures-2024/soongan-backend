@@ -24,6 +24,7 @@ data class WeeklyContestPostListCursorResponseDto(
         val nickname: String,
         val profileImageUrl: String,
         val postId: Long,
+        val likeCount: Int,
         val imageUrl: String,
     )
 
@@ -42,6 +43,7 @@ data class WeeklyContestPostListCursorResponseDto(
                         nickname = it.member.nickname!!,
                         profileImageUrl = it.member.profileImageUrl ?: DEFAULT_PROFILE_IMAGE_URL,
                         postId = it.id,
+                        likeCount = it.likeCount,
                         imageUrl = it.imageUrl,
                     )
                 } ?: emptyList(),
