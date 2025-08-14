@@ -99,7 +99,7 @@ class WeeklyContestService(
                 weeklyContestPostAdapter.queryLatestPost(currentCursor, pageSize)
             }
             WeeklyContestPostOrderCriteriaEnum.MOST_LIKED -> {
-                weeklyContestPostAdapter.queryMostLikedPost(currentCursor, pageSize)
+                weeklyContestPostAdapter.queryLatestPost(currentCursor, pageSize)
             }
             WeeklyContestPostOrderCriteriaEnum.OLDEST -> {
                 weeklyContestPostAdapter.queryOldestPost(currentCursor, pageSize)

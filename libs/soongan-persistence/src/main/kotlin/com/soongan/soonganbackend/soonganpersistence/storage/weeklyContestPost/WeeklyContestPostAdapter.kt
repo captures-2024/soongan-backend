@@ -114,7 +114,7 @@ class WeeklyContestPostAdapter(
     override fun queryLatestPost(currentCursor: String?, size: Int): CursorResponseWrapper<List<WeeklyContestPostEntity>> {
         val cursorExpression = datetimeCursorSpec.generateCursorExpression(
             sortCriteria = weeklyContestPostEntity.createdAt,
-            pk = weeklyContestPostEntity.id
+            pk = weeklyContestPostEntity.id.stringValue()
         )
 
         val query: JPAQuery<WeeklyContestPostEntity> = queryFactory
@@ -123,12 +123,9 @@ class WeeklyContestPostAdapter(
             .orderBy(weeklyContestPostEntity.createdAt.desc(), weeklyContestPostEntity.id.desc())
             .limit(size.toLong())
 
-        println("query = $query")
-
         val posts = query.fetch()
 
         val nextCursor = datetimeCursorSpec.generateCursor(posts.last().createdAt, posts.last().id)
-        println("nextCursor = $nextCursor")
 
         return CursorResponseWrapper.from(nextCursor, posts)
 
@@ -137,7 +134,7 @@ class WeeklyContestPostAdapter(
     override fun queryOldestPost(currentCursor: String?, size: Int): CursorResponseWrapper<List<WeeklyContestPostEntity>> {
         val cursorExpression = datetimeCursorSpec.generateCursorExpression(
             sortCriteria = weeklyContestPostEntity.createdAt,
-            pk = weeklyContestPostEntity.id
+            pk = weeklyContestPostEntity.id.stringValue()
         )
 
         val query: JPAQuery<WeeklyContestPostEntity> = queryFactory
@@ -146,12 +143,9 @@ class WeeklyContestPostAdapter(
             .applySortCondition(cursorExpression, currentCursor, SortDirection.ASC)
             .limit(size.toLong())
 
-        println("query = $query")
-
         val posts = query.fetch()
 
         val nextCursor = datetimeCursorSpec.generateCursor(posts.last().createdAt, posts.last().id)
-        println("nextCursor = $nextCursor")
 
         return CursorResponseWrapper.from(nextCursor, posts)
     }
