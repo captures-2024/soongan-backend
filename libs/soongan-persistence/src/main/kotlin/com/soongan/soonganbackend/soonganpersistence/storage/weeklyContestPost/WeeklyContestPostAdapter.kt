@@ -1,18 +1,16 @@
 package com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost
 
-import com.querydsl.core.types.dsl.StringExpression
 import com.querydsl.jpa.impl.JPAQuery
 import com.querydsl.jpa.impl.JPAQueryFactory
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContest.WeeklyContestEntity
-import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.QWeeklyContestPostEntity.*
+import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.QWeeklyContestPostEntity.weeklyContestPostEntity
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.type.WeeklyContestPostAndIsLiked
 import com.soongan.soonganbackend.soonganpersistence.util.applySortCondition
-import com.soongan.soonganbackend.soonganpersistence.util.calculateNextCursor
-import com.soongan.soonganbackend.soonganpersistence.util.generateCursor
 import com.soongan.soonganbackend.soongansupport.util.common.SortDirection
-import com.soongan.soonganbackend.soongansupport.util.common.toEpochMilliKST
 import com.soongan.soonganbackend.soonganpersistence.util.CursorResponseWrapper
+import com.soongan.soonganbackend.soonganpersistence.util.DateTimeCursorSpec
+import com.soongan.soonganbackend.soonganpersistence.util.IntegerCursorSpec
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Slice
@@ -23,7 +21,9 @@ import org.springframework.transaction.annotation.Transactional
 @Component
 class WeeklyContestPostAdapter(
     private val weeklyContestPostRepository: WeeklyContestPostRepository,
-    private val queryFactory: JPAQueryFactory
+    private val queryFactory: JPAQueryFactory,
+    private val datetimeCursorSpec: DateTimeCursorSpec,
+    private val integerCursorSpec: IntegerCursorSpec
 ): WeeklyContestPostRepositoryCustom {
 
     @Transactional
@@ -114,53 +114,59 @@ class WeeklyContestPostAdapter(
     }
 
     override fun queryLatestPost(currentCursor: String?, size: Int): CursorResponseWrapper<List<WeeklyContestPostEntity>> {
-        val weeklyContestPost = weeklyContestPostEntity
-        val cursorExpression: StringExpression = generateCursor(weeklyContestPost.createdAt, weeklyContestPost.id)
+        val cursorExpression = datetimeCursorSpec.generateCursorExpression(
+            sortCriteria = weeklyContestPostEntity.createdAt,
+            pk = weeklyContestPostEntity.id.stringValue()
+        )
 
         val query: JPAQuery<WeeklyContestPostEntity> = queryFactory
-            .selectFrom(weeklyContestPost)
-            .orderBy(weeklyContestPost.createdAt.desc(), weeklyContestPost.id.desc())
-            .limit(size.toLong())
+            .selectFrom(weeklyContestPostEntity)
             .applySortCondition(cursorExpression, currentCursor, SortDirection.DESC)
+            .orderBy(weeklyContestPostEntity.createdAt.desc(), weeklyContestPostEntity.id.desc())
+            .limit(size.toLong())
 
         val posts = query.fetch()
 
-        val nextCursor = calculateNextCursor(posts) { listOf(it.createdAt.toEpochMilliKST(), it.id) }
+        val nextCursor = datetimeCursorSpec.generateCursor(posts.last().createdAt, posts.last().id)
 
         return CursorResponseWrapper.from(nextCursor, posts)
 
     }
 
     override fun queryOldestPost(currentCursor: String?, size: Int): CursorResponseWrapper<List<WeeklyContestPostEntity>> {
-        val weeklyContestPost = weeklyContestPostEntity
-        val cursorExpression: StringExpression = generateCursor(weeklyContestPost.createdAt, weeklyContestPost.id)
+        val cursorExpression = datetimeCursorSpec.generateCursorExpression(
+            sortCriteria = weeklyContestPostEntity.createdAt,
+            pk = weeklyContestPostEntity.id.stringValue()
+        )
 
         val query: JPAQuery<WeeklyContestPostEntity> = queryFactory
-            .selectFrom(weeklyContestPost)
-            .orderBy(weeklyContestPost.createdAt.asc(), weeklyContestPost.id.desc())
-            .limit(size.toLong())
+            .selectFrom(weeklyContestPostEntity)
             .applySortCondition(cursorExpression, currentCursor, SortDirection.ASC)
+            .orderBy(weeklyContestPostEntity.createdAt.desc(), weeklyContestPostEntity.id.desc())
+            .limit(size.toLong())
 
         val posts = query.fetch()
 
-        val nextCursor = calculateNextCursor(posts) { listOf(it.createdAt.toEpochMilliKST(), it.id) }
+        val nextCursor = datetimeCursorSpec.generateCursor(posts.last().createdAt, posts.last().id)
 
         return CursorResponseWrapper.from(nextCursor, posts)
     }
 
     override fun queryMostLikedPost(currentCursor: String?, size: Int): CursorResponseWrapper<List<WeeklyContestPostEntity>> {
-        val weeklyContestPost = weeklyContestPostEntity
-        val cursorExpression: StringExpression = generateCursor(weeklyContestPost.likeCount, weeklyContestPost.id)
+        val cursorExpression = integerCursorSpec.generateCursorExpression(
+            sortCriteria = weeklyContestPostEntity.likeCount,
+            pk = weeklyContestPostEntity.id.stringValue()
+        )
 
         val query: JPAQuery<WeeklyContestPostEntity> = queryFactory
-            .selectFrom(weeklyContestPost)
-            .orderBy(weeklyContestPost.likeCount.desc(), weeklyContestPost.id.desc())
-            .limit(size.toLong())
+            .selectFrom(weeklyContestPostEntity)
             .applySortCondition(cursorExpression, currentCursor, SortDirection.DESC)
+            .orderBy(weeklyContestPostEntity.likeCount.desc(), weeklyContestPostEntity.id.desc())
+            .limit(size.toLong())
 
         val posts = query.fetch()
 
-        val nextCursor = calculateNextCursor(posts) { listOf(it.likeCount, it.id) }
+        val nextCursor = integerCursorSpec.generateCursor(posts.last().likeCount, posts.last().id)
 
         return CursorResponseWrapper.from(nextCursor, posts)
     }
