@@ -66,7 +66,7 @@ class NotificationController(
         description = "알림을 삭제합니다.",
         security = [SecurityRequirement(name = "JWT")]
     )
-    fun deleteNotification(@LoginMember loginMember: MemberEntity, @PathVariable("notificationId") notificationId: Long): Unit {
+    fun deleteNotification(@LoginMember loginMember: MemberEntity, @PathVariable("notificationId") notificationId: Long) {
         notificationService.deleteNotification(loginMember, notificationId)
     }
 

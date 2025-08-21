@@ -15,9 +15,9 @@ import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.W
 import com.soongan.soonganbackend.soonganredis.constant.RedisStreamKey
 import com.soongan.soonganbackend.soonganredis.producer.RedisMessageProducer
 import com.soongan.soonganbackend.soongansupport.domain.ContestTypeEnum
-import com.soongan.soonganbackend.soongansupport.util.dto.Message
 import com.soongan.soonganbackend.soongansupport.util.exception.SoonganException
 import com.soongan.soonganbackend.soongansupport.util.exception.StatusCode
+import com.soongan.soonganbackend.soongansupport.util.noti.createCommentNotiMessages
 import org.springframework.data.domain.Slice
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -59,7 +59,7 @@ class CommentService(
         val fcmTokens = fcmTokenAdapter.findAllByMemberId(weeklyContestPost.member.id)
         fcmTokens.map { it.token }.let { tokens ->
             if (tokens.isNotEmpty()) {
-                val messages = Message.createCommentMessages(tokens, request.postId)
+                val messages = createCommentNotiMessages(tokens, request.postId)
                 redisMessageProducer.addMessage(RedisStreamKey.SOONGAN_NOTI, messages)
             }
         }
