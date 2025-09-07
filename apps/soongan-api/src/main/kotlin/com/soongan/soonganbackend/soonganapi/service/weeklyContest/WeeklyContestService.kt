@@ -15,6 +15,7 @@ import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
 import com.soongan.soonganbackend.soonganpersistence.storage.postLike.PostLikeAdapter
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContest.WeeklyContestAdapter
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContest.WeeklyContestEntity
+import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestFinal.WeeklyContestFinalAdapter
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.WeeklyContestPostAdapter
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.WeeklyContestPostEntity
 import com.soongan.soonganbackend.soongansupport.domain.ContestTypeEnum
@@ -32,6 +33,7 @@ import java.time.LocalDateTime
 class WeeklyContestService(
     private val weeklyContestAdapter: WeeklyContestAdapter,
     private val weeklyContestPostAdapter: WeeklyContestPostAdapter,
+    private val weeklyContestFinalAdapter: WeeklyContestFinalAdapter,
     private val gcpStorageService: GcpStorageService,
     private val weeklyContestPostValidator: WeeklyContestPostValidator,
     private val weeklyContestValidator: WeeklyContestValidator,
@@ -48,13 +50,25 @@ class WeeklyContestService(
     fun getWeeklyContestPost(postId: Long, loginMember: MemberEntity?): WeeklyContestPostResponseDto {
         val weeklyContestPost: WeeklyContestPostEntity = weeklyContestPostAdapter.getByIdOrNull(postId)
             ?: throw SoonganException(StatusCode.SOONGAN_API_NOT_FOUND_WEEKLY_CONTEST_POST)
+        val isTop7: Boolean = weeklyContestFinalAdapter.isTop7Post(weeklyContestPost)
 
         loginMember?.let {
             val isLiked: Boolean = likeAdapter.existsByPostIdAndContestTypeAndMember(postId, ContestTypeEnum.WEEKLY, loginMember)
-            return WeeklyContestPostResponseDto.Companion.from(loginMember.id, weeklyContestPost, isLiked)
+            return WeeklyContestPostResponseDto.Companion.from(
+                memberId = loginMember.id,
+                weeklyContestPost = weeklyContestPost,
+                isLiked = isLiked,
+                isTop7 = isTop7,
+                weeklyContest = weeklyContestPost.weeklyContest,
+            )
         }
 
-        return WeeklyContestPostResponseDto.Companion.from(weeklyContestPost =  weeklyContestPost)
+
+        return WeeklyContestPostResponseDto.Companion.from(
+            weeklyContestPost =  weeklyContestPost,
+            isTop7 = isTop7,
+            weeklyContest = weeklyContestPost.weeklyContest,
+        )
     }
 
     @Transactional(readOnly = true)
