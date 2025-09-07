@@ -24,8 +24,9 @@ jobs:
 
       - name: Install Infisical CLI
         run: |
-          curl -1sLf 'https://dl.cloudsmith.io/public/infisical/infisical-cli/setup.deb.sh' | sudo -E bash
-          sudo apt-get update && sudo apt-get install -y infisical
+          curl -1sLf 'https://artifacts-cli.infisical.com/setup.deb.sh' | sudo -E bash
+          sudo apt-get install -y infisical
+          infisical --version
 
       - name: Build with Gradle and Infisical
         run: |
@@ -33,8 +34,8 @@ jobs:
           export INFISICAL_PROJECT_ID=${{ secrets.INFISICAL_PROJECT_ID_API }}
           export SPRING_PROFILES_ACTIVE=local
           infisical run \
-            --token=$INFISICAL_TOKEN \
-            --projectId=$INFISICAL_PROJECT_ID \
+            --token="$INFISICAL_TOKEN" \
+            --projectId="$INFISICAL_PROJECT_ID" \
             --env=local \
             --path=. \
             -- ./gradlew :soongan-api:build

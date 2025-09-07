@@ -1,5 +1,6 @@
 package com.soongan.soonganbackend.soonganapi.interfaces.weeklyContest.dto.response
 
+import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContest.WeeklyContestEntity
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.WeeklyContestPostEntity
 import io.swagger.v3.oas.annotations.media.Schema
 
@@ -31,10 +32,25 @@ data class WeeklyContestPostResponseDto(
 
     @Schema(description = "게시글 댓글 수", type = "Int")
     val commentCount: Int,
+
+    @Schema(description = "해당 게시글이 탑 7에 속하는지 여부. 아직 진행 중인 콘테스트라면 무조건 false", type = "Boolean")
+    val isTop7: Boolean,
+
+    @Schema(description = "콘테스트 회차", type = "Int")
+    val weeklyContestRound: Int,
+
+    @Schema(description = "콘테스트 주제", type = "String")
+    val weeklyContestSubject: String
 ) {
 
     companion object {
-        fun from(memberId: Long? = null, weeklyContestPost: WeeklyContestPostEntity, isLiked: Boolean = false): WeeklyContestPostResponseDto {
+        fun from(
+            memberId: Long? = null,
+            weeklyContestPost: WeeklyContestPostEntity,
+            weeklyContest: WeeklyContestEntity,
+            isLiked: Boolean = false,
+            isTop7: Boolean = false
+        ): WeeklyContestPostResponseDto {
             return WeeklyContestPostResponseDto(
                 memberId = memberId,
                 authorMemberId = weeklyContestPost.member.id,
@@ -44,7 +60,10 @@ data class WeeklyContestPostResponseDto(
                 nickname = weeklyContestPost.member.nickname!!,
                 likeCount = weeklyContestPost.likeCount,
                 isLiked = isLiked,
-                commentCount = weeklyContestPost.commentCount
+                commentCount = weeklyContestPost.commentCount,
+                isTop7 = isTop7,
+                weeklyContestRound = weeklyContest.round,
+                weeklyContestSubject = weeklyContest.subject
             )
         }
     }

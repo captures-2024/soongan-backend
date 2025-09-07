@@ -25,7 +25,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
 
-      - name: Build Docker image
+      - name: Build & Push Docker image
         uses: docker/build-push-action@v4
         with:
           context: .
@@ -40,11 +40,60 @@ jobs:
           username: ${{ secrets.GCP_USERNAME_DEV }}
           key: ${{ secrets.GCP_SSH_PRIVATE_KEY_API_DEV }}
           script: |
-            sudo docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_TOKEN }}
-            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/soongan-api-dev:latest
-            sudo docker stop $(sudo docker ps -q) || true
-            sudo docker rm $(sudo docker ps -a -q) || true
-            sudo docker run -d --name soongan-api-dev -p 8080:8080 \
-              -e INFISICAL_TOKEN=${{ secrets.INFISICAL_TOKEN_API_DEV }} \
-              -e INFISICAL_PROJECT_ID=${{ secrets.INFISICAL_PROJECT_ID_API }} \
-              ${{ secrets.DOCKER_USERNAME }}/soongan-api-dev:latest
+            set -euo pipefail
+
+            APP_NAME="soongan-api-dev"
+            IMAGE="${{ secrets.DOCKER_USERNAME }}/soongan-api-dev:latest"
+            APP_DIR="/opt/soongan"
+            ENV_FILE="$APP_DIR/.env"
+
+            # --- 1) 준비 디렉토리
+            sudo mkdir -p "$APP_DIR"
+            sudo chown "$USER":"$USER" "$APP_DIR"
+
+            # --- 2) Docker 로그인 & 최신 이미지 pull
+            echo "Logging into DockerHub..."
+            sudo docker login -u '${{ secrets.DOCKER_USERNAME }}' -p '${{ secrets.DOCKER_TOKEN }}'
+            echo "Pulling image $IMAGE ..."
+            sudo docker pull "$IMAGE"
+
+            # --- 3) Infisical CLI 설치(신규 리포)
+            if ! command -v infisical >/dev/null 2>&1; then
+              echo "Installing Infisical CLI..."
+              curl -1sLf 'https://artifacts-cli.infisical.com/setup.deb.sh' | sudo -E bash
+              sudo apt-get install -y infisical
+            fi
+
+            # --- 4) 비밀을 .env로 export (dotenv 형식)
+            echo "Exporting secrets to $ENV_FILE ..."
+            infisical export \
+              --token='${{ secrets.INFISICAL_TOKEN_API_DEV }}' \
+              --projectId='${{ secrets.INFISICAL_PROJECT_ID_API }}' \
+              --env=dev \
+              --format=dotenv \
+              --silent > "$ENV_FILE"
+
+            # 필요시 고정 환경변수 추가
+            {
+              echo "SPRING_PROFILES_ACTIVE=dev"
+              echo "JAVA_TOOL_OPTIONS=-XX:+UseG1GC"
+            } >> "$ENV_FILE"
+
+            # --- 5) 기존 컨테이너만 안전하게 교체
+            if sudo docker ps -a --format '{{.Names}}' | grep -q "^${APP_NAME}$"; then
+              echo "Stopping existing container ${APP_NAME} ..."
+              sudo docker stop "${APP_NAME}" || true
+              sudo docker rm "${APP_NAME}" || true
+            fi
+
+            # --- 6) 새 컨테이너 실행
+            echo "Starting ${APP_NAME} ..."
+            sudo docker run -d --name "${APP_NAME}" \
+              --restart=always \
+              --env-file "$ENV_FILE" \
+              -p 8080:8080 \
+              "$IMAGE"
+
+            # --- 7) 헬스체크(옵션)
+            sleep 3
+            sudo docker ps --filter "name=${APP_NAME}"
