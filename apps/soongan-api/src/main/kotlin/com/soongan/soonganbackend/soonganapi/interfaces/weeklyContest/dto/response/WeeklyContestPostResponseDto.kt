@@ -36,10 +36,10 @@ data class WeeklyContestPostResponseDto(
     @Schema(description = "해당 게시글이 탑 7에 속하는지 여부. 아직 진행 중인 콘테스트라면 무조건 false", type = "Boolean")
     val isTop7: Boolean,
 
-    @Schema(description = "콘테스트 회차", type = "Int", nullable = true)
+    @Schema(description = "콘테스트 회차", type = "Int")
     val weeklyContestRound: Int,
 
-    @Schema(description = "콘테스트 주제", type = "String", nullable = true)
+    @Schema(description = "콘테스트 주제", type = "String")
     val weeklyContestSubject: String
 ) {
 
