@@ -138,7 +138,7 @@ class WeeklyContestPostAdapter(
             datetimeCursorSpec.generateCursor(actualPosts.last().createdAt, actualPosts.last().id)
         } else null
 
-        return CursorResponseWrapper.from(nextCursor, posts)
+        return CursorResponseWrapper.from(nextCursor, actualPosts)
 
     }
 
@@ -167,7 +167,7 @@ class WeeklyContestPostAdapter(
             datetimeCursorSpec.generateCursor(actualPosts.last().createdAt, actualPosts.last().id)
         } else null
 
-        return CursorResponseWrapper.from(nextCursor, posts)
+        return CursorResponseWrapper.from(nextCursor, actualPosts)
     }
 
     override fun queryMostLikedPost(weeklyContest: WeeklyContestEntity, currentCursor: String?, size: Int): CursorResponseWrapper<List<WeeklyContestPostEntity>> {
@@ -195,6 +195,6 @@ class WeeklyContestPostAdapter(
             datetimeCursorSpec.generateCursor(actualPosts.last().createdAt, actualPosts.last().id)
         } else null
 
-        return CursorResponseWrapper.from(nextCursor, posts)
+        return CursorResponseWrapper.from(nextCursor, actualPosts)
     }
 }
