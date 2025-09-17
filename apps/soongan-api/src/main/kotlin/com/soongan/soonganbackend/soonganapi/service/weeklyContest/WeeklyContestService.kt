@@ -110,13 +110,13 @@ class WeeklyContestService(
 
         val posts = when (orderCriteria) {
             WeeklyContestPostOrderCriteriaEnum.LATEST -> {
-                weeklyContestPostAdapter.queryLatestPost(currentCursor, pageSize)
+                weeklyContestPostAdapter.queryLatestPost(weeklyContest, currentCursor, pageSize)
             }
             WeeklyContestPostOrderCriteriaEnum.MOST_LIKED -> {
-                weeklyContestPostAdapter.queryMostLikedPost(currentCursor, pageSize)
+                weeklyContestPostAdapter.queryMostLikedPost(weeklyContest, currentCursor, pageSize)
             }
             WeeklyContestPostOrderCriteriaEnum.OLDEST -> {
-                weeklyContestPostAdapter.queryOldestPost(currentCursor, pageSize)
+                weeklyContestPostAdapter.queryOldestPost(weeklyContest, currentCursor, pageSize)
             }
         }
 
