@@ -26,7 +26,6 @@ class HomeController (
     )
     @GetMapping
     fun getHome(@LoginMember(throwIfUnauthorized = false) loginMember: MemberEntity?): HomeResponseDto {
-        // TODO: 인증 있는 경우 없는 경우 구분하여 처리
         return homeService.getHome(loginMember)
     }
 }

@@ -1,11 +1,9 @@
 package com.soongan.soonganbackend.soonganapi.interfaces.home.dto.response
 
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContest.WeeklyContestEntity
-import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.WeeklyContestPostEntity
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.type.WeeklyContestPostAndIsLiked
 import com.soongan.soonganbackend.soongansupport.domain.ContestTypeEnum
 import io.swagger.v3.oas.annotations.media.Schema
-import org.springframework.data.domain.Slice
 import java.time.LocalDateTime
 
 @Schema(description = "홈 화면 정보 응답 DTO")
