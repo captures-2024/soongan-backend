@@ -38,7 +38,7 @@ class GlobalExceptionHandler {
     @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
     fun handleCommonException(ex: Exception): CommonErrorResponseDto {
         val requestUuid = MDC.get("uuid")
-        logger.error {
+        logger.error(ex) {
             "${ColorCode.GREEN}[${requestUuid}]${ColorCode.RED}[Error]${ColorCode.RESET} 500 Internal Server Error${ColorCode.RESET}\n${ex.stackTraceToString()}"
         }
         return CommonErrorResponseDto.from(StatusCode.SERVICE_NOT_AVAILABLE)
@@ -48,7 +48,7 @@ class GlobalExceptionHandler {
     @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
     fun handleSoonganException(ex: SoonganException): CommonErrorResponseDto {
         val requestUuid = MDC.get("uuid")
-        logger.error {
+        logger.error(ex) {
             "${ColorCode.GREEN}[${requestUuid}]${ColorCode.RED}[Error]${ColorCode.RESET} ${ex.statusCode.code} ${ex.statusCode.message}${ColorCode.RESET}\n${ex.stackTraceToString()}"
         }
 
@@ -59,7 +59,7 @@ class GlobalExceptionHandler {
     @ResponseStatus(code = HttpStatus.UNAUTHORIZED)
     fun handleSoonganUnauthorizedException(ex: SoonganUnauthorizedException): CommonErrorResponseDto {
         val requestUuid = MDC.get("uuid")
-        logger.error {
+        logger.error(ex) {
             "${ColorCode.GREEN}[${requestUuid}]${ColorCode.RED}[Error]${ColorCode.RESET} ${ex.statusCode.code} ${ex.statusCode.message}${ColorCode.RESET}\n${ex.stackTraceToString()}"
         }
 
@@ -83,30 +83,30 @@ class GlobalExceptionHandler {
         NoResourceFoundException::class
     )
     @ResponseStatus(code = HttpStatus.BAD_REQUEST)
-    fun handleInvalidParameterException(exception: Exception): CommonErrorResponseDto {
+    fun handleInvalidParameterException(ex: Exception): CommonErrorResponseDto {
         val statusCode: StatusCode = StatusCode.SOONGAN_API_INVALID_REQUEST
 
         val errorMessage: String =
             when {
-                exception is HttpMessageNotReadableException
-                        && exception.rootCause is InvalidFormatException -> {
-                    val fieldName = (exception.rootCause as InvalidFormatException).path[0].fieldName
+                ex is HttpMessageNotReadableException
+                        && ex.rootCause is InvalidFormatException -> {
+                    val fieldName = (ex.rootCause as InvalidFormatException).path[0].fieldName
                     "There is a missing parameter, detail : missing '${fieldName}'"
                 }
-                exception is BindException -> {
+                ex is BindException -> {
                     try {
-                        val fieldNames = exception.bindingResult.allErrors.joinToString {
+                        val fieldNames = ex.bindingResult.allErrors.joinToString {
                             "${(it as FieldError).field}:${it.defaultMessage}"
                         }
                         "There are invalid parameters, detail : ['${fieldNames}']"
                     } catch (e: Exception) {
-                        exception.message
+                        ex.message
                     }
                 }
                 else -> statusCode.message
             }
 
-        logger.error { exception.stackTraceToString() }
+        logger.error(ex) { ex.stackTraceToString() }
         return CommonErrorResponseDto.from(statusCode, errorMessage)
     }
 }

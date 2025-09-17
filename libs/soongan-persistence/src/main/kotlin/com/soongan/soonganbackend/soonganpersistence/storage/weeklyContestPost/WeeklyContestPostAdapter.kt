@@ -113,7 +113,9 @@ class WeeklyContestPostAdapter(
         return weeklyContestPostRepository.countByWeeklyContestId(contestId)
     }
 
-    override fun queryLatestPost(currentCursor: String?, size: Int): CursorResponseWrapper<List<WeeklyContestPostEntity>> {
+    override fun queryLatestPost(weeklyContest: WeeklyContestEntity, currentCursor: String?, size: Int): CursorResponseWrapper<List<WeeklyContestPostEntity>> {
+        val retrieveSize = size + 1
+
         val cursorExpression = datetimeCursorSpec.generateCursorExpression(
             sortCriteria = weeklyContestPostEntity.createdAt,
             pk = weeklyContestPostEntity.id.stringValue()
@@ -121,19 +123,28 @@ class WeeklyContestPostAdapter(
 
         val query: JPAQuery<WeeklyContestPostEntity> = queryFactory
             .selectFrom(weeklyContestPostEntity)
+            .where(weeklyContestPostEntity.weeklyContest.eq(weeklyContest))
             .applySortCondition(cursorExpression, currentCursor, SortDirection.DESC)
             .orderBy(weeklyContestPostEntity.createdAt.desc(), weeklyContestPostEntity.id.desc())
-            .limit(size.toLong())
+            .limit(retrieveSize.toLong())
 
         val posts = query.fetch()
 
-        val nextCursor = datetimeCursorSpec.generateCursor(posts.last().createdAt, posts.last().id)
+        // 다음 페이지 존재 여부 판단
+        val hasNext = posts.size > size
+        val actualPosts = if (hasNext) posts.dropLast(1) else posts
 
-        return CursorResponseWrapper.from(nextCursor, posts)
+        val nextCursor = if (hasNext) {
+            datetimeCursorSpec.generateCursor(actualPosts.last().createdAt, actualPosts.last().id)
+        } else null
+
+        return CursorResponseWrapper.from(nextCursor, actualPosts)
 
     }
 
-    override fun queryOldestPost(currentCursor: String?, size: Int): CursorResponseWrapper<List<WeeklyContestPostEntity>> {
+    override fun queryOldestPost(weeklyContest: WeeklyContestEntity, currentCursor: String?, size: Int): CursorResponseWrapper<List<WeeklyContestPostEntity>> {
+        val retrieveSize = size + 1
+
         val cursorExpression = datetimeCursorSpec.generateCursorExpression(
             sortCriteria = weeklyContestPostEntity.createdAt,
             pk = weeklyContestPostEntity.id.stringValue()
@@ -141,18 +152,27 @@ class WeeklyContestPostAdapter(
 
         val query: JPAQuery<WeeklyContestPostEntity> = queryFactory
             .selectFrom(weeklyContestPostEntity)
+            .where(weeklyContestPostEntity.weeklyContest.eq(weeklyContest))
             .applySortCondition(cursorExpression, currentCursor, SortDirection.ASC)
             .orderBy(weeklyContestPostEntity.createdAt.desc(), weeklyContestPostEntity.id.desc())
-            .limit(size.toLong())
+            .limit(retrieveSize.toLong())
 
         val posts = query.fetch()
 
-        val nextCursor = datetimeCursorSpec.generateCursor(posts.last().createdAt, posts.last().id)
+        // 다음 페이지 존재 여부 판단
+        val hasNext = posts.size > size
+        val actualPosts = if (hasNext) posts.dropLast(1) else posts
 
-        return CursorResponseWrapper.from(nextCursor, posts)
+        val nextCursor = if (hasNext) {
+            datetimeCursorSpec.generateCursor(actualPosts.last().createdAt, actualPosts.last().id)
+        } else null
+
+        return CursorResponseWrapper.from(nextCursor, actualPosts)
     }
 
-    override fun queryMostLikedPost(currentCursor: String?, size: Int): CursorResponseWrapper<List<WeeklyContestPostEntity>> {
+    override fun queryMostLikedPost(weeklyContest: WeeklyContestEntity, currentCursor: String?, size: Int): CursorResponseWrapper<List<WeeklyContestPostEntity>> {
+        val retrieveSize = size + 1
+
         val cursorExpression = integerCursorSpec.generateCursorExpression(
             sortCriteria = weeklyContestPostEntity.likeCount,
             pk = weeklyContestPostEntity.id.stringValue()
@@ -160,14 +180,21 @@ class WeeklyContestPostAdapter(
 
         val query: JPAQuery<WeeklyContestPostEntity> = queryFactory
             .selectFrom(weeklyContestPostEntity)
+            .where(weeklyContestPostEntity.weeklyContest.eq(weeklyContest))
             .applySortCondition(cursorExpression, currentCursor, SortDirection.DESC)
             .orderBy(weeklyContestPostEntity.likeCount.desc(), weeklyContestPostEntity.id.desc())
-            .limit(size.toLong())
+            .limit(retrieveSize.toLong())
 
         val posts = query.fetch()
 
-        val nextCursor = integerCursorSpec.generateCursor(posts.last().likeCount, posts.last().id)
+        // 다음 페이지 존재 여부 판단
+        val hasNext = posts.size > size
+        val actualPosts = if (hasNext) posts.dropLast(1) else posts
 
-        return CursorResponseWrapper.from(nextCursor, posts)
+        val nextCursor = if (hasNext) {
+            datetimeCursorSpec.generateCursor(actualPosts.last().createdAt, actualPosts.last().id)
+        } else null
+
+        return CursorResponseWrapper.from(nextCursor, actualPosts)
     }
 }
