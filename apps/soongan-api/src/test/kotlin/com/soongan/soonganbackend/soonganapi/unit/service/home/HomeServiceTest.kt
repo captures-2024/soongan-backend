@@ -8,6 +8,7 @@ import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContest.Weekl
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.WeeklyContestPostAdapter
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.WeeklyContestPostEntity
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.type.WeeklyContestPostAndIsLiked
+import com.soongan.soonganbackend.soongansupport.domain.ContestStatusEnum
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -66,6 +67,7 @@ class HomeServiceTest {
 
         // mock
         every { weeklyContestValidator.getWeeklyContestIfValidRound() } returns weeklyContest
+        every { weeklyContestValidator.determineContestStatus(weeklyContest) } returns ContestStatusEnum.IN_PROGRESS
         every { weeklyContestPostAdapter.getHomePostsWithIsLiked(loginMember, weeklyContest) } returns homeWeeklyContestPostList
 
         // when
