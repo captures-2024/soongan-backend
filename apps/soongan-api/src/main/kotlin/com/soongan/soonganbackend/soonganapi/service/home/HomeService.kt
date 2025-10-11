@@ -3,7 +3,6 @@ package com.soongan.soonganbackend.soonganapi.service.home
 import com.soongan.soonganbackend.soonganapi.interfaces.home.dto.response.HomeResponseDto
 import com.soongan.soonganbackend.soonganapi.service.weeklyContest.validator.WeeklyContestValidator
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
-import com.soongan.soonganbackend.soonganpersistence.storage.postLike.PostLikeAdapter
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContest.WeeklyContestEntity
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.WeeklyContestPostAdapter
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.type.WeeklyContestPostAndIsLiked
@@ -28,6 +27,12 @@ class HomeService(
                 weeklyContest
             )
 
-        return HomeResponseDto.fromWeeklyContest(weeklyContest, homeWeeklyContestPostList)
+        val contestStatus = weeklyContestValidator.determineContestStatus(weeklyContest)
+
+        return HomeResponseDto.fromWeeklyContest(
+            weeklyContest = weeklyContest,
+            status = contestStatus,
+            postInfo = homeWeeklyContestPostList
+        )
     }
 }

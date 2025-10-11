@@ -3,6 +3,7 @@ package com.soongan.soonganbackend.soonganapi.service.weeklyContest.validator
 import com.soongan.soonganbackend.soonganapi.admin.weeklyContest.dto.request.UpdateWeeklyContestAdminRequestDto
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContest.WeeklyContestAdapter
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContest.WeeklyContestEntity
+import com.soongan.soonganbackend.soongansupport.domain.ContestStatusEnum
 import com.soongan.soonganbackend.soongansupport.util.exception.SoonganException
 import com.soongan.soonganbackend.soongansupport.util.exception.StatusCode
 import org.springframework.stereotype.Component
@@ -62,6 +63,16 @@ class WeeklyContestValidator(
             (requestDto.endAt != null && requestDto.endAt < now)
         ) {
             throw SoonganException(statusCode = StatusCode.BAD_REQUEST, "수정할 콘테스트 시간은 현재 시간 이후여야 합니다.")
+        }
+    }
+
+    fun determineContestStatus(weeklyContest: WeeklyContestEntity): ContestStatusEnum {
+        val now = LocalDateTime.now()
+
+        return when {
+            now.isBefore(weeklyContest.startAt) -> ContestStatusEnum.UPCOMING
+            now.isAfter(weeklyContest.endAt) -> ContestStatusEnum.CLOSED
+            else -> ContestStatusEnum.IN_PROGRESS
         }
     }
 }

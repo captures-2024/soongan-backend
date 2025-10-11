@@ -2,6 +2,7 @@ package com.soongan.soonganbackend.soonganapi.interfaces.home.dto.response
 
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContest.WeeklyContestEntity
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.type.WeeklyContestPostAndIsLiked
+import com.soongan.soonganbackend.soongansupport.domain.ContestStatusEnum
 import com.soongan.soonganbackend.soongansupport.domain.ContestTypeEnum
 import io.swagger.v3.oas.annotations.media.Schema
 import java.time.LocalDateTime
@@ -20,6 +21,7 @@ data class HomeResponseDto(
         // daily contest response 와 분리하기 위한 네이밍
         fun fromWeeklyContest(
             weeklyContest: WeeklyContestEntity,
+            status: ContestStatusEnum,
             postInfo: List<WeeklyContestPostAndIsLiked>
         ): HomeResponseDto {
             return HomeResponseDto(
@@ -27,7 +29,8 @@ data class HomeResponseDto(
                     contestType = ContestTypeEnum.WEEKLY,
                     subject = weeklyContest.subject,
                     startAt = weeklyContest.startAt,
-                    endAt = weeklyContest.endAt
+                    endAt = weeklyContest.endAt,
+                    status = status
                 ),
                 postInfo = postInfo.map {
                     HomeMyPostInfo(
@@ -47,6 +50,8 @@ data class HomeResponseDto(
         val subject: String,
         val startAt: LocalDateTime,
         val endAt: LocalDateTime,
+        @Schema(description = "콘테스트 상태", example = "UPCOMING, IN_PROGRESS, CLOSED")
+        val status: ContestStatusEnum
     )
 
     data class HomeMyPostInfo(
