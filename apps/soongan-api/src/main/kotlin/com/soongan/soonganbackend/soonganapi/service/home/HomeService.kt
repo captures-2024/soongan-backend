@@ -16,9 +16,10 @@ class HomeService(
 
     fun getHome(loginMember: MemberEntity?): HomeResponseDto {
         val weeklyContest: WeeklyContestEntity = weeklyContestValidator.getWeeklyContestIfValidRound()
+        val contestStatus = weeklyContestValidator.determineContestStatus(weeklyContest)
 
         if (loginMember == null) {
-            return HomeResponseDto.fromWeeklyContest(weeklyContest, emptyList())
+            return HomeResponseDto.fromWeeklyContest(weeklyContest, contestStatus, emptyList())
         }
 
         val homeWeeklyContestPostList: List<WeeklyContestPostAndIsLiked> =
@@ -26,8 +27,6 @@ class HomeService(
                 loginMember,
                 weeklyContest
             )
-
-        val contestStatus = weeklyContestValidator.determineContestStatus(weeklyContest)
 
         return HomeResponseDto.fromWeeklyContest(
             weeklyContest = weeklyContest,
