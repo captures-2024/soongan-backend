@@ -1,0 +1,70 @@
+# home-server용 docker-compose
+services:
+  soongan-api:
+    build:
+      context: .
+      dockerfile: Dockerfile-api-home
+    container_name: soongan-api-dev
+    restart: always
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    environment:
+      # Spring 설정
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-dev}
+      - TZ=Asia/Seoul
+      - EXECUTION_ENV=${EXECUTION_ENV}
+
+      # Logging (레벨만 설정)
+      - LOGGING_LEVEL_ROOT=INFO
+      - LOGGING_LEVEL_COM_SOONGAN=DEBUG
+
+      # MySQL
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_HOST=${MYSQL_HOST}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_PORT=${MYSQL_PORT}
+      - MYSQL_USERNAME=${MYSQL_USERNAME}
+
+      # FCM
+      - FCM_FIREBASE_KEY_JSON=${FCM_FIREBASE_KEY_JSON}
+      - FCM_FIREBASE_PROJECT_ID=${FCM_FIREBASE_PROJECT_ID}
+
+      # OAuth2
+      - OAUTH2_ANDROID_GOOGLE_CLIENT_ID=${OAUTH2_ANDROID_GOOGLE_CLIENT_ID}
+      - OAUTH2_IOS_GOOGLE_CLIENT_ID=${OAUTH2_IOS_GOOGLE_CLIENT_ID}
+
+      # Redis
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_PORT=${REDIS_PORT}
+
+      # Server
+      - SERVER_PORT=${SERVER_PORT}
+      - SOONGAN_API_KEY=${SOONGAN_API_KEY}
+
+      # GCP
+      - GCP_PROJECT_ID=${GCP_PROJECT_ID}
+      - GCP_STORAGE_BUCKET=${GCP_STORAGE_BUCKET}
+      - GCP_STORAGE_MANAGER_KEY_JSON=${GCP_STORAGE_MANAGER_KEY_JSON}
+
+      # Jasypt
+      - JASYPT_ENCRYPTOR_PASSWORD=${JASYPT_ENCRYPTOR_PASSWORD}
+
+    volumes:
+      - ./logs:/app/logs
+    networks:
+      - soongan-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/_health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+networks:
+  app-network:
+    external: true
+  soongan-network:
+    driver: bridge

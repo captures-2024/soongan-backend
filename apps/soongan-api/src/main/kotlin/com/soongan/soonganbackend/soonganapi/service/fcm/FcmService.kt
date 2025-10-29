@@ -119,6 +119,7 @@ class FcmService(
 
 
     fun getFcmAccessToken(): String {
+        logger.info { "Firebase Key JSON String: $firebaseKeyJsonString" }
         val googleCredentials = GoogleCredentials.fromStream(firebaseKeyJsonString.byteInputStream())
             .createScoped("https://www.googleapis.com/auth/cloud-platform")
         googleCredentials.refreshIfExpired()
