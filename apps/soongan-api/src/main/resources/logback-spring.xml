@@ -23,8 +23,8 @@
     <springProfile name="dev">
         <root level="INFO">
             <appender-ref ref="CONSOLE" />
-            <appender-ref ref="CLOUD" />
         </root>
+        <logger name="com.soongan.soonganbackend" level="DEBUG" />
     </springProfile>
 
     <springProfile name="!prod &amp; !dev">
