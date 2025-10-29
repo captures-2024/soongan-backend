@@ -30,6 +30,9 @@ class SecurityConfig(
             .sessionManagement {
                 it.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             }
+            .authorizeHttpRequests { auth ->
+                auth.anyRequest().permitAll()
+            }
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter::class.java)
             .addFilterBefore(apiKeyFilter, JwtFilter::class.java)
             .build()
