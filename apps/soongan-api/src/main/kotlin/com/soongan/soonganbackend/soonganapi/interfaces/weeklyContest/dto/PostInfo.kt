@@ -18,4 +18,7 @@ data class PostInfo(
 
     @Schema(description = "좋아요 수", required = true)
     val likeCount: Int,
+
+    @Schema(description = "신고 수", required = true)
+    val reportCount: Long
 )
