@@ -33,6 +33,8 @@ data class WeeklyContestPostListCursorResponseDto(
 
         @Schema(description = "좋아요 수", required = true)
         val likeCount: Int,
+
+        @Schema(description = "게시글 이미지 URL", required = true)
         val imageUrl: String,
         val reportCount: Long,
     )
