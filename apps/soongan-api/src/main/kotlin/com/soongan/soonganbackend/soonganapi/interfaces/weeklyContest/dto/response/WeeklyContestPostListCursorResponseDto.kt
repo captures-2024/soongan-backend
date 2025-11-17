@@ -20,10 +20,18 @@ data class WeeklyContestPostListCursorResponseDto(
     @Schema(description = "다음 페이지에 요청으로 전달할 커서입니다. 마지막 페이지의 경우 생략됩니다.", required = false)
     val nextCursor: String? = null
 ) {
+    @Schema(description = "주간 콘테스트 게시글 정보 (좋아요/신고 수 포함)")
     data class WeeklyContestPostDto(
+        @Schema(description = "게시글 작성자 닉네임", required = true)
         val nickname: String,
+
+        @Schema(description = "게시글 작성자 프로필 이미지 URL", required = true)
         val profileImageUrl: String,
+
+        @Schema(description = "게시글 ID", required = true)
         val postId: Long,
+
+        @Schema(description = "좋아요 수", required = true)
         val likeCount: Int,
         val imageUrl: String,
         val reportCount: Long,

@@ -1,6 +1,6 @@
 package com.soongan.soonganbackend.soonganapi.interfaces.weeklyContest.dto.response
 
-import com.soongan.soonganbackend.soonganapi.interfaces.weeklyContest.PostInfo
+import com.soongan.soonganbackend.soonganapi.interfaces.weeklyContest.dto.PostInfo
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.WeeklyContestPostEntity
 import com.soongan.soonganbackend.soongansupport.util.dto.PageDto
 import io.swagger.v3.oas.annotations.media.Schema
