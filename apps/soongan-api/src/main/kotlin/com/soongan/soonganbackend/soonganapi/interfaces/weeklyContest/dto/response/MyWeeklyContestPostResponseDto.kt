@@ -1,5 +1,6 @@
 package com.soongan.soonganbackend.soonganapi.interfaces.weeklyContest.dto.response
 
+import com.soongan.soonganbackend.soonganapi.interfaces.weeklyContest.dto.PostInfo
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.WeeklyContestPostEntity
 import com.soongan.soonganbackend.soongansupport.util.dto.PageDto
 import io.swagger.v3.oas.annotations.media.Schema
@@ -13,13 +14,6 @@ data class MyWeeklyContestPostResponseDto(
     @Schema(description = "페이지네이션 정보", required = true)
     val pageInfo: PageDto
 ) {
-    data class PostInfo(
-        val round: Int,
-        val subject: String,
-        val postId: Long,
-        val imageUrl: String,
-        val likeCount: Int
-    )
 
     companion object {
         fun from(
