@@ -13,12 +13,14 @@ import com.soongan.soonganbackend.soonganapi.service.weeklyContest.validator.Wee
 import com.soongan.soonganbackend.soonganapi.service.weeklyContestPost.validator.WeeklyContestPostValidator
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
 import com.soongan.soonganbackend.soonganpersistence.storage.postLike.PostLikeAdapter
+import com.soongan.soonganbackend.soonganpersistence.storage.report.ReportAdapter
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContest.WeeklyContestAdapter
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContest.WeeklyContestEntity
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestFinal.WeeklyContestFinalAdapter
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.WeeklyContestPostAdapter
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.WeeklyContestPostEntity
 import com.soongan.soonganbackend.soongansupport.domain.ContestTypeEnum
+import com.soongan.soonganbackend.soongansupport.domain.ReportTargetTypeEnum
 import com.soongan.soonganbackend.soongansupport.domain.WeeklyContestPostOrderCriteriaEnum
 import com.soongan.soonganbackend.soongansupport.service.GcpStorageService
 import com.soongan.soonganbackend.soongansupport.util.exception.SoonganException
@@ -37,7 +39,8 @@ class WeeklyContestService(
     private val gcpStorageService: GcpStorageService,
     private val weeklyContestPostValidator: WeeklyContestPostValidator,
     private val weeklyContestValidator: WeeklyContestValidator,
-    private val likeAdapter: PostLikeAdapter
+    private val likeAdapter: PostLikeAdapter,
+    private val reportAdapter: ReportAdapter
 ) {
 
     @Transactional(readOnly = true)
@@ -50,6 +53,13 @@ class WeeklyContestService(
     fun getWeeklyContestPost(postId: Long, loginMember: MemberEntity?): WeeklyContestPostResponseDto {
         val weeklyContestPost: WeeklyContestPostEntity = weeklyContestPostAdapter.getByIdOrNull(postId)
             ?: throw SoonganException(StatusCode.SOONGAN_API_NOT_FOUND_WEEKLY_CONTEST_POST)
+
+        // 신고 3회 이상 게시물 접근 차단
+        val reportCount = reportAdapter.countByTargetIdAndTargetType(postId, ReportTargetTypeEnum.WEEKLY_POST)
+        if (reportCount >= 3) {
+            throw SoonganException(StatusCode.SOONGAN_API_POST_ACCESS_RESTRICTED_BY_REPORTS)
+        }
+
         val isTop7: Boolean = weeklyContestFinalAdapter.isTop7Post(weeklyContestPost)
 
         loginMember?.let {

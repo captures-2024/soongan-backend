@@ -43,6 +43,7 @@ enum class StatusCode(val code: Int, val message: String) {
     SOONGAN_API_WEEKLY_CONTEST_POST_REGISTER_LIMIT_EXCEEDED(1103, "Weekly Contest Post Register Limit Exceeded"),
     SOONGAN_API_NOT_OWNER_WEEKLY_CONTEST_POST(1104, "Not Owner Weekly Contest Post"),
     SOONGAN_API_CANNOT_UPDATE_POST_AFTER_VOTE_END(1105, "Cannot Update Post After End Vote"),
+    SOONGAN_API_POST_ACCESS_RESTRICTED_BY_REPORTS(1106, "Post Access Restricted By Reports"),
 
     // 1200 ~ 1299 Like Status Code
     SOONGAN_API_DUPLICATED_LIKE(1200, "Duplicated Like"),
