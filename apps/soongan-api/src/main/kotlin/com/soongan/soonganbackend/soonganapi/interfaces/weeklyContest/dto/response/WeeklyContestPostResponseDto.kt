@@ -40,7 +40,10 @@ data class WeeklyContestPostResponseDto(
     val weeklyContestRound: Int,
 
     @Schema(description = "콘테스트 주제", type = "String")
-    val weeklyContestSubject: String
+    val weeklyContestSubject: String,
+
+    @Schema(description = "신고 횟수", type = "Long")
+    val reportCount: Long = 0L
 ) {
 
     companion object {
@@ -63,7 +66,8 @@ data class WeeklyContestPostResponseDto(
                 commentCount = weeklyContestPost.commentCount,
                 isTop7 = isTop7,
                 weeklyContestRound = weeklyContest.round,
-                weeklyContestSubject = weeklyContest.subject
+                weeklyContestSubject = weeklyContest.subject,
+                reportCount = 0L // TODO : 신고 기능 추가 시 수정
             )
         }
     }

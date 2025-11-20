@@ -21,11 +21,22 @@ data class WeeklyContestPostListResponseDto(
     val pageInfo: PageDto
 ) {
 
+    @Schema(description = "주간 콘테스트 게시글 정보")
     data class WeeklyContestPostDto(
+        @Schema(description = "게시글 작성자 닉네임")
         val nickname: String,
+
+        @Schema(description = "게시글 작성자 프로필 이미지 URL")
         val profileImageUrl: String,
+
+        @Schema(description = "게시글 ID")
         val postId: Long,
+
+        @Schema(description = "게시글 이미지 URL")
         val imageUrl: String,
+
+        @Schema(description = "신고 수")
+        val reportCount: Long
     )
 
     companion object {
@@ -43,6 +54,7 @@ data class WeeklyContestPostListResponseDto(
                         profileImageUrl = it.member.profileImageUrl ?: DEFAULT_PROFILE_IMAGE_URL,
                         postId = it.id,
                         imageUrl = it.imageUrl,
+                        reportCount = 0L, // TODO : 신고 기능 추가 시 수정
                     )
                 },
                 pageInfo = PageDto(

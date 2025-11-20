@@ -35,7 +35,8 @@ data class WeeklyContestPostListCursorResponseDto(
         val likeCount: Int,
 
         @Schema(description = "게시글 이미지 URL", required = true)
-        val imageUrl: String
+        val imageUrl: String,
+        val reportCount: Long,
     )
 
     companion object {
@@ -55,6 +56,7 @@ data class WeeklyContestPostListCursorResponseDto(
                         postId = it.id,
                         likeCount = it.likeCount,
                         imageUrl = it.imageUrl,
+                        reportCount = 0L, // TODO : 신고 기능 추가 시 수정
                     )
                 } ?: emptyList(),
                 nextCursor = posts.nextCursor

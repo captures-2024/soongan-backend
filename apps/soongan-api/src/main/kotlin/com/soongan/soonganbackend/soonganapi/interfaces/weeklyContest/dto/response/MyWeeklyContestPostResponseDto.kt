@@ -1,5 +1,6 @@
 package com.soongan.soonganbackend.soonganapi.interfaces.weeklyContest.dto.response
 
+
 import com.soongan.soonganbackend.soonganapi.interfaces.weeklyContest.dto.PostInfo
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.WeeklyContestPostEntity
 import com.soongan.soonganbackend.soongansupport.util.dto.PageDto
@@ -26,7 +27,8 @@ data class MyWeeklyContestPostResponseDto(
                         subject = it.weeklyContest.subject,
                         postId = it.id,
                         imageUrl = it.imageUrl,
-                        likeCount = it.likeCount
+                        likeCount = it.likeCount,
+                        reportCount = 0L, // TODO : 신고 기능 추가 시 수정
                     )
                 },
                 pageInfo = PageDto(
