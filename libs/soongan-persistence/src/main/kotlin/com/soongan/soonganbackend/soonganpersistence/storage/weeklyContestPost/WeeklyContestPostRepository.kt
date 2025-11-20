@@ -13,21 +13,57 @@ import org.springframework.data.repository.query.Param
 
 interface WeeklyContestPostRepository : JpaRepository<WeeklyContestPostEntity, Long> {
 
-    // 현재 회차 최신순
+    // 현재 회차 최신순 (신고 3회 이상 게시물 제외)
+    @Query("""
+        SELECT p
+        FROM WeeklyContestPostEntity p
+        WHERE p.weeklyContest = :weeklyContestEntity
+            AND (
+                SELECT COUNT(r)
+                FROM ReportEntity r
+                WHERE r.targetId = p.id
+                    AND r.targetType = 'WEEKLY_POST'
+            ) < 3
+        ORDER BY p.createdAt DESC
+    """)
     fun findAllByWeeklyContestOrderByCreatedAtDesc(
-        weeklyContestEntity: WeeklyContestEntity,
+        @Param("weeklyContestEntity") weeklyContestEntity: WeeklyContestEntity,
         pageable: Pageable
     ): Slice<WeeklyContestPostEntity>
 
-    // 현재 회차 오래된 순
+    // 현재 회차 오래된 순 (신고 3회 이상 게시물 제외)
+    @Query("""
+        SELECT p
+        FROM WeeklyContestPostEntity p
+        WHERE p.weeklyContest = :weeklyContestEntity
+            AND (
+                SELECT COUNT(r)
+                FROM ReportEntity r
+                WHERE r.targetId = p.id
+                    AND r.targetType = 'WEEKLY_POST'
+            ) < 3
+        ORDER BY p.createdAt ASC
+    """)
     fun findAllByWeeklyContestOrderByCreatedAtAsc(
-        weeklyContestEntity: WeeklyContestEntity,
+        @Param("weeklyContestEntity") weeklyContestEntity: WeeklyContestEntity,
         pageable: Pageable
     ): Slice<WeeklyContestPostEntity>
 
-    // 현재 회차 좋아요 많은 순
+    // 현재 회차 좋아요 많은 순 (신고 3회 이상 게시물 제외)
+    @Query("""
+        SELECT p
+        FROM WeeklyContestPostEntity p
+        WHERE p.weeklyContest = :weeklyContestEntity
+            AND (
+                SELECT COUNT(r)
+                FROM ReportEntity r
+                WHERE r.targetId = p.id
+                    AND r.targetType = 'WEEKLY_POST'
+            ) < 3
+        ORDER BY p.likeCount DESC
+    """)
     fun findAllByWeeklyContestOrderByLikeCountDesc(
-        weeklyContestEntity: WeeklyContestEntity,
+        @Param("weeklyContestEntity") weeklyContestEntity: WeeklyContestEntity,
         pageable: Pageable
     ): Slice<WeeklyContestPostEntity>
 

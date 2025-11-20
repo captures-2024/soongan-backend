@@ -1,12 +1,15 @@
 package com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost
 
+import com.querydsl.jpa.JPAExpressions
 import com.querydsl.jpa.impl.JPAQuery
 import com.querydsl.jpa.impl.JPAQueryFactory
 import com.soongan.soonganbackend.soonganpersistence.storage.member.MemberEntity
+import com.soongan.soonganbackend.soonganpersistence.storage.report.QReportEntity.reportEntity
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContest.WeeklyContestEntity
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.QWeeklyContestPostEntity.weeklyContestPostEntity
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.type.WeeklyContestPostAndIsLiked
 import com.soongan.soonganbackend.soonganpersistence.util.applySortCondition
+import com.soongan.soonganbackend.soongansupport.domain.ReportTargetTypeEnum
 import com.soongan.soonganbackend.soongansupport.util.common.SortDirection
 import com.soongan.soonganbackend.soonganpersistence.util.CursorResponseWrapper
 import com.soongan.soonganbackend.soonganpersistence.util.DateTimeCursorSpec
@@ -121,9 +124,21 @@ class WeeklyContestPostAdapter(
             pk = weeklyContestPostEntity.id.stringValue()
         )
 
+        // 신고 3회 이상 게시물 제외 조건
+        val reportCountSubquery = JPAExpressions
+            .select(reportEntity.count())
+            .from(reportEntity)
+            .where(
+                reportEntity.targetId.eq(weeklyContestPostEntity.id),
+                reportEntity.targetType.eq(ReportTargetTypeEnum.WEEKLY_POST)
+            )
+
         val query: JPAQuery<WeeklyContestPostEntity> = queryFactory
             .selectFrom(weeklyContestPostEntity)
-            .where(weeklyContestPostEntity.weeklyContest.eq(weeklyContest))
+            .where(
+                weeklyContestPostEntity.weeklyContest.eq(weeklyContest),
+                reportCountSubquery.lt(3L)
+            )
             .applySortCondition(cursorExpression, currentCursor, SortDirection.DESC)
             .orderBy(weeklyContestPostEntity.createdAt.desc(), weeklyContestPostEntity.id.desc())
             .limit(retrieveSize.toLong())
@@ -150,9 +165,21 @@ class WeeklyContestPostAdapter(
             pk = weeklyContestPostEntity.id.stringValue()
         )
 
+        // 신고 3회 이상 게시물 제외 조건
+        val reportCountSubquery = JPAExpressions
+            .select(reportEntity.count())
+            .from(reportEntity)
+            .where(
+                reportEntity.targetId.eq(weeklyContestPostEntity.id),
+                reportEntity.targetType.eq(ReportTargetTypeEnum.WEEKLY_POST)
+            )
+
         val query: JPAQuery<WeeklyContestPostEntity> = queryFactory
             .selectFrom(weeklyContestPostEntity)
-            .where(weeklyContestPostEntity.weeklyContest.eq(weeklyContest))
+            .where(
+                weeklyContestPostEntity.weeklyContest.eq(weeklyContest),
+                reportCountSubquery.lt(3L)
+            )
             .applySortCondition(cursorExpression, currentCursor, SortDirection.ASC)
             .orderBy(weeklyContestPostEntity.createdAt.desc(), weeklyContestPostEntity.id.desc())
             .limit(retrieveSize.toLong())
@@ -178,9 +205,21 @@ class WeeklyContestPostAdapter(
             pk = weeklyContestPostEntity.id.stringValue()
         )
 
+        // 신고 3회 이상 게시물 제외 조건
+        val reportCountSubquery = JPAExpressions
+            .select(reportEntity.count())
+            .from(reportEntity)
+            .where(
+                reportEntity.targetId.eq(weeklyContestPostEntity.id),
+                reportEntity.targetType.eq(ReportTargetTypeEnum.WEEKLY_POST)
+            )
+
         val query: JPAQuery<WeeklyContestPostEntity> = queryFactory
             .selectFrom(weeklyContestPostEntity)
-            .where(weeklyContestPostEntity.weeklyContest.eq(weeklyContest))
+            .where(
+                weeklyContestPostEntity.weeklyContest.eq(weeklyContest),
+                reportCountSubquery.lt(3L)
+            )
             .applySortCondition(cursorExpression, currentCursor, SortDirection.DESC)
             .orderBy(weeklyContestPostEntity.likeCount.desc(), weeklyContestPostEntity.id.desc())
             .limit(retrieveSize.toLong())
