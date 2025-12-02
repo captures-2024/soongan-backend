@@ -22,16 +22,18 @@ class AwardsService(
     fun getWeeklyContestAwards(): WeeklyContestAwardsResponseDto {
         // 1차 투표가 끝난 주간 콘테스트들만 조회
         val weeklyContestList: List<WeeklyContestEntity> = weeklyContestAdapter.getEndedWeeklyContests()
-        return weeklyContestList.map { contest ->
-            val firstPrizePost = weeklyContestFinalAdapter.getFirstPrizePostByContestId(contest.id)
-                ?: throw SoonganException(
-                    StatusCode.SOONGAN_API_NOT_FOUND_WEEKLY_CONTEST_POST,
-                    "해당 콘테스트의 1등 게시글이 존재하지 않습니다. contestId: ${contest.id}"
-                )
+        return weeklyContestList.mapNotNull { contest ->
+            // 1. Final에서 확정된 1등 조회
+            val finalFirstPost = weeklyContestFinalAdapter.getFirstPrizePostByContestId(contest.id)
+
+            // 2. Final이 없으면 WeeklyContestPost에서 실시간 1등 계산
+            val firstPlaceImageUrl = finalFirstPost?.weeklyContestPost?.imageUrl
+                ?: weeklyContestPostAdapter.getFirstPlacePost(contest)?.imageUrl
+                ?: return@mapNotNull null // 게시물이 하나도 없으면 목록에서 제외
 
             WeeklyContestAwardsResponseDto.WeeklyContestDto.from(
                 entity = contest,
-                thumbnailImageUrl = firstPrizePost.weeklyContestPost.imageUrl
+                thumbnailImageUrl = firstPlaceImageUrl
             )
         }.let { WeeklyContestAwardsResponseDto(it) }
     }

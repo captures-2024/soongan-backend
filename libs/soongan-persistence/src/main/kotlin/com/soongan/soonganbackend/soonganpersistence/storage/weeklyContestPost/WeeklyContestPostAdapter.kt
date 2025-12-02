@@ -37,6 +37,11 @@ class WeeklyContestPostAdapter(
     }
 
     @Transactional(readOnly = true)
+    fun getFirstPlacePost(weeklyContest: WeeklyContestEntity): WeeklyContestPostEntity? {
+        return weeklyContestPostRepository.findFirstPlacePost(weeklyContest)
+    }
+
+    @Transactional(readOnly = true)
     fun getLatestPostWithSlicing(
         weeklyContest: WeeklyContestEntity,
         page: Int,

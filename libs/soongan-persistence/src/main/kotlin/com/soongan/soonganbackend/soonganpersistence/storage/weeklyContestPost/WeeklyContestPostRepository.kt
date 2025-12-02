@@ -49,6 +49,24 @@ interface WeeklyContestPostRepository : JpaRepository<WeeklyContestPostEntity, L
 
     fun countByWeeklyContestId(weeklyContestId: Long): Int
 
+    // 해당 콘테스트의 1등 게시물 조회 (좋아요 많은 순, 동점 시 업로드 시간 빠른 순)
+    @Query("""
+        SELECT p
+        FROM WeeklyContestPostEntity p
+        WHERE p.weeklyContest = :weeklyContest
+            AND p.deletedAt IS NULL
+            AND p.blindedAt IS NULL
+            AND (
+                SELECT COUNT(r)
+                FROM ReportEntity r
+                WHERE r.targetId = p.id
+                    AND r.targetType = 'WEEKLY_POST'
+            ) < 3
+        ORDER BY p.likeCount DESC, p.createdAt ASC
+        LIMIT 1
+    """)
+    fun findFirstPlacePost(@Param("weeklyContest") weeklyContest: WeeklyContestEntity): WeeklyContestPostEntity?
+
     // `JOIN`을 통해 게시물과 좋아요 여부를 함께 가져오는 쿼리
     @Query("""
         SELECT new com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.type.WeeklyContestPostAndIsLiked(
