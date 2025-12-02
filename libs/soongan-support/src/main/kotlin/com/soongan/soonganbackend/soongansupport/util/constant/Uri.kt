@@ -52,6 +52,10 @@ object Uri {
 
     const val CURSOR = "/cursor"
 
+    const val APP = "/app"
+    const val VERSION = "/version"
+    const val CHECK = "/check"
+
     val passGetUris = listOf(
         HEALTH,
         API_DOCS,
@@ -75,7 +79,9 @@ object Uri {
         AUTH + REFRESH,
 
         FCM,
-        FCM + "/test"
+        FCM + "/test",
+
+        APP + VERSION + CHECK
     )
 
     val notWrapUris = listOf(
