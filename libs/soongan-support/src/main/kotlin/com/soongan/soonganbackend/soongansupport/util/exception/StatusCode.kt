@@ -61,6 +61,9 @@ enum class StatusCode(val code: Int, val message: String) {
     SOONGAN_API_NOT_LOGIN_MEMBER_NOTIFICATION(1403, "Not Login Member's Notification"),
     SOONGAN_API_NOT_FOUND_NOTI_SETTING(1404, "Not Found Noti Setting"),
 
+    // 1500 ~ 1599 App Version Status Code
+    SOONGAN_API_INVALID_APP_VERSION_FORMAT(1500, "Invalid App Version Format"),
+    SOONGAN_API_UPDATE_REQUIRED(1501, "Update Required"),
 
     // 9000 Common Status Code
     SERVICE_NOT_AVAILABLE(9000, "Service Not Available"),
