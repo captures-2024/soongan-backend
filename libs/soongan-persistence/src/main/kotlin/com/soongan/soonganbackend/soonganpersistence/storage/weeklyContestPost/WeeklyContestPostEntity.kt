@@ -49,6 +49,9 @@ data class WeeklyContestPostEntity(
     @Column(name = "image_url", nullable = false)
     val imageUrl: String = "",
 
+    @Column(name = "ratio")
+    val ratio: Double? = null,
+
     @Column(name = "like_count")
     val likeCount: Int = 0,
 

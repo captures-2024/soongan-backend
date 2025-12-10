@@ -21,6 +21,9 @@ data class WeeklyContestPostResponseDto(
     @Schema(description = "게시글 이미지 URL", type = "String")
     val imageUrl: String,
 
+    @Schema(description = "이미지 가로세로 비율 (width / height)", type = "Double", nullable = true)
+    val ratio: Double?,
+
     @Schema(description = "게시글 작성자 닉네임", type = "String")
     val nickname: String,
 
@@ -60,6 +63,7 @@ data class WeeklyContestPostResponseDto(
                 postId = weeklyContestPost.id,
                 title = weeklyContestPost.title,
                 imageUrl = weeklyContestPost.imageUrl,
+                ratio = weeklyContestPost.ratio,
                 nickname = weeklyContestPost.member.nickname!!,
                 likeCount = weeklyContestPost.likeCount,
                 isLiked = isLiked,
