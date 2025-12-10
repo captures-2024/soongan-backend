@@ -35,6 +35,9 @@ data class WeeklyContestPostListResponseDto(
         @Schema(description = "게시글 이미지 URL")
         val imageUrl: String,
 
+        @Schema(description = "이미지 가로세로 비율 (width / height)")
+        val ratio: Double?,
+
         @Schema(description = "신고 수")
         val reportCount: Long
     )
@@ -54,6 +57,7 @@ data class WeeklyContestPostListResponseDto(
                         profileImageUrl = it.member.profileImageUrl ?: DEFAULT_PROFILE_IMAGE_URL,
                         postId = it.id,
                         imageUrl = it.imageUrl,
+                        ratio = it.ratio,
                         reportCount = 0L, // TODO : 신고 기능 추가 시 수정
                     )
                 },

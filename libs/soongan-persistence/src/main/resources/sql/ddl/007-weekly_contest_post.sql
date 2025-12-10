@@ -5,6 +5,7 @@ create table weekly_contest_post
     member_id         bigint       not null,
     image_url         varchar(1024) not null,
     title             varchar(30) not null,
+    ratio             double       null,
     like_count        int default 0,
     comment_count     int default 0,
     blinded_at        datetime    null,

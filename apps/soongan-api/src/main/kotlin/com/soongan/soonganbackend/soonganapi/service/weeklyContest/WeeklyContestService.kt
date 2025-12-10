@@ -23,6 +23,7 @@ import com.soongan.soonganbackend.soongansupport.domain.ContestTypeEnum
 import com.soongan.soonganbackend.soongansupport.domain.ReportTargetTypeEnum
 import com.soongan.soonganbackend.soongansupport.domain.WeeklyContestPostOrderCriteriaEnum
 import com.soongan.soonganbackend.soongansupport.service.GcpStorageService
+import com.soongan.soonganbackend.soongansupport.util.ImageUtil
 import com.soongan.soonganbackend.soongansupport.util.exception.SoonganException
 import com.soongan.soonganbackend.soongansupport.util.exception.StatusCode
 import org.springframework.data.domain.Page
@@ -159,6 +160,9 @@ class WeeklyContestService(
 
         weeklyContestPostValidator.validateMaxRegisterPost(weeklyContest, loginMember)
 
+        // 이미지 비율 계산
+        val ratio = ImageUtil.calculateImageRatio(request.imageFile)
+
         val imageUrl = gcpStorageService.uploadContestImage(
             request.imageFile,
             loginMember.id,
@@ -171,7 +175,8 @@ class WeeklyContestService(
                 member = loginMember,
                 title = request.title,
                 weeklyContest = weeklyContest,
-                imageUrl = imageUrl
+                imageUrl = imageUrl,
+                ratio = ratio
             )
         )
 
