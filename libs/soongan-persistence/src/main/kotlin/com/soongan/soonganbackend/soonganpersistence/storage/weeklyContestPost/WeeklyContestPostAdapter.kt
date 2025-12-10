@@ -121,6 +121,11 @@ class WeeklyContestPostAdapter(
         return weeklyContestPostRepository.countByWeeklyContestId(contestId)
     }
 
+    @Transactional(readOnly = true)
+    fun getTop7Posts(weeklyContest: WeeklyContestEntity): List<WeeklyContestPostEntity> {
+        return weeklyContestPostRepository.findTop7Posts(weeklyContest)
+    }
+
     override fun queryLatestPost(weeklyContest: WeeklyContestEntity, currentCursor: String?, size: Int): CursorResponseWrapper<List<WeeklyContestPostEntity>> {
         val retrieveSize = size + 1
 
