@@ -27,6 +27,7 @@ data class MyWeeklyContestPostResponseDto(
                         subject = it.weeklyContest.subject,
                         postId = it.id,
                         imageUrl = it.imageUrl,
+                        ratio = it.ratio,
                         likeCount = it.likeCount,
                         reportCount = 0L, // TODO : 신고 기능 추가 시 수정
                     )

@@ -16,6 +16,9 @@ data class PostInfo(
     @Schema(description = "게시글 이미지 URL", required = true)
     val imageUrl: String,
 
+    @Schema(description = "이미지 비율 (가로/세로)", required = false)
+    val ratio: Double?,
+
     @Schema(description = "좋아요 수", required = true)
     val likeCount: Int,
 
