@@ -1,9 +1,11 @@
 package com.soongan.soonganbackend.soonganapi.scheduler
 
+import com.soongan.soonganbackend.soonganpersistence.storage.postLike.PostLikeAdapter
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContest.WeeklyContestAdapter
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestFinal.WeeklyContestFinalAdapter
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestFinal.WeeklyContestFinalEntity
 import com.soongan.soonganbackend.soonganpersistence.storage.weeklyContestPost.WeeklyContestPostAdapter
+import com.soongan.soonganbackend.soongansupport.domain.ContestTypeEnum
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
@@ -12,16 +14,17 @@ import org.springframework.stereotype.Component
 class WeeklyContestFinalScheduler(
     private val weeklyContestAdapter: WeeklyContestAdapter,
     private val weeklyContestPostAdapter: WeeklyContestPostAdapter,
-    private val weeklyContestFinalAdapter: WeeklyContestFinalAdapter
+    private val weeklyContestFinalAdapter: WeeklyContestFinalAdapter,
+    private val postLikeAdapter: PostLikeAdapter
 ) {
     private val logger = LoggerFactory.getLogger(WeeklyContestFinalScheduler::class.java)
 
     /**
-     * 매 시간마다 종료된 콘테스트의 최종 순위를 확정합니다.
+     * 매시 1분에 종료된 콘테스트의 최종 순위를 확정합니다.
      * - 종료된 콘테스트 중 Final 데이터가 없는 것을 찾아서
-     * - 좋아요 수 기준 상위 7개 게시물을 Final 테이블에 저장합니다.
+     * - 콘테스트 기간(startAt ~ endAt) 동안 받은 좋아요 수 기준 상위 7개 게시물을 Final 테이블에 저장합니다.
      */
-    @Scheduled(cron = "0 0 * * * *") // 매 시간 정각에 실행
+    @Scheduled(cron = "0 1 * * * *") // 매시 1분에 실행
     fun finalizeWeeklyContestRankings() {
         logger.info("[WeeklyContestFinalScheduler] 콘테스트 최종 순위 확정 작업 시작")
 
@@ -51,12 +54,20 @@ class WeeklyContestFinalScheduler(
                 }
 
                 // WeeklyContestFinalEntity 생성
+                // 각 게시물의 콘테스트 기간 내 좋아요 수를 집계
                 val finalEntities = top7Posts.mapIndexed { index, post ->
+                    val likeCountInPeriod = postLikeAdapter.countLikesByPostIdAndPeriod(
+                        postId = post.id,
+                        contestType = ContestTypeEnum.WEEKLY,
+                        startAt = contest.startAt,
+                        endAt = contest.endAt
+                    )
+
                     WeeklyContestFinalEntity(
                         weeklyContest = contest,
                         weeklyContestPost = post,
                         ranking = index + 1, // 1등부터 7등까지
-                        score = post.likeCount
+                        score = likeCountInPeriod.toInt() // 콘테스트 기간 내 좋아요 수
                     )
                 }
 
