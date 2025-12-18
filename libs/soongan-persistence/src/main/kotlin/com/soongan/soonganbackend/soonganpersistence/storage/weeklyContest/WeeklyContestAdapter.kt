@@ -9,7 +9,7 @@ class WeeklyContestAdapter (
 ){
 
     fun getAllWeeklyContests(): List<WeeklyContestEntity> {
-        return weeklyContestRepository.findAllByOrderByRoundAsc()
+        return weeklyContestRepository.findAllByOrderByRoundDesc()
     }
 
     fun getEndedWeeklyContests(now: LocalDateTime = LocalDateTime.now()): List<WeeklyContestEntity> {

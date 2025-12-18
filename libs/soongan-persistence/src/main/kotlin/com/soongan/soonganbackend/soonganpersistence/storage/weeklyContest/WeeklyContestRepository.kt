@@ -6,7 +6,7 @@ import java.time.LocalDateTime
 
 interface WeeklyContestRepository: JpaRepository<WeeklyContestEntity, Long> {
     // 라운드 오름차순으로 정렬된 모든 주간 콘테스트를 조회
-    fun findAllByOrderByRoundAsc(): List<WeeklyContestEntity>
+    fun findAllByOrderByRoundDesc(): List<WeeklyContestEntity>
 
     fun findByRound(round: Int): WeeklyContestEntity?
 
