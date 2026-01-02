@@ -10,7 +10,7 @@ interface WeeklyContestRepository: JpaRepository<WeeklyContestEntity, Long> {
 
     fun findByRound(round: Int): WeeklyContestEntity?
 
-    @Query("SELECT wc FROM WeeklyContestEntity wc WHERE wc.endAt <= :now")
+    @Query("SELECT wc FROM WeeklyContestEntity wc WHERE wc.endAt <= :now ORDER BY wc.createdAt DESC")
     fun findEndedContests(now: LocalDateTime): List<WeeklyContestEntity>
 
     @Query("SELECT wc FROM WeeklyContestEntity wc WHERE wc.startAt <= :now AND wc.endAt > :now")
