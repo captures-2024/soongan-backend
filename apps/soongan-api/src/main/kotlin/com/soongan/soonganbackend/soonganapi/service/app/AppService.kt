@@ -16,11 +16,11 @@ class AppService {
     companion object {
         // 최신 버전 정의 (플랫폼별)
         private const val LATEST_VERSION_ANDROID = "2.0.1"
-        private const val LATEST_VERSION_IOS = "2.0.1"
+        private const val LATEST_VERSION_IOS = "1.0.0"
 
         // 강제 업데이트가 필요한 최소 버전 (이 버전보다 낮으면 강제 업데이트)
         private const val MIN_VERSION_ANDROID = "2.0.0"
-        private const val MIN_VERSION_IOS = "2.0.0"
+        private const val MIN_VERSION_IOS = "1.0.0"
     }
 
     fun checkVersion(versionCheckRequestDto: VersionCheckRequestDto): VersionCheckResponseDto {

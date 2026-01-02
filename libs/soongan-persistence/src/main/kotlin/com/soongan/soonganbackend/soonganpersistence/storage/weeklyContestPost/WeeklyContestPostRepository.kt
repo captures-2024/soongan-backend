@@ -73,7 +73,7 @@ interface WeeklyContestPostRepository : JpaRepository<WeeklyContestPostEntity, L
         member: MemberEntity
     ): Int
 
-    fun findAllByMember(
+    fun findAllByMemberOrderByCreatedAtDesc(
         member: MemberEntity,
         pageable: Pageable
     ): Page<WeeklyContestPostEntity>

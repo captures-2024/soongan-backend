@@ -94,7 +94,7 @@ class WeeklyContestPostAdapter(
         page: Int,
         size: Int
     ): Page<WeeklyContestPostEntity> {
-        return weeklyContestPostRepository.findAllByMember(
+        return weeklyContestPostRepository.findAllByMemberOrderByCreatedAtDesc(
             member,
             PageRequest.of(page, size)
         )
