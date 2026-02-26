@@ -86,13 +86,14 @@ class AuthService(
             logger.info { "[Auth] register user=${member.id}, provider=${member.provider}, ip=$clientIp" }
         }
 
-        fcmTokenAdapter.findByToken(loginDto.fcmToken)?.let { foundFcmToken ->
-            if (foundFcmToken.member == null || foundFcmToken.member!!.id != member.id) {
-                fcmTokenAdapter.save(foundFcmToken.copy(id = foundFcmToken.id, member = member))
+        loginDto.fcmToken?.let { fcmToken ->
+            fcmTokenAdapter.findByToken(fcmToken)?.let { foundFcmToken ->
+                if (foundFcmToken.member == null || foundFcmToken.member!!.id != member.id) {
+                    fcmTokenAdapter.save(foundFcmToken.copy(id = foundFcmToken.id, member = member))
+                }
+            } ?: run {
+                logger.warn { "[Auth] login_warning user=${member.id}, provider=$provider, ip=$clientIp, reason=FCM token not found in DB" }
             }
-        } ?: run {
-            logger.warn { "[Auth] login_failed user=${member.id}, provider=$provider, ip=$clientIp, reason=FCM token not found" }
-            throw SoonganException(StatusCode.SOONGAN_API_NOT_FOUND_FCM_TOKEN)
         }
 
         val issuedTokens = jwtHandler.issueTokens(member.email)
