@@ -41,18 +41,19 @@ data class AwardsDetailResponseDto(
     ) {
         companion object {
             fun from(weeklyContestFinalEntity: WeeklyContestFinalEntity): FirstPrizePostResponseDto {
+                val post = weeklyContestFinalEntity.weeklyContestPost
                 return FirstPrizePostResponseDto(
-                    postId = weeklyContestFinalEntity.weeklyContestPost.id,
-                    title = weeklyContestFinalEntity.weeklyContestPost.title,
-                    imageUrl = weeklyContestFinalEntity.weeklyContestPost.imageUrl,
-                    nickname = weeklyContestFinalEntity.weeklyContestPost.member.nickname,
+                    postId = post.id,
+                    title = post.title,
+                    imageUrl = post.imageUrl,
+                    nickname = post.member?.nickname ?: "알 수 없음",
                     score = weeklyContestFinalEntity.score,
-                    status = if (weeklyContestFinalEntity.weeklyContestPost.deletedAt != null) {
-                        when (weeklyContestFinalEntity.weeklyContestPost.deletedReason) {
+                    status = if (post.deletedAt != null) {
+                        when (post.deletedReason) {
                             DeletedReasonEnum.BY_CREATOR -> AwardsPostStatusEnum.DELETED_BY_CREATOR
                             else -> AwardsPostStatusEnum.DELETED_BY_ADMIN // deletedAt이 true인데 deletedReason이 null인 경우는 어쩌지? 일단 admin 삭제로 처리
                         }
-                    } else if (weeklyContestFinalEntity.weeklyContestPost.blindedAt != null) {
+                    } else if (post.blindedAt != null) {
                         AwardsPostStatusEnum.BLINDED
                     } else {
                         AwardsPostStatusEnum.ACTIVE
@@ -87,9 +88,9 @@ data class AwardsDetailResponseDto(
                 }
 
                 return TopPostResponseDto(
-                    postId = weeklyContestFinalEntity.weeklyContestPost.id,
+                    postId = post.id,
                     imageUrl = post.imageUrl,
-                    nickname = post.member.nickname,
+                    nickname = post.member?.nickname ?: "알 수 없음",
                     ranking = weeklyContestFinalEntity.ranking,
                     score = weeklyContestFinalEntity.score,
                     status = status

@@ -57,14 +57,15 @@ data class WeeklyContestPostResponseDto(
             isLiked: Boolean = false,
             isTop7: Boolean = false
         ): WeeklyContestPostResponseDto {
+            val member = weeklyContestPost.member
             return WeeklyContestPostResponseDto(
                 memberId = memberId,
-                authorMemberId = weeklyContestPost.member.id,
+                authorMemberId = member?.id ?: 0L,
                 postId = weeklyContestPost.id,
                 title = weeklyContestPost.title,
                 imageUrl = weeklyContestPost.imageUrl,
                 ratio = weeklyContestPost.ratio,
-                nickname = weeklyContestPost.member.nickname!!,
+                nickname = member?.nickname ?: "알 수 없음",
                 likeCount = weeklyContestPost.likeCount,
                 isLiked = isLiked,
                 commentCount = weeklyContestPost.commentCount,
