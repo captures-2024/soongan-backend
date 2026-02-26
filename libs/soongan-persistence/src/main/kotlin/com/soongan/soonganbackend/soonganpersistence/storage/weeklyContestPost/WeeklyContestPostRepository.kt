@@ -17,6 +17,7 @@ interface WeeklyContestPostRepository : JpaRepository<WeeklyContestPostEntity, L
     @Query("""
         SELECT p
         FROM WeeklyContestPostEntity p
+        JOIN FETCH p.member
         WHERE p.weeklyContest = :weeklyContestEntity
             AND (
                 SELECT COUNT(r)
@@ -35,6 +36,7 @@ interface WeeklyContestPostRepository : JpaRepository<WeeklyContestPostEntity, L
     @Query("""
         SELECT p
         FROM WeeklyContestPostEntity p
+        JOIN FETCH p.member
         WHERE p.weeklyContest = :weeklyContestEntity
             AND (
                 SELECT COUNT(r)
@@ -53,6 +55,7 @@ interface WeeklyContestPostRepository : JpaRepository<WeeklyContestPostEntity, L
     @Query("""
         SELECT p
         FROM WeeklyContestPostEntity p
+        JOIN FETCH p.member
         WHERE p.weeklyContest = :weeklyContestEntity
             AND (
                 SELECT COUNT(r)

@@ -51,10 +51,12 @@ data class WeeklyContestPostListResponseDto(
             return WeeklyContestPostListResponseDto(
                 round = weeklyContest.round,
                 subject = weeklyContest.subject,
-                posts = postSlice.content.map {
+                posts = postSlice.content.mapNotNull {
+                    // member가 null이면 해당 게시물을 제외
+                    val member = it.member ?: return@mapNotNull null
                     WeeklyContestPostDto(
-                        nickname = it.member.nickname!!,
-                        profileImageUrl = it.member.profileImageUrl ?: DEFAULT_PROFILE_IMAGE_URL,
+                        nickname = member.nickname ?: "알 수 없음",
+                        profileImageUrl = member.profileImageUrl ?: DEFAULT_PROFILE_IMAGE_URL,
                         postId = it.id,
                         imageUrl = it.imageUrl,
                         ratio = it.ratio,
