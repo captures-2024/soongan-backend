@@ -145,6 +145,7 @@ class WeeklyContestPostAdapter(
 
         val query: JPAQuery<WeeklyContestPostEntity> = queryFactory
             .selectFrom(weeklyContestPostEntity)
+            .join(weeklyContestPostEntity.member).fetchJoin()
             .where(
                 weeklyContestPostEntity.weeklyContest.eq(weeklyContest),
                 reportCountSubquery.lt(3L)
@@ -186,6 +187,7 @@ class WeeklyContestPostAdapter(
 
         val query: JPAQuery<WeeklyContestPostEntity> = queryFactory
             .selectFrom(weeklyContestPostEntity)
+            .join(weeklyContestPostEntity.member).fetchJoin()
             .where(
                 weeklyContestPostEntity.weeklyContest.eq(weeklyContest),
                 reportCountSubquery.lt(3L)
@@ -226,6 +228,7 @@ class WeeklyContestPostAdapter(
 
         val query: JPAQuery<WeeklyContestPostEntity> = queryFactory
             .selectFrom(weeklyContestPostEntity)
+            .join(weeklyContestPostEntity.member).fetchJoin()
             .where(
                 weeklyContestPostEntity.weeklyContest.eq(weeklyContest),
                 reportCountSubquery.lt(3L)
