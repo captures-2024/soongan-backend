@@ -15,7 +15,6 @@ data class LoginRequestDto(
     @field:NotBlank(message = "iDToken 정보는 필수입니다.")
     val idToken: String,
 
-    @Schema(description = "해당 기기 FCM Token", required = true)
-    @field:NotBlank(message = "fcmToken 정보는 필수입니다.")
-    val fcmToken: String
+    @Schema(description = "해당 기기 FCM Token", required = false)
+    val fcmToken: String? = null
 )
