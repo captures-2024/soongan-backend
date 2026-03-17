@@ -85,7 +85,16 @@ class WeeklyContestPostAdapter(
         weeklyContest: WeeklyContestEntity,
         member: MemberEntity,
     ): Int {
-        return weeklyContestPostRepository.countByWeeklyContestAndMember(weeklyContest, member)
+        return queryFactory
+            .select(weeklyContestPostEntity.count())
+            .from(weeklyContestPostEntity)
+            .where(
+                weeklyContestPostEntity.weeklyContest.eq(weeklyContest),
+                weeklyContestPostEntity.member.eq(member),
+                weeklyContestPostEntity.deletedAt.isNull,
+                weeklyContestPostEntity.blindedAt.isNull
+            )
+            .fetchOne()?.toInt() ?: 0
     }
 
     @Transactional(readOnly = true)
